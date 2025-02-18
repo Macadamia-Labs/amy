@@ -10,6 +10,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { usePathname } from 'next/navigation'
+import { SearchForm } from './search-form'
 
 export default function CooperHeader() {
   const pathname = usePathname()
@@ -59,6 +60,9 @@ export default function CooperHeader() {
       <Breadcrumb className="mr-auto">
         <BreadcrumbList>{getBreadcrumbItems()}</BreadcrumbList>
       </Breadcrumb>
+      <div className="ml-auto">
+        <SearchForm />
+      </div>
     </header>
   )
 }

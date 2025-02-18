@@ -13,7 +13,6 @@ import { BrainCircuitIcon } from 'lucide-react'
 import Link from 'next/link'
 import * as React from 'react'
 import { NavDocs } from './nav-docs'
-import { SearchForm } from './search-form'
 
 export function CooperSidebar(props: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -39,7 +38,6 @@ export function CooperSidebar(props: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup className="space-y-2">
-          <SearchForm />
           <NavDocs />
         </SidebarGroup>
       </SidebarContent>

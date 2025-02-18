@@ -6,7 +6,7 @@ export function NavDocs() {
   return (
     <Link href="/docs">
       <SidebarMenuButton>
-        <TextFileIcon />
+        <TextFileIcon className="size-6" />
         Docs
       </SidebarMenuButton>
     </Link>
