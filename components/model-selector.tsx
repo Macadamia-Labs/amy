@@ -1,7 +1,7 @@
 'use client'
 
 import { Check, ChevronsUpDown } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from './ui/button'
 import {
   Command,
@@ -117,12 +117,12 @@ export function StandardSelector() {
   const [open, setOpen] = useState(false)
   const [selectedStandardId, setSelectedStandardId] = useState<string>('')
 
-  useEffect(() => {
-    const savedStandard = localStorage.getItem('selected-standard')
-    if (savedStandard) {
-      setSelectedStandardId(savedStandard)
-    }
-  }, [])
+  // useEffect(() => {
+  //   const savedStandard = localStorage.getItem('selected-standard')
+  //   if (savedStandard) {
+  //     setSelectedStandardId(savedStandard)
+  //   }
+  // }, [])
 
   const handleStandardSelect = (id: string) => {
     setSelectedStandardId(id === selectedStandardId ? '' : id)

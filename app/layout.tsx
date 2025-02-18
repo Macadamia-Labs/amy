@@ -1,12 +1,17 @@
-import Footer from '@/components/footer'
-import Header from '@/components/header'
-import { Sidebar } from '@/components/sidebar'
-import { ThemeProvider } from '@/components/theme-provider'
-import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import AuthProvider from '@/lib/providers/auth-provider'
 import { cn } from '@/lib/utils'
+import '@/styles/globals.css'
+import '@/styles/prosemirror.css'
+import '@/styles/xy-theme.css'
 import type { Metadata, Viewport } from 'next'
+import { ThemeProvider } from 'next-themes'
 import { Inter as FontSans } from 'next/font/google'
-import './globals.css'
+import { Toaster } from 'sonner'
+
+interface RootLayoutProps {
+  children: React.ReactNode
+}
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -39,28 +44,24 @@ export const viewport: Viewport = {
   maximumScale: 1
 }
 
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  const enableSaveChatHistory =
-    process.env.NEXT_PUBLIC_ENABLE_SAVE_CHAT_HISTORY === 'true'
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn('font-sans antialiased', fontSans.variable)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          {children}
-          {enableSaveChatHistory && <Sidebar />}
-          <Footer />
-          <Toaster />
-        </ThemeProvider>
+      <body
+        className={cn('font-sans h-screen flex flex-col', fontSans.variable)}
+      >
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+            themes={['light', 'dark', 'sunlight', 'sunset']}
+          >
+            <TooltipProvider>{children}</TooltipProvider>
+            <Toaster position="top-right" />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )
