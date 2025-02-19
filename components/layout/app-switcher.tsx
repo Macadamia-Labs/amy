@@ -1,75 +1,69 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { Check, ChevronsUpDown, SearchCodeIcon, Bolt } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { Check, ChevronsUpDown, Plus } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import * as React from 'react'
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import {
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+  SidebarMenuItem
+} from '@/components/ui/sidebar'
+import { BoxIcon } from '@/lib/utils/icons'
 
-const apps = [
+// This would typically come from an API or database
+const projects = [
   {
-    name: "Cooper",
-    description: "AI Search Engine for CAE",
-    icon: Bolt,
-    path: "/cooper",
-    bgColor: "bg-emerald-500",
+    name: 'My First Project',
+    description: 'Engineering simulation project',
+    icon: BoxIcon,
+    path: '/projects/first-project',
+    bgColor: 'bg-sky-500'
   },
-  // {
-  //   name: "Casper",
-  //   description: "Text-to-CAD Editor",
-  //   icon: PencilRulerIcon,
-  //   path: "/casper",
-  //   bgColor: "bg-yellow-500",
-  // },
-  // {
-  //   name: "Amy",
-  //   description: "AI for Mechanical Engineers",
-  //   icon: BrainCircuit,
-  //   path: "/amy",
-  //   bgColor: "bg-red-500",
-  // },
   {
-    name: "Oswald",
-    description: "AI Simulations Agent",
-    icon: SearchCodeIcon,
-    path: "/oswald",
-    bgColor: "bg-blue-500",
-  },
-];
+    name: 'Optimization Study',
+    description: 'Parameter optimization',
+    icon: BoxIcon,
+    path: '/projects/optimization',
+    bgColor: 'bg-emerald-500'
+  }
+]
 
-export function AppSwitcher() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [selectedApp, setSelectedApp] = React.useState(() => {
-    // Set initial app based on current path
-    return apps.find((app) => pathname.startsWith(app.path)) || apps[0];
-  });
+export function ProjectSwitcher() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const [selectedProject, setSelectedProject] = React.useState(() => {
+    return (
+      projects.find(project => pathname.startsWith(project.path)) || projects[0]
+    )
+  })
 
-  // Update selected app when pathname changes
   React.useEffect(() => {
-    const matchingApp = apps.find((app) => pathname.startsWith(app.path));
-    if (matchingApp && matchingApp.name !== selectedApp.name) {
-      setSelectedApp(matchingApp);
+    const matchingProject = projects.find(project =>
+      pathname.startsWith(project.path)
+    )
+    if (matchingProject && matchingProject.name !== selectedProject.name) {
+      setSelectedProject(matchingProject)
     }
-  }, [pathname, selectedApp.name]);
+  }, [pathname, selectedProject.name])
 
-  const handleAppSwitch = (app: (typeof apps)[0]) => {
-    setSelectedApp(app);
-    // Only redirect if we're not already in the app's path
-    if (!pathname.startsWith(app.path)) {
-      router.push(app.path);
+  const handleProjectSwitch = (project: (typeof projects)[0]) => {
+    setSelectedProject(project)
+    if (!pathname.startsWith(project.path)) {
+      router.push(project.path)
     }
-  };
+  }
+
+  const handleNewProject = () => {
+    router.push('/projects/new')
+  }
 
   return (
     <SidebarMenu>
@@ -81,48 +75,62 @@ export function AppSwitcher() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div
-                className={`flex aspect-square size-8 items-center justify-center rounded-sm ${selectedApp.bgColor} text-white`}
+                className={`flex aspect-square size-8 items-center justify-center rounded-sm ${selectedProject.bgColor} text-white`}
               >
-                <selectedApp.icon className="size-4" />
+                <selectedProject.icon className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {selectedApp.name}
+                  {selectedProject.name}
                 </span>
                 <span className="truncate text-xs">
-                  {selectedApp.description}
+                  {selectedProject.description}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-fit" align="start">
-            {apps.map((app) => (
+            {projects.map(project => (
               <DropdownMenuItem
-                key={app.name}
-                onSelect={() => handleAppSwitch(app)}
+                key={project.name}
+                onSelect={() => handleProjectSwitch(project)}
               >
                 <div className="flex items-center gap-4 pr-1 w-full">
                   <div
-                    className={`flex aspect-square size-6 items-center justify-center rounded-sm ${app.bgColor} text-white`}
+                    className={`flex aspect-square size-6 items-center justify-center rounded-sm ${project.bgColor} text-white`}
                   >
-                    <app.icon className="size-3" />
+                    <project.icon className="size-3" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="font-semibold">{app.name}</span>
+                    <span className="font-semibold">{project.name}</span>
                     <span className="text-xs text-muted-foreground">
-                      {app.description}
+                      {project.description}
                     </span>
                   </div>
-                  {app.name === selectedApp.name && (
+                  {project.name === selectedProject.name && (
                     <Check className="ml-auto size-4" />
                   )}
                 </div>
               </DropdownMenuItem>
             ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={handleNewProject}>
+              <div className="flex items-center gap-4 pr-1 w-full">
+                <div className="flex aspect-square size-6 items-center justify-center rounded-sm bg-muted text-muted-foreground">
+                  <Plus className="size-3" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="font-semibold">New Project</span>
+                  <span className="text-xs text-muted-foreground">
+                    Create a new project
+                  </span>
+                </div>
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  );
+  )
 }

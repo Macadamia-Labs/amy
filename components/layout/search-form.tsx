@@ -102,7 +102,7 @@ export function SearchForm({
         >
           <Search className="size-4 flex-shrink-0" />
           <span className="flex-1">Search the docs...</span>
-          <ShortCut className="hidden md:inline-flex">⌘K</ShortCut>
+          <ShortCut className="hidden md:inline-flex ml-8">⌘K</ShortCut>
         </SidebarMenuButton>
       </form>
 

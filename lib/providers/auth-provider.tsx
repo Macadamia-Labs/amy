@@ -27,7 +27,7 @@ const AuthContext = createContext<AuthContextProps>({
   emailLoading: false,
   googleLoading: false,
   verifyOtp: false,
-  isLoading: true,
+  isLoading: false,
   signOut: async () => {},
   signInWithGoogle: async () => {},
   signInWithOtp: async (email: string) => {
@@ -39,9 +39,11 @@ const AuthContext = createContext<AuthContextProps>({
 })
 
 export default function AuthProvider({
-  children
+  children,
+  serverSession
 }: {
   children: React.ReactNode
+  serverSession: Session | null | undefined
 }) {
   const supabase = createClient()
   const router = useRouter()
@@ -49,9 +51,10 @@ export default function AuthProvider({
   const [emailLoading, setEmailLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [verifyOtp, setVerifyOtp] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [session, setSession] = useState<Session | null | undefined>(undefined)
-  const [user, setUser] = useState<User | null | undefined>(undefined)
+  const [session, setSession] = useState<Session | null | undefined>(
+    serverSession
+  )
+  const [user, setUser] = useState<User | null | undefined>(serverSession?.user)
 
   // Sign Out
   const signOut = async () => {
@@ -167,7 +170,6 @@ export default function AuthProvider({
         setSession(null)
         setUser(null)
       }
-      setIsLoading(false)
     })
 
     // Set up auth state change listener
@@ -191,7 +193,6 @@ export default function AuthProvider({
           })
         }
       }
-      setIsLoading(false)
     })
 
     return () => {
@@ -205,7 +206,7 @@ export default function AuthProvider({
     emailLoading,
     googleLoading,
     verifyOtp,
-    isLoading,
+    isLoading: emailLoading || googleLoading,
     signOut,
     signInWithGoogle,
     signInWithOtp,

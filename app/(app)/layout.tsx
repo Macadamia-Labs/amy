@@ -9,13 +9,15 @@ export default function RootLayout({
 }>) {
   return (
     <SidebarProvider>
-      <CooperSidebar />
-      <SidebarInset>
-        <div className="flex flex-col h-screen pr-2">
-          <Header />
-          <div className="flex-1 overflow-auto">{children}</div>
-        </div>
-      </SidebarInset>
+      <div className="flex h-screen w-screen">
+        <CooperSidebar />
+        <SidebarInset>
+          <div className="flex flex-col h-full">
+            <Header />
+            <div className="flex-1 overflow-auto">{children}</div>
+          </div>
+        </SidebarInset>
+      </div>
     </SidebarProvider>
   )
 }

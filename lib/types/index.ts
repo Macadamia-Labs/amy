@@ -1,4 +1,4 @@
-import { CoreMessage, JSONValue, Message } from 'ai'
+import { CoreMessage, JSONValue } from 'ai'
 
 export type SearchResults = {
   images: SearchResultImage[]
@@ -112,4 +112,59 @@ export type SearXNGSearchResults = {
   results: SearchResultItem[]
   number_of_results?: number
   query: string
+}
+
+export interface Resource {
+  id: string
+  name: string
+  type: 'CPU' | 'Memory' | 'Storage' | 'Network' | 'Other'
+  usage: number
+  total: number
+  unit: string
+}
+
+export interface ResourceType {
+  id: string
+  name: string
+  type: 'Equipment' | 'Material' | 'Labor' | 'Power' | 'Other'
+  category: 'Production' | 'Construction' | 'Maintenance' | 'Safety'
+  usage: number
+  total: number
+  unit: string
+}
+
+export interface Standard {
+  id: string
+  code: string
+  name: string
+  category: 'ISO' | 'ASTM' | 'DIN' | 'IEC' | 'ASME' | 'Other'
+  description: string
+  lastUpdated: Date
+  relevantSections: string[]
+}
+
+export interface Document {
+  id: string
+  type: 'Drawing' | 'Simulation' | 'Report' | 'Specification' | 'Manual'
+  title: string
+  fileUrl: string
+  version: string
+  createdAt: Date
+  updatedAt: Date
+  status: 'draft' | 'review' | 'approved' | 'obsolete'
+}
+
+export interface Issue {
+  id: string
+  title: string
+  description: string
+  status: 'open' | 'in_progress' | 'resolved' | 'closed'
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  category: 'Production' | 'Construction' | 'Maintenance' | 'Safety'
+  location: string
+  createdAt: Date
+  updatedAt: Date
+  resources: ResourceType[]
+  standards: Standard[]
+  documents: Document[]
 }

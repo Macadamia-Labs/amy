@@ -2,8 +2,14 @@
 
 import { Button } from '@/components/ui/button'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
-import { Copy, Link, MessageCircle, MoreHorizontal } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import {
+  CheckIcon,
+  CopyIcon,
+  LinkIcon,
+  MessageCircleIcon,
+  MoreHorizontalIcon
+} from '@/lib/utils/icons'
+import { useEffect, useRef, useState } from 'react'
 import rehypeExternalLinks from 'rehype-external-links'
 import remarkGfm from 'remark-gfm'
 import { toast } from 'sonner'
@@ -20,6 +26,7 @@ interface Section {
 interface DocContentProps {
   sections: Section[]
   activeSection: Section | null
+  onSectionSelect?: (section: Section) => void
 }
 
 function findMainSection(
@@ -57,18 +64,44 @@ function getAllSectionsContent(section: Section): Section[] {
   return result
 }
 
-export function DocContent({ sections, activeSection }: DocContentProps) {
-  const contentRef = useRef<HTMLDivElement>(null)
+export function DocContent({
+  sections,
+  activeSection,
+  onSectionSelect
+}: DocContentProps) {
   const activeRef = useRef<HTMLDivElement>(null)
+  const [showCheckMark, setShowCheckMark] = useState<{
+    type: 'copy' | 'link' | null
+    sectionIndex: number | null
+  }>({ type: null, sectionIndex: null })
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = async (text: string, sectionIndex: number) => {
     try {
       await navigator.clipboard.writeText(text)
-      toast.success('Text copied to clipboard')
+      toast.success('Text copied to clipboard', {
+        duration: 1000
+      })
+      setShowCheckMark({ type: 'copy', sectionIndex })
+      setTimeout(() => {
+        setShowCheckMark({ type: null, sectionIndex: null })
+      }, 1000) // Match toast duration
     } catch (error) {
       console.error('Failed to copy text:', error)
-      toast.error('Failed to copy text to clipboard')
+      toast.error('Failed to copy text to clipboard', {
+        duration: 1000
+      })
     }
+  }
+
+  const handleShare = (sectionIndex: number) => {
+    // Add share functionality
+    toast.success('Link copied to clipboard', {
+      duration: 1000
+    })
+    setShowCheckMark({ type: 'link', sectionIndex })
+    setTimeout(() => {
+      setShowCheckMark({ type: null, sectionIndex: null })
+    }, 1000) // Match toast duration
   }
 
   useEffect(() => {
@@ -77,60 +110,40 @@ export function DocContent({ sections, activeSection }: DocContentProps) {
     }
   }, [activeSection])
 
-  if (!activeSection) {
-    return (
-      <div className="h-full flex items-center justify-center text-muted-foreground">
-        Select a section from the sidebar to view its content
-      </div>
-    )
-  }
-
-  const getSectionGroup = () => {
-    const index = sections.findIndex(s => s.title === activeSection.title)
-    if (index === -1) return [activeSection]
-    let startIndex = index
-    // find nearest preceding section with level 1
-    for (let i = index; i >= 0; i--) {
-      if (sections[i].level === 1) {
-        startIndex = i
-        break
-      }
-    }
-    const group: typeof sections = []
-    for (let i = startIndex; i < sections.length; i++) {
-      if (i > startIndex && sections[i].level === 1) break
-      group.push(sections[i])
-    }
-    return group
-  }
-  const sectionGroup = getSectionGroup()
-
   return (
     <div className="h-full overflow-auto p-6">
       <div className="mx-auto max-w-4xl">
-        <div className="prose dark:prose-invert">
-          {sectionGroup.map((section, index) => (
+        <div className="prose dark:prose-invert space-y-2">
+          {sections.map((section, index) => (
             <div
               key={index}
               className={`group relative ${
-                section.title === activeSection.title
-                  ? 'bg-muted rounded-lg'
-                  : ''
+                activeSection?.title === section.title
+                  ? 'bg-blue-500/20 rounded-lg border border-blue-500/80'
+                  : 'hover:bg-muted rounded-lg'
               }`}
-              ref={section.title === activeSection.title ? activeRef : null}
+              ref={activeSection?.title === section.title ? activeRef : null}
+              onClick={() => onSectionSelect?.(section)}
+              role="button"
+              tabIndex={0}
             >
-              <div className="absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 border transition-opacity flex gap-1 bg-card rounded-md p-1">
+              <div className="absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 border transition-opacity flex gap-1 bg-card rounded-xl p-1">
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
                   onClick={e => {
                     e.stopPropagation()
-                    copyToClipboard(section.content)
+                    copyToClipboard(section.content, index)
                   }}
                   title="Copy"
                 >
-                  <Copy className="h-4 w-4" />
+                  {showCheckMark.type === 'copy' &&
+                  showCheckMark.sectionIndex === index ? (
+                    <CheckIcon className="size-4" />
+                  ) : (
+                    <CopyIcon className="size-4" />
+                  )}
                 </Button>
                 <Button
                   variant="ghost"
@@ -138,11 +151,16 @@ export function DocContent({ sections, activeSection }: DocContentProps) {
                   className="h-8 w-8"
                   onClick={e => {
                     e.stopPropagation()
-                    // Add share functionality
+                    handleShare(index)
                   }}
                   title="Share link"
                 >
-                  <Link className="h-4 w-4" />
+                  {showCheckMark.type === 'link' &&
+                  showCheckMark.sectionIndex === index ? (
+                    <CheckIcon className="size-4" />
+                  ) : (
+                    <LinkIcon className="size-4" />
+                  )}
                 </Button>
                 <Button
                   variant="ghost"
@@ -154,7 +172,7 @@ export function DocContent({ sections, activeSection }: DocContentProps) {
                   }}
                   title="Feedback"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <MessageCircleIcon className="size-4" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -166,7 +184,7 @@ export function DocContent({ sections, activeSection }: DocContentProps) {
                   }}
                   title="More options"
                 >
-                  <MoreHorizontal className="h-4 w-4" />
+                  <MoreHorizontalIcon className="size-4" />
                 </Button>
               </div>
               <MemoizedReactMarkdown

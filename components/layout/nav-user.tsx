@@ -5,11 +5,9 @@ import {
   Bell,
   Check,
   ChevronsUpDown,
-  CreditCard,
   Laptop,
   LogOut,
   Moon,
-  Sparkles,
   Sun,
   UserIcon
 } from 'lucide-react'
@@ -116,46 +114,41 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
+                <BadgeCheck className="size-4 mr-2" />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
+                <Bell className="size-4 mr-2" />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => setTheme('light')}>
-                <Sun className={theme === 'light' ? 'text-primary' : ''} />
+                <Sun
+                  className={`mr-2 ${theme === 'light' ? 'text-primary' : ''}`}
+                />
                 Light
-                {theme === 'light' && <Check className="ml-auto" />}
+                {theme === 'light' && <Check className="ml-auto size-4" />}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setTheme('dark')}>
-                <Moon className={theme === 'dark' ? 'text-primary' : ''} />
+                <Moon
+                  className={`mr-2 ${theme === 'dark' ? 'text-primary' : ''}`}
+                />
                 Dark
-                {theme === 'dark' && <Check className="ml-auto" />}
+                {theme === 'dark' && <Check className="ml-auto size-4" />}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setTheme('system')}>
-                <Laptop className={theme === 'system' ? 'text-primary' : ''} />
+                <Laptop
+                  className={`mr-2 ${theme === 'system' ? 'text-primary' : ''}`}
+                />
                 System
-                {theme === 'system' && <Check className="ml-auto" />}
+                {theme === 'system' && <Check className="ml-auto size-4" />}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOut}>
-              <LogOut />
+              <LogOut className="mr-2" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

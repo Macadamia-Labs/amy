@@ -1,6 +1,6 @@
-import { SVGProps } from "react";
+import { SVGProps } from 'react'
 
-export type IconProps = SVGProps<SVGSVGElement>;
+export type IconProps = SVGProps<SVGSVGElement>
 
 export function TextFileIcon({ className }: { className?: string }) {
   return (
@@ -24,7 +24,7 @@ export function TextFileIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function OrderedListIcon({ className }: { className?: string }) {
@@ -49,7 +49,7 @@ export function OrderedListIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function ChipIcon({ className }: { className?: string }) {
@@ -76,7 +76,7 @@ export function ChipIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function SearchIcon({ className }: { className?: string }) {
@@ -101,7 +101,7 @@ export function SearchIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function SidebarIcon({ className }: { className?: string }) {
@@ -126,7 +126,7 @@ export function SidebarIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function SendIcon({ className }: { className?: string }) {
@@ -156,7 +156,7 @@ export function SendIcon({ className }: { className?: string }) {
         </clipPath>
       </defs>
     </svg>
-  );
+  )
 }
 
 export function MicIcon({ className }: { className?: string }) {
@@ -181,7 +181,7 @@ export function MicIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function PencilIcon({ className }: { className?: string }) {
@@ -204,7 +204,7 @@ export function PencilIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function TrashIcon({ className }: { className?: string }) {
@@ -229,7 +229,7 @@ export function TrashIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function TerminalIcon({ className }: { className?: string }) {
@@ -254,7 +254,7 @@ export function TerminalIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export function PlusSquareIcon({ className }: { className?: string }) {
@@ -279,7 +279,7 @@ export function PlusSquareIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }
 
 export const ClipboardIcon = ({ className }: { className?: string }) => {
@@ -301,8 +301,8 @@ export const ClipboardIcon = ({ className }: { className?: string }) => {
       />
       <rect x="7" y="0.25" width="10" height="4" rx="2" fill="currentColor" />
     </svg>
-  );
-};
+  )
+}
 
 export const ClipboardCheckIcon = ({ className }: { className?: string }) => {
   return (
@@ -328,8 +328,8 @@ export const ClipboardCheckIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const ExternalLinkIcon = ({ className }: { className?: string }) => {
   return (
@@ -353,8 +353,8 @@ export const ExternalLinkIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const CheckSquareIcon = ({ className }: { className?: string }) => {
   return (
@@ -378,8 +378,8 @@ export const CheckSquareIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const GearIcon = ({ className }: { className?: string }) => {
   return (
@@ -401,8 +401,8 @@ export const GearIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const ChatIcon = ({ className }: { className?: string }) => {
   return (
@@ -426,8 +426,8 @@ export const ChatIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const TalkIcon = ({ className }: { className?: string }) => {
   return (
@@ -449,8 +449,8 @@ export const TalkIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const FolderIcon = ({ className }: { className?: string }) => {
   return (
@@ -468,8 +468,8 @@ export const FolderIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const FileCheckIcon = ({ className }: { className?: string }) => {
   return (
@@ -493,8 +493,8 @@ export const FileCheckIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const FileUploadIcon = ({ className }: { className?: string }) => {
   return (
@@ -518,8 +518,8 @@ export const FileUploadIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const FilePlusIcon = ({ className }: { className?: string }) => {
   return (
@@ -543,8 +543,8 @@ export const FilePlusIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const FileMinusIcon = ({ className }: { className?: string }) => {
   return (
@@ -568,8 +568,8 @@ export const FileMinusIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const SlidersIcon = ({ className }: { className?: string }) => {
   return (
@@ -597,8 +597,8 @@ export const SlidersIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const ExpandIcon = ({ className }: { className?: string }) => {
   return (
@@ -618,8 +618,8 @@ export const ExpandIcon = ({ className }: { className?: string }) => {
         strokeLinejoin="round"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const PaperclipIcon = ({ className }: { className?: string }) => {
   return (
@@ -639,8 +639,8 @@ export const PaperclipIcon = ({ className }: { className?: string }) => {
         strokeLinejoin="round"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const BoxIcon = ({ className }: { className?: string }) => {
   return (
@@ -667,8 +667,8 @@ export const BoxIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const FolderOpenIcon = ({ className }: { className?: string }) => {
   return (
@@ -690,8 +690,8 @@ export const FolderOpenIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const ActivityIcon = ({ className }: { className?: string }) => {
   return (
@@ -715,8 +715,8 @@ export const ActivityIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const PlusFolderIcon = ({ className }: { className?: string }) => {
   return (
@@ -740,8 +740,8 @@ export const PlusFolderIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const ConvoIcon = ({ className }: { className?: string }) => {
   return (
@@ -763,8 +763,8 @@ export const ConvoIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const ChartColumnIcon = ({ className }: { className?: string }) => {
   return (
@@ -788,8 +788,8 @@ export const ChartColumnIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const NotesIcon = ({ className }: { className?: string }) => {
   return (
@@ -813,8 +813,8 @@ export const NotesIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const FireIcon = ({ className }: { className?: string }) => {
   return (
@@ -836,8 +836,8 @@ export const FireIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const StopIcon = ({ className }: { className?: string }) => {
   return (
@@ -861,8 +861,8 @@ export const StopIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const PlayCircleIcon = ({ className }: { className?: string }) => {
   return (
@@ -886,8 +886,8 @@ export const PlayCircleIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const XSquareIcon = ({ className }: { className?: string }) => {
   return (
@@ -911,8 +911,8 @@ export const XSquareIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const AtomIcon = ({ className }: { className?: string }) => {
   return (
@@ -944,8 +944,8 @@ export const AtomIcon = ({ className }: { className?: string }) => {
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
 
 export const BuildGridIcon = ({ className }: { className?: string }) => {
   return (
@@ -968,11 +968,272 @@ export const BuildGridIcon = ({ className }: { className?: string }) => {
         />
       </g>
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M18.75 2C18.75 1.58579 18.4142 1.25 18 1.25C17.5858 1.25 17.25 1.58579 17.25 2V5.25H14C13.5858 5.25 13.25 5.58579 13.25 6C13.25 6.41421 13.5858 6.75 14 6.75H17.25V10C17.25 10.4142 17.5858 10.75 18 10.75C18.4142 10.75 18.75 10.4142 18.75 10V6.75H22C22.4142 6.75 22.75 6.41421 22.75 6C22.75 5.58579 22.4142 5.25 22 5.25H18.75V2ZM1.52248 14.615C1.25 15.1498 1.25 15.8499 1.25 17.25V18.75C1.25 20.1501 1.25 20.8502 1.52248 21.385C1.76217 21.8554 2.14462 22.2378 2.61502 22.4775C3.1498 22.75 3.84987 22.75 5.25 22.75H6.75C8.15013 22.75 8.8502 22.75 9.38498 22.4775C9.85538 22.2378 10.2378 21.8554 10.4775 21.385C10.75 20.8502 10.75 20.1501 10.75 18.75V17.25C10.75 15.8499 10.75 15.1498 10.4775 14.615C10.2378 14.1446 9.85538 13.7622 9.38498 13.5225C8.8502 13.25 8.15013 13.25 6.75 13.25H5.25C3.84987 13.25 3.1498 13.25 2.61502 13.5225C2.14462 13.7622 1.76217 14.1446 1.52248 14.615Z"
         fill="currentColor"
       />
     </svg>
-  );
-};
+  )
+}
+
+export const WrenchIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <g clip-path="url(#clip0_2519_24514)">
+        <path
+          opacity="0.32"
+          d="M15 1.25C10.7198 1.25 7.24999 4.71979 7.24999 9C7.24999 9.54962 7.26724 10.2289 7.34278 10.896C7.39221 11.3326 7.41692 11.5509 7.41926 11.6364C7.4356 12.236 7.33616 12.5204 6.94981 12.9792C6.8947 13.0446 6.79678 13.1426 6.60092 13.3384L1.96966 17.9697C0.848341 19.091 0.848341 20.909 1.96966 22.0303C3.09098 23.1516 4.909 23.1517 6.03032 22.0303L10.6616 17.3991C10.8574 17.2032 10.9554 17.1053 11.0208 17.0502C11.4796 16.6638 11.764 16.5644 12.3636 16.5807C12.4491 16.5831 12.6674 16.6078 13.104 16.6572C13.7711 16.7328 14.4504 16.75 15 16.75C19.2802 16.75 22.75 13.2802 22.75 9C22.75 8.62484 22.7233 8.25547 22.6715 7.8938L22.4592 6.40925L19.8722 8.99621C19.0802 9.78825 18.6842 10.1843 18.2275 10.3326C17.8258 10.4632 17.3931 10.4632 16.9915 10.3326C16.5348 10.1843 16.1388 9.78825 15.3467 8.99621L15.0038 8.65325C14.2117 7.86121 13.8157 7.4652 13.6673 7.00854C13.5368 6.60685 13.5368 6.17416 13.6673 5.77247C13.8157 5.31581 14.2117 4.9198 15.0038 4.12776L17.5907 1.54079L16.1062 1.32845C15.7445 1.27671 15.3752 1.25 15 1.25Z"
+          fill="currentColor"
+        />
+        <path
+          d="M4.90916 15.0303L1.96965 17.9698C0.848334 19.0911 0.848333 20.9091 1.96965 22.0304C3.09097 23.1518 4.909 23.1517 6.03031 22.0304L8.96978 19.0908C10.091 17.9695 10.091 16.1516 8.96974 15.0303C7.84845 13.909 6.03046 13.909 4.90916 15.0303Z"
+          fill="currentColor"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_2519_24514">
+          <rect width="24" height="24" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
+
+export const HardDriveIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        opacity="0.32"
+        d="M10.7764 1.25C8.50117 1.25 7.36358 1.25 6.42283 1.65174C5.59299 2.00613 4.87451 2.57848 4.34358 3.30811C3.74171 4.13524 3.48741 5.24405 2.97881 7.46167L1.45238 14.1173C1.37656 14.4479 1.33865 14.6132 1.31207 14.7802C1.28845 14.9287 1.27153 15.0781 1.26137 15.2281C1.24994 15.3969 1.24994 15.5665 1.24994 15.9056V17H22.7499V15.9056C22.7499 15.5664 22.7499 15.3968 22.7385 15.2281C22.7284 15.0781 22.7114 14.9287 22.6878 14.7802C22.6612 14.6132 22.6233 14.4479 22.5475 14.1174L21.0212 7.4618C20.5127 5.24414 20.2584 4.13531 19.6565 3.30816C19.1256 2.57852 18.4071 2.00615 17.5772 1.65175C16.6365 1.25 15.4989 1.25 13.2236 1.25H10.7764Z"
+        fill="#2F384C"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M5.88425 13.25H18.1158C18.9338 13.2498 19.492 13.2496 19.9706 13.3778C21.2647 13.7246 22.2755 14.7354 22.6223 16.0295C22.7505 16.5081 22.7503 17.0662 22.7501 17.8842V18.1158C22.7503 18.9337 22.7505 19.492 22.6223 19.9706C22.2755 21.2647 21.2647 22.2755 19.9706 22.6223C19.492 22.7505 18.9338 22.7503 18.1158 22.7501H5.88425C5.06629 22.7503 4.50814 22.7505 4.02948 22.6223C2.73538 22.2755 1.72458 21.2647 1.37783 19.9706C1.24957 19.492 1.24975 18.9338 1.25002 18.1158V17.8843C1.24975 17.0663 1.24957 16.5081 1.37783 16.0295C1.72458 14.7354 2.73538 13.7246 4.02948 13.3778C4.50814 13.2496 5.06629 13.2498 5.88425 13.25ZM7.00006 19.0001C7.55235 19.0001 8.00006 18.5523 8.00006 18.0001C8.00006 17.4478 7.55235 17.0001 7.00006 17.0001C6.44778 17.0001 6.00006 17.4478 6.00006 18.0001C6.00006 18.5523 6.44778 19.0001 7.00006 19.0001ZM18.0001 18.0001C18.0001 18.4143 17.6643 18.7501 17.2501 18.7501H10.7501C10.3358 18.7501 10.0001 18.4143 10.0001 18.0001C10.0001 17.5858 10.3358 17.2501 10.7501 17.2501H17.2501C17.6643 17.2501 18.0001 17.5858 18.0001 18.0001Z"
+        fill="#2F384C"
+      />
+    </svg>
+  )
+}
+
+export const MapPinIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        opacity="0.32"
+        d="M12 1.25C6.64344 1.25 2.25 5.03039 2.25 10.5C2.25 14.6709 4.1156 17.7331 6.23437 19.739C7.29094 20.7393 8.41559 21.4828 9.41692 21.9791C10.3934 22.4631 11.3293 22.7498 12 22.7498C12.6707 22.7498 13.6066 22.4631 14.5831 21.9791C15.5844 21.4828 16.7091 20.7393 17.7656 19.739C19.8844 17.7331 21.75 14.6709 21.75 10.5C21.75 5.03039 17.3566 1.25 12 1.25Z"
+        fill="currentColor"
+      />
+      <circle cx="12" cy="11" r="3" fill="currentColor" />
+    </svg>
+  )
+}
+
+export const ClockIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        opacity="0.32"
+        d="M12 1.25C6.06294 1.25 1.25 6.06294 1.25 12C1.25 17.9371 6.06294 22.75 12 22.75C17.9371 22.75 22.75 17.9371 22.75 12C22.75 6.06294 17.9371 1.25 12 1.25Z"
+        fill="currentColor"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4.53033 0.46967C4.82322 0.762563 4.82322 1.23744 4.53033 1.53033L1.53033 4.53033C1.23744 4.82322 0.762563 4.82322 0.46967 4.53033C0.176777 4.23744 0.176777 3.76256 0.46967 3.46967L3.46967 0.46967C3.76256 0.176777 4.23744 0.176777 4.53033 0.46967ZM19.4697 0.46967C19.7626 0.176777 20.2374 0.176777 20.5303 0.46967L23.5303 3.46967C23.8232 3.76256 23.8232 4.23744 23.5303 4.53033C23.2374 4.82322 22.7626 4.82322 22.4697 4.53033L19.4697 1.53033C19.1768 1.23744 19.1768 0.762563 19.4697 0.46967ZM12 7.25C12.4142 7.25 12.75 7.58579 12.75 8V11.5986L15.416 13.376C15.7607 13.6057 15.8538 14.0714 15.624 14.416C15.3943 14.7607 14.9286 14.8538 14.584 14.624L11.584 12.624C11.3753 12.4849 11.25 12.2508 11.25 12V8C11.25 7.58579 11.5858 7.25 12 7.25Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export const CopyIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        opacity="0.32"
+        d="M18 7.25V10C18 12.8003 18 14.2004 17.455 15.27C16.9757 16.2108 16.2108 16.9757 15.27 17.455C14.2004 18 12.8003 18 10 18H7.25012C7.25012 18.6967 7.25012 19.0451 7.29342 19.3369C7.55194 21.0797 8.92037 22.4482 10.6632 22.7067C10.9551 22.75 11.3034 22.75 12.0001 22.75H16.3501C18.5903 22.75 19.7104 22.75 20.5661 22.314C21.3187 21.9305 21.9307 21.3186 22.3141 20.566C22.7501 19.7103 22.7501 18.5902 22.7501 16.35V12.0001C22.7501 11.3033 22.7501 10.9549 22.7068 10.663C22.4483 8.92023 21.0799 7.55186 19.3371 7.29331C19.0452 7.25 18.6968 7.25 18 7.25Z"
+        fill="currentColor"
+      />
+      <path
+        d="M7.65012 1.25C5.40991 1.25 4.28981 1.25 3.43416 1.68597C2.68151 2.06947 2.06959 2.68139 1.6861 3.43404C1.25012 4.28969 1.25012 5.40979 1.25012 7.65V10.35C1.25012 12.5902 1.25012 13.7103 1.6861 14.566C2.06959 15.3186 2.68151 15.9305 3.43416 16.314C4.28981 16.75 5.40991 16.75 7.65012 16.75H10.3501C12.5903 16.75 13.7104 16.75 14.5661 16.314C15.3187 15.9305 15.9307 15.3186 16.3141 14.566C16.7501 13.7103 16.7501 12.5902 16.7501 10.35V7.65C16.7501 5.40979 16.7501 4.28969 16.3141 3.43404C15.9307 2.68139 15.3187 2.06947 14.5661 1.68597C13.7104 1.25 12.5903 1.25 10.3501 1.25H7.65012Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export const LinkIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M12.2893 18.7484L11.5786 19.4816C9.61616 21.5061 6.43435 21.5061 4.47186 19.4816C2.50938 17.457 2.50938 14.1745 4.47186 12.1499L6.16656 10.4016C7.97808 8.53279 10.9151 8.53279 12.7267 10.4016L13 10.6836M11.7107 5.25159L12.4214 4.51843C14.3838 2.49386 17.5657 2.49386 19.5281 4.51843C21.4906 6.543 21.4906 9.82549 19.5281 11.8501L17.8334 13.5984C16.0219 15.4672 13.0849 15.4672 11.2733 13.5984L11 13.3164"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+export const MessageCircleIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        opacity="0.32"
+        d="M2.24087 16.5125C2.60252 17.2931 3.03665 18.1104 2.78372 18.9906C2.60548 19.6108 2.216 20.1186 2.16118 20.7861C2.06787 21.9222 3.06842 22.8429 4.1929 22.6555C5.24137 22.4808 6.24918 21.4847 7.35382 21.7445C7.46428 21.7705 7.83036 21.8998 8.72366 22.2194C9.72211 22.5765 10.786 22.75 12 22.75C17.9371 22.75 22.75 17.9371 22.75 12C22.75 6.06294 17.9371 1.25 12 1.25C6.06294 1.25 1.25 6.06294 1.25 12C1.25 13.6102 1.60482 15.1395 2.24087 16.5125Z"
+        fill="currentColor"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7.25 10C7.25 9.58579 7.58579 9.25 8 9.25H16C16.4142 9.25 16.75 9.58579 16.75 10C16.75 10.4142 16.4142 10.75 16 10.75H8C7.58579 10.75 7.25 10.4142 7.25 10ZM7.25 14C7.25 13.5858 7.58579 13.25 8 13.25H12C12.4142 13.25 12.75 13.5858 12.75 14C12.75 14.4142 12.4142 14.75 12 14.75H8C7.58579 14.75 7.25 14.4142 7.25 14Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export const MoreHorizontalIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M4.5 9.5C3.125 9.5 2 10.625 2 12C2 13.375 3.125 14.5 4.5 14.5C5.875 14.5 7 13.375 7 12C7 10.625 5.875 9.5 4.5 9.5Z"
+        fill="currentColor"
+      />
+      <path
+        d="M19.5 9.5C18.125 9.5 17 10.625 17 12C17 13.375 18.125 14.5 19.5 14.5C20.875 14.5 22 13.375 22 12C22 10.625 20.875 9.5 19.5 9.5Z"
+        fill="currentColor"
+      />
+      <path
+        d="M9.5 12C9.5 10.625 10.625 9.5 12 9.5C13.375 9.5 14.5 10.625 14.5 12C14.5 13.375 13.375 14.5 12 14.5C10.625 14.5 9.5 13.375 9.5 12Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export const CheckIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M4 13L9 18L20 6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+export const ArrowUpCircleIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        opacity="0.32"
+        d="M12 1.25C6.06294 1.25 1.25 6.06294 1.25 12C1.25 17.9371 6.06294 22.75 12 22.75C17.9371 22.75 22.75 17.9371 22.75 12C22.75 6.06294 17.9371 1.25 12 1.25Z"
+        fill="currentColor"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 7.25C12.1989 7.25 12.3897 7.32902 12.5303 7.46967L15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303C15.2374 11.8232 14.7626 11.8232 14.4697 11.5303L12.75 9.81066L12.75 16C12.75 16.4142 12.4142 16.75 12 16.75C11.5858 16.75 11.25 16.4142 11.25 16L11.25 9.81066L9.53033 11.5303C9.23744 11.8232 8.76256 11.8232 8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697L11.4697 7.46967C11.6103 7.32902 11.8011 7.25 12 7.25Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export const ArrowUpIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M12 21L12 3M12 3L19 10M12 3L5 10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
