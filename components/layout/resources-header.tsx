@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import { PlusIcon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import { SearchForm } from './search-form'
+import { Button } from '../ui/button'
 
-export default function CooperHeader() {
+export default function ResourcesHeader() {
   const pathname = usePathname()
 
   const getBreadcrumbItems = () => {
@@ -73,7 +74,10 @@ export default function CooperHeader() {
         <BreadcrumbList>{getBreadcrumbItems()}</BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex gap-2">
-        <SearchForm />
+        <Button variant="outline">
+          <PlusIcon className="size-4" />
+          Add Resource
+        </Button>
       </div>
     </header>
   )

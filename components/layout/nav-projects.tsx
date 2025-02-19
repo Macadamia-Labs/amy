@@ -1,23 +1,22 @@
-"use client";
+'use client'
 
 import {
-  BoxIcon,
   ChevronDown,
   ChevronUp,
   Folder,
   Forward,
   MoreHorizontal,
-  Trash2,
-} from "lucide-react";
-import { useState } from "react";
+  Trash2
+} from 'lucide-react'
+import { useState } from 'react'
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -25,49 +24,100 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { useRouter } from "next/navigation";
-import { Project } from "@/lib/types/database";
-import { App } from "@/lib/types/apps";
+  useSidebar
+} from '@/components/ui/sidebar'
+import { Project } from '@/lib/types/database'
+import { useRouter } from 'next/navigation'
+
+// Example hardcoded projects for development
+const exampleProjects: (Project & { color: string })[] = [
+  {
+    id: '1',
+    name: 'Wind Turbine Analysis',
+    description: 'CFD simulation of wind turbine performance',
+    user_id: 'user1',
+    app: 'simulation',
+    created_at: new Date(2024, 2, 15).toISOString(),
+    updated_at: new Date(2024, 2, 15).toISOString(),
+    simulations: [],
+    color: 'bg-emerald-500'
+  },
+  {
+    id: '2',
+    name: 'Solar Panel Optimization',
+    description: 'Thermal analysis of solar panel configurations',
+    user_id: 'user1',
+    app: 'simulation',
+    created_at: new Date(2024, 2, 10).toISOString(),
+    updated_at: new Date(2024, 2, 10).toISOString(),
+    simulations: [],
+    color: 'bg-amber-500'
+  },
+  {
+    id: '3',
+    name: 'Battery Cooling System',
+    description: 'Heat transfer simulation for EV batteries',
+    user_id: 'user1',
+    app: 'simulation',
+    created_at: new Date(2024, 2, 5).toISOString(),
+    updated_at: new Date(2024, 2, 5).toISOString(),
+    simulations: [],
+    color: 'bg-blue-500'
+  },
+  {
+    id: '4',
+    name: 'Bridge Structure Analysis',
+    description: 'Structural simulation of bridge design',
+    user_id: 'user1',
+    app: 'simulation',
+    created_at: new Date(2024, 2, 1).toISOString(),
+    updated_at: new Date(2024, 2, 1).toISOString(),
+    simulations: [],
+    color: 'bg-purple-500'
+  }
+]
 
 export function NavProjects({
-  app,
-  projects,
+  projects: providedProjects = [],
+  defaultColor = 'bg-blue-500'
 }: {
-  app: App;
-  projects: Project[];
+  projects?: (Project & { color?: string })[]
+  defaultColor?: string
 }) {
-  const { isMobile } = useSidebar();
-  const router = useRouter();
-  const [showAll, setShowAll] = useState(false);
+  const { isMobile } = useSidebar()
+  const router = useRouter()
+  const [showAll, setShowAll] = useState(false)
 
-  if (projects.length === 0) {
-    return null;
-  }
+  // Use example projects if no projects are provided
+  const projects =
+    providedProjects.length > 0 ? providedProjects : exampleProjects
 
   // Sort projects by creation time (most recent first) and get the display list
   const sortedProjects = [...projects].sort((a, b) => {
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-  });
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  })
 
-  const displayProjects = showAll ? sortedProjects : sortedProjects.slice(0, 3);
+  const displayProjects = showAll ? sortedProjects : sortedProjects.slice(0, 3)
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarMenu>
-        {displayProjects.map((item) => (
+        {displayProjects.map(item => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={e => {
+                e.preventDefault()
                 if (item.id) {
-                  router.push(`/${app}/projects/${item.id}`);
+                  router.push(`/projects/${item.id}`)
                 }
               }}
             >
-              <BoxIcon />
+              <div
+                className={`size-2 rounded-full opacity-80 ${
+                  item.color || defaultColor
+                }`}
+              />
               <span>{item.name}</span>
             </SidebarMenuButton>
             <DropdownMenu>
@@ -79,8 +129,8 @@ export function NavProjects({
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-48 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
+                side={isMobile ? 'bottom' : 'right'}
+                align={isMobile ? 'end' : 'start'}
               >
                 <DropdownMenuItem>
                   <Folder className="text-muted-foreground" />
@@ -121,5 +171,5 @@ export function NavProjects({
         )}
       </SidebarMenu>
     </SidebarGroup>
-  );
+  )
 }

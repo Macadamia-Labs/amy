@@ -1,11 +1,15 @@
 'use client'
 
-import { docs } from '@/app/(app)/docs/content'
+import { docs } from '@/app/(app)/resources/content'
+import { Button } from '@/components/ui/button'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { cn } from '@/lib/utils'
+import { ChevronRight, X } from 'lucide-react'
 
 interface Section {
   level: number
@@ -79,20 +83,19 @@ function parseMarkdownSections(markdown: string): Section[] {
 interface DocsSidebarProps {
   onSectionSelect: (section: Section) => void
   activeSection?: Section | null
+  onClose: () => void
 }
 
 function SectionItem({
   section,
   onSectionSelect,
   activeSection,
-  level = 0,
-  sectionPath = ''
+  level = 0
 }: {
   section: Section
   onSectionSelect: (section: Section) => void
   activeSection?: Section | null
   level?: number
-  sectionPath?: string
 }) {
   const hasChildren = section.children && section.children.length > 0
 
@@ -100,35 +103,38 @@ function SectionItem({
     return (
       <button
         onClick={() => onSectionSelect(section)}
-        className={`block w-full text-left py-1 text-sm ${
-          level === 0 ? 'font-medium' : 'text-muted-foreground'
-        } hover:text-accent-foreground ml-${level * 2} ${
+        className={cn(
+          'block w-full text-left py-1 text-sm hover:text-accent-foreground',
+          level === 0 ? 'font-medium' : 'text-muted-foreground',
           activeSection?.title === section.title
             ? 'text-primary font-medium'
-            : ''
-        }`}
+            : '',
+          `ml-${level * 4}`
+        )}
       >
-        <span className="text-muted-foreground mr-2">{sectionPath}</span>
         <span className="truncate w-full text-left">{section.title}</span>
       </button>
     )
   }
 
   return (
-    <Collapsible defaultOpen={true} className="group/collapsible">
+    <Collapsible defaultOpen={false} className="group/collapsible">
       <div className="flex items-center py-1">
-        <CollapsibleTrigger
-          onClick={() => onSectionSelect(section)}
-          className={`flex items-center gap-2 text-sm hover:text-accent-foreground ml-${
-            level * 2
-          } ${
-            activeSection?.title === section.title
-              ? 'text-primary font-medium'
-              : ''
-          }`}
-        >
-          <span className="text-muted-foreground mr-1">{sectionPath}</span>
-          <span className="truncate w-full text-left">{section.title}</span>
+        <CollapsibleTrigger className="flex items-center gap-2 text-sm hover:text-accent-foreground w-full">
+          <div className={`ml-${level * 4} flex items-center gap-2`}>
+            <ChevronRight className="h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            <span
+              onClick={() => onSectionSelect(section)}
+              className={cn(
+                'truncate w-full text-left',
+                activeSection?.title === section.title
+                  ? 'text-primary font-medium'
+                  : ''
+              )}
+            >
+              {section.title}
+            </span>
+          </div>
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent>
@@ -140,9 +146,6 @@ function SectionItem({
               onSectionSelect={onSectionSelect}
               activeSection={activeSection}
               level={level + 1}
-              sectionPath={
-                sectionPath ? `${sectionPath}.${index + 1}` : `${index + 1}`
-              }
             />
           ))}
         </div>
@@ -153,28 +156,38 @@ function SectionItem({
 
 export function DocsSidebar({
   onSectionSelect,
-  activeSection
+  activeSection,
+  onClose
 }: DocsSidebarProps) {
   const sections = parseMarkdownSections(docs['asme'])
   const hierarchy = buildHierarchy(sections)
 
   return (
-    <div className="w-96 h-full border rounded-lg bg-sidebar">
+    <div className="h-full">
       <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between p-4">
+        <div className="flex items-center justify-between p-4 border-b">
           <span className="text-sm font-medium">Documentation</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-8 w-8"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="flex-1 overflow-auto px-2">
-          {hierarchy.map((section, index) => (
-            <SectionItem
-              key={index}
-              section={section}
-              onSectionSelect={onSectionSelect}
-              activeSection={activeSection}
-              sectionPath={`${index + 1}`}
-            />
-          ))}
-        </div>
+        <ScrollArea className="flex-1">
+          <div className="p-4">
+            {hierarchy.map((section, index) => (
+              <SectionItem
+                key={index}
+                section={section}
+                onSectionSelect={onSectionSelect}
+                activeSection={activeSection}
+              />
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </div>
   )

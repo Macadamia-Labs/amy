@@ -10,8 +10,9 @@ import {
 } from '@/components/ui/sidebar'
 import * as React from 'react'
 import { ProjectSwitcher } from './app-switcher'
-import { NavDocs } from './nav-docs'
+import { NavHome } from './nav-home'
 import { NavIssues } from './nav-issues'
+import { NavProjects } from './nav-projects'
 import { NavResources } from './nav-resources'
 
 export function CooperSidebar(props: React.ComponentProps<typeof Sidebar>) {
@@ -21,10 +22,12 @@ export function CooperSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <ProjectSwitcher />
       </SidebarHeader>
       <SidebarContent>
+        <NavProjects />
         <SidebarGroup className="space-y-2">
+          <NavHome />
           <NavIssues />
           <NavResources />
-          <NavDocs />
+          {/* <NavDocs /> */}
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>

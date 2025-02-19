@@ -5,7 +5,7 @@ import Link from 'next/link'
 export function NavResources() {
   return (
     <Link href="/resources">
-      <SidebarMenuButton>
+      <SidebarMenuButton tooltip="Resources">
         <BoxIcon className="size-6" />
         Resources
       </SidebarMenuButton>
