@@ -6,7 +6,7 @@ import {
   deleteChat as deleteChatFromDb,
   getChats,
   updateChatTitle
-} from '@/lib/queries'
+} from '@/lib/queries/client'
 import { Chat } from '@/lib/types/database'
 import {
   createContext,

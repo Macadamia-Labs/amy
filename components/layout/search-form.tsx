@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowBigRightDash, Search } from 'lucide-react'
+import { ArrowBigRightDash } from 'lucide-react'
 import * as React from 'react'
 
 import {
@@ -15,6 +15,7 @@ import { DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import ShortCut from '@/components/ui/shortcut'
 import { SidebarMenuButton } from '@/components/ui/sidebar'
+import { SearchIcon } from '@/lib/utils/icons'
 
 const CHAT_TEMPLATES = [
   {
@@ -48,7 +49,7 @@ export function SearchForm({
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if (e.key === '/') {
         e.preventDefault()
         toggleOpen()
       }
@@ -91,18 +92,19 @@ export function SearchForm({
           Search
         </Label>
         <SidebarMenuButton
-          variant="outline"
           role="combobox"
           aria-expanded={open}
           onClick={e => {
             e.preventDefault()
             setOpen(true)
           }}
-          className="relative flex items-center gap-2"
+          className="relative flex items-center"
         >
-          <Search className="size-4 flex-shrink-0" />
-          <span className="flex-1">Search the docs...</span>
-          <ShortCut className="hidden md:inline-flex ml-8">⌘K</ShortCut>
+          <SearchIcon className="size-4 flex-shrink-0" />
+          <div className="flex flex-1 items-center">
+            <span className="truncate">Search anything...</span>
+            <ShortCut className="hidden md:inline-flex ml-auto">/</ShortCut>
+          </div>
         </SidebarMenuButton>
       </form>
 

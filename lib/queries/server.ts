@@ -1,0 +1,116 @@
+import { Chat, FileRecord, Project, ResourceRecord } from '@/lib/types/database'
+import { createClient } from '../supabase/server'
+
+// Project queries
+export async function getProjects(app: string): Promise<Project[]> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser()
+
+  if (userError || !user) {
+    console.error('You must be logged in to view projects')
+    return []
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('app', app)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return data as Project[]
+  } catch (error) {
+    console.error('Error fetching projects:', error)
+    return []
+  }
+}
+
+// File queries used in client components
+export async function getFiles(): Promise<FileRecord[]> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser()
+
+  if (userError || !user) {
+    console.error('You must be logged in to view files')
+    return []
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('files')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return data as FileRecord[]
+  } catch (error) {
+    console.error('Error fetching files:', error)
+    return []
+  }
+}
+
+// Resource queries used in client components
+export async function getResources(): Promise<ResourceRecord[]> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser()
+
+  if (userError || !user) {
+    console.error('You must be logged in to view resources')
+    return []
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('resources')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return data as ResourceRecord[]
+  } catch (error) {
+    console.error('Error fetching resources:', error)
+    return []
+  }
+}
+
+export async function getRecentChats(limit: number): Promise<Chat[]> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser()
+
+  if (userError || !user) {
+    console.error('You must be logged in to view chats')
+    return []
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('chats')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('app', 'amy')
+      .order('last_message_at', { ascending: false })
+      .limit(limit)
+
+    if (error) throw error
+    return data as Chat[]
+  } catch (error) {
+    console.error('Error fetching recent chats:', error)
+    return []
+  }
+}

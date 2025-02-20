@@ -5,6 +5,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarRail
 } from '@/components/ui/sidebar'
@@ -12,18 +13,25 @@ import * as React from 'react'
 import { ProjectSwitcher } from './app-switcher'
 import { NavHome } from './nav-home'
 import { NavIssues } from './nav-issues'
-import { NavProjects } from './nav-projects'
 import { NavResources } from './nav-resources'
+import { SearchForm } from './search-form'
 
-export function CooperSidebar(props: React.ComponentProps<typeof Sidebar>) {
+export default function CooperSidebar(
+  props: React.ComponentProps<typeof Sidebar>
+) {
   return (
     <Sidebar collapsible="icon" variant="floating" {...props}>
       <SidebarHeader>
         <ProjectSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects />
+        {/* <NavProjects /> */}
+        <SidebarGroup>
+          <SearchForm />
+        </SidebarGroup>
+
         <SidebarGroup className="space-y-2">
+          <SidebarGroupLabel>Project</SidebarGroupLabel>
           <NavHome />
           <NavIssues />
           <NavResources />

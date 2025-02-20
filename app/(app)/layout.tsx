@@ -1,4 +1,4 @@
-import { CooperSidebar } from '@/components/layout/cooper-sidebar'
+import CooperSidebar from '@/components/layout/cooper-sidebar'
 import Header from '@/components/layout/header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 

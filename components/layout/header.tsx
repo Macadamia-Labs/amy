@@ -7,13 +7,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import { Plus } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import { SearchForm } from './search-form'
 
-export default function CooperHeader() {
+export default function Header() {
   const pathname = usePathname()
+  const isResourcesPage = pathname.startsWith('/resources')
 
   const getBreadcrumbItems = () => {
     const pathParts = pathname.split('/').filter(part => part)
@@ -73,7 +75,12 @@ export default function CooperHeader() {
         <BreadcrumbList>{getBreadcrumbItems()}</BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex gap-2">
-        <SearchForm />
+        {isResourcesPage ? (
+          <Button size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Resource
+          </Button>
+        ) : null}
       </div>
     </header>
   )

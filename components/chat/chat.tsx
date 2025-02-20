@@ -3,7 +3,6 @@
 import { ChatList } from '@/components/chat/chat-list'
 import { ChatScrollAnchor } from '@/components/chat/chat-scroll-anchor'
 import { cn } from '@/lib/utils'
-import { EnhancedAttachment } from '@/types/attachment-types'
 import { ChatRequestOptions, Message } from 'ai'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { MultimodalInput } from './input/multimodal-input'
@@ -71,11 +70,9 @@ export function Chat({
     id: msg.id || Date.now().toString()
   })) as Message[]
 
-  const [attachments, setAttachments] = useState<EnhancedAttachment[]>([])
+  const [attachments, setAttachments] = useState<any[]>([])
   const [uploadQueue, setUploadQueue] = useState<UploadQueueItem[]>([])
   const [showMessagesDialog, setShowMessagesDialog] = useState(false)
-  const [showToolInvocationsDialog, setShowToolInvocationsDialog] =
-    useState(false)
 
   return (
     <div className="flex flex-col h-full max-h-screen p-2">

@@ -1,6 +1,6 @@
 import { TooltipProvider } from '@/components/ui/tooltip'
 import AuthProvider from '@/lib/providers/auth-provider'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 
 import { cn } from '@/lib/utils/helpers'
 import '@/styles/globals.css'
