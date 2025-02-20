@@ -20,13 +20,17 @@ import { categoryIcons } from '@/lib/constants/resources'
 import { deleteResource, shareResource } from '@/lib/queries/client'
 import { MoreHorizontal, Share, Trash2 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { SearchResources } from './search-resources'
 
 export function ResourcesTable() {
   const { resources, removeResource } = useResources()
   const [filteredResources, setFilteredResources] = useState(resources)
+
+  useEffect(() => {
+    setFilteredResources(resources)
+  }, [resources])
 
   const handleShare = async (id: string) => {
     try {
@@ -100,7 +104,7 @@ export function ResourcesTable() {
                   </TableCell>
                   <TableCell>
                     <Link href={`/resources/${resource.id}`} className="block">
-                      {new Date(resource.updated_at).toLocaleDateString()}
+                      {new Date(resource.created_at).toLocaleDateString()}
                     </Link>
                   </TableCell>
                   <TableCell>
