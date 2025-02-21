@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
 
-interface Section {
+export interface Section {
   level: number
   title: string
   content: string
@@ -14,6 +14,7 @@ interface DocumentContextType {
   activeSection: Section | null
   setActiveSection: (section: Section | null) => void
   setContent: (content: string) => void
+  getCurrentContext: () => { content: string; activeSection: Section | null }
 }
 
 const DocumentContext = createContext<DocumentContextType | undefined>(
@@ -119,6 +120,11 @@ export function DocumentProvider({
     return sections
   }
 
+  const getCurrentContext = () => ({
+    content,
+    activeSection
+  })
+
   const handleSetContent = (newContent: string) => {
     setContent(newContent)
     setSections(parseMarkdownSections(newContent))
@@ -129,7 +135,8 @@ export function DocumentProvider({
     sections,
     activeSection,
     setActiveSection,
-    setContent: handleSetContent
+    setContent: handleSetContent,
+    getCurrentContext
   }
 
   return (

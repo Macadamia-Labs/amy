@@ -111,8 +111,8 @@ export function DocContent({
   }, [activeSection])
 
   return (
-    <div className="h-full overflow-auto p-6">
-      <div className="mx-auto max-w-4xl">
+    <div className="h-full overflow-auto p-6 w-full">
+      <div className="mx-auto max-w-4xl w-fit">
         <div className="prose dark:prose-invert space-y-2">
           {sections.map((section, index) => (
             <div

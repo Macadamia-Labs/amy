@@ -1,4 +1,5 @@
 import { CoreMessage, smoothStream, streamText } from 'ai'
+import { Section } from '../providers/document-provider'
 import { getModel } from '../utils/registry'
 
 const BASE_SYSTEM_PROMPT = `
@@ -39,6 +40,10 @@ interface ManualResearcherConfig {
   messages: CoreMessage[]
   model: string
   isSearchEnabled?: boolean
+  context?: {
+    content: string
+    activeSection: Section | null
+  }
 }
 
 type ManualResearcherReturn = Parameters<typeof streamText>[0]
@@ -46,7 +51,8 @@ type ManualResearcherReturn = Parameters<typeof streamText>[0]
 export function manualResearcher({
   messages,
   model,
-  isSearchEnabled = true
+  isSearchEnabled = true,
+  context
 }: ManualResearcherConfig): ManualResearcherReturn {
   try {
     const currentDate = new Date().toLocaleString()
@@ -54,9 +60,30 @@ export function manualResearcher({
       ? SEARCH_ENABLED_PROMPT
       : SEARCH_DISABLED_PROMPT
 
+    let fullPrompt = `${systemPrompt}\nCurrent date and time: ${currentDate}`
+
+    if (context) {
+      fullPrompt += `\n\nDocument Context:
+1. You have access to a document with the following content:
+${context.content}
+
+2. The user is currently viewing the following section:
+${
+  context.activeSection
+    ? context.activeSection.content
+    : 'No specific section selected'
+}
+
+When answering questions:
+- Consider the document context when relevant to the user's question
+- If the question is about the document, focus on the content from the active section first
+- You can reference other parts of the document if needed
+- If the question is not related to the document, you can ignore the document context`
+    }
+
     return {
       model: getModel(model),
-      system: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
+      system: fullPrompt,
       messages,
       temperature: 0.6,
       topP: 1,

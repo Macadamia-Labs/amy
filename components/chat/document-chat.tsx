@@ -4,8 +4,9 @@ import { Chat } from '@/components/chat/chat'
 import { useToolChat } from '@/hooks/use-tool-chat'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { useChats } from '@/lib/providers/chats-provider'
+import { useDocument } from '@/lib/providers/document-provider'
 import { generateUUID } from '@/lib/utils/helpers'
-import { Message } from 'ai'
+import { ChatRequestOptions, Message } from 'ai'
 import { toast } from 'sonner'
 
 interface DocumentChatProps {
@@ -16,6 +17,7 @@ interface DocumentChatProps {
 export function DocumentChat({ id, initialMessages }: DocumentChatProps) {
   const { createNewChat, chats } = useChats()
   const { user } = useAuth()
+  const { getCurrentContext } = useDocument()
 
   const chat = id ? chats.find(c => c.id === id) : null
   const chatMessages = chat
@@ -33,12 +35,12 @@ export function DocumentChat({ id, initialMessages }: DocumentChatProps) {
     messages,
     setMessages,
     input,
-    append,
+    append: originalAppend,
     isLoading,
     setInput,
     reload,
     stop,
-    handleSubmit,
+    handleSubmit: originalHandleSubmit,
     addToolResult
   } = useToolChat({
     id,
@@ -47,29 +49,55 @@ export function DocumentChat({ id, initialMessages }: DocumentChatProps) {
 
   const isNewChat = !id || messages?.length === 1
 
+  const handleSubmit = async (
+    event?: { preventDefault?: () => void },
+    chatRequestOptions?: ChatRequestOptions
+  ) => {
+    if (event?.preventDefault) {
+      event.preventDefault()
+    }
+    const context = getCurrentContext()
+    return originalHandleSubmit(event, {
+      ...chatRequestOptions,
+      body: {
+        ...chatRequestOptions?.body,
+        context
+      }
+    })
+  }
+
+  const appendWithContext = async (
+    message: Message,
+    chatRequestOptions?: ChatRequestOptions
+  ) => {
+    const context = getCurrentContext()
+    if (isNewChat) {
+      if (!user?.id) {
+        toast.error('User not found')
+        return null
+      }
+      await createNewChat({
+        id,
+        title: 'New Chat',
+        user_id: user?.id
+      })
+    }
+    return originalAppend(message, {
+      ...chatRequestOptions,
+      body: {
+        ...chatRequestOptions?.body,
+        context
+      }
+    })
+  }
+
   return (
     <Chat
       id={id}
       data={data}
       messages={messages}
       setMessages={setMessages}
-      append={async (value: Message) => {
-        console.log('appending', value)
-        if (isNewChat) {
-          if (!user?.id) {
-            toast.error('User not found')
-            return null
-          }
-          await createNewChat({
-            id,
-            title: 'New Chat',
-            user_id: user?.id
-          })
-          return append(value as Message)
-        } else {
-          return append(value as Message)
-        }
-      }}
+      append={appendWithContext}
       addToolResult={addToolResult}
       isLoading={isLoading}
       input={input}

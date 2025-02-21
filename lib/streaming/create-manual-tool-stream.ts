@@ -15,7 +15,7 @@ import { BaseStreamConfig } from './types'
 export function createManualToolStreamResponse(config: BaseStreamConfig) {
   return createDataStreamResponse({
     execute: async (dataStream: DataStreamWriter) => {
-      const { messages, model, chatId, searchMode } = config
+      const { messages, model, chatId, searchMode, context } = config
       try {
         const coreMessages = convertToCoreMessages(messages)
         const truncatedMessages = truncateMessages(
@@ -34,7 +34,8 @@ export function createManualToolStreamResponse(config: BaseStreamConfig) {
         const researcherConfig = manualResearcher({
           messages: [...truncatedMessages, ...toolCallMessages],
           model,
-          isSearchEnabled: searchMode
+          isSearchEnabled: searchMode,
+          context
         })
 
         // Variables to track the reasoning timing.

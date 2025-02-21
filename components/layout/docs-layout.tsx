@@ -1,7 +1,6 @@
 import { DocContent } from '@/app/(app)/resources/[id]/doc-content'
 import { DocumentChat } from '@/components/chat/document-chat'
 import { DocsSidebar } from '@/components/layout/docs-sidebar'
-import { Button } from '@/components/ui/button'
 import {
   ResizableHandle,
   ResizablePanel,
@@ -11,6 +10,7 @@ import { useDocument } from '@/lib/providers/document-provider'
 import { TextOutlineIcon } from '@/lib/utils/icons'
 import { nanoid } from 'nanoid'
 import { useRef, useState } from 'react'
+import { Button } from '../ui/button'
 
 export function DocsLayout() {
   const { sections, activeSection, setActiveSection } = useDocument()
@@ -19,17 +19,6 @@ export function DocsLayout() {
 
   return (
     <div className="relative h-full">
-      {isCollapsed && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsCollapsed(false)}
-          className="absolute top-2 left-2 z-50 h-8 w-8 bg-background hover:bg-accent"
-        >
-          <TextOutlineIcon className="size-5" />
-        </Button>
-      )}
-
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {!isCollapsed && (
           <>
@@ -44,6 +33,18 @@ export function DocsLayout() {
           </>
         )}
         <ResizablePanel defaultSize={isCollapsed ? 65 : 45} minSize={30}>
+          <div className="h-12 w-full border-b">
+            {isCollapsed && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsCollapsed(false)}
+                className="absolute top-2 left-2 z-50 h-8 w-8 bg-background hover:bg-accent"
+              >
+                <TextOutlineIcon className="size-5" />
+              </Button>
+            )}
+          </div>
           <div className="flex-1 h-full overflow-auto">
             <DocContent sections={sections} activeSection={activeSection} />
           </div>

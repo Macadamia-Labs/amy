@@ -1,4 +1,5 @@
 import { CoreMessage, smoothStream, streamText } from 'ai'
+import { Section } from '../providers/document-provider'
 import { retrieveTool } from '../tools/retrieve'
 import { searchTool } from '../tools/search'
 import { videoSearchTool } from '../tools/video-search'
@@ -25,21 +26,48 @@ Citation Format:
 
 type ResearcherReturn = Parameters<typeof streamText>[0]
 
-export function researcher({
-  messages,
-  model,
-  searchMode
-}: {
+interface ResearcherConfig {
   messages: CoreMessage[]
   model: string
   searchMode: boolean
-}): ResearcherReturn {
+  context?: {
+    content: string
+    activeSection: Section | null
+  }
+}
+
+export function researcher({
+  messages,
+  model,
+  searchMode,
+  context
+}: ResearcherConfig): ResearcherReturn {
   try {
     const currentDate = new Date().toLocaleString()
+    let fullPrompt = `${SYSTEM_PROMPT}\nCurrent date and time: ${currentDate}`
+
+    if (context) {
+      fullPrompt += `\n\nDocument Context:
+1. You have access to a document with the following content:
+${context.content}
+
+2. The user is currently viewing the following section:
+${
+  context.activeSection
+    ? context.activeSection.content
+    : 'No specific section selected'
+}
+
+When answering questions:
+- Consider the document context when relevant to the user's question
+- If the question is about the document, focus on the content from the active section first
+- You can reference other parts of the document if needed
+- If the question is not related to the document, you can ignore the document context`
+    }
 
     return {
       model: getModel(model),
-      system: `${SYSTEM_PROMPT}\nCurrent date and time: ${currentDate}`,
+      system: fullPrompt,
       messages,
       tools: {
         search: searchTool,

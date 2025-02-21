@@ -13,7 +13,7 @@ import { BaseStreamConfig } from './types'
 export function createToolCallingStreamResponse(config: BaseStreamConfig) {
   return createDataStreamResponse({
     execute: async (dataStream: DataStreamWriter) => {
-      const { messages, model, chatId, searchMode } = config
+      const { messages, model, chatId, searchMode, context } = config
 
       try {
         const coreMessages = convertToCoreMessages(messages)
@@ -25,7 +25,8 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
         let researcherConfig = await researcher({
           messages: truncatedMessages,
           model,
-          searchMode
+          searchMode,
+          context
         })
 
         const result = streamText({
