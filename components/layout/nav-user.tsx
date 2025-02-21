@@ -1,16 +1,15 @@
 'use client'
 
+import { Check, ChevronsUpDown } from 'lucide-react'
+
 import {
-  BadgeCheck,
-  Bell,
-  Check,
-  ChevronsUpDown,
-  Laptop,
-  LogOut,
-  Moon,
-  Sun,
+  BellIcon,
+  LaptopIcon,
+  LogOutIcon,
+  MoonIcon,
+  SunIcon,
   UserIcon
-} from 'lucide-react'
+} from '@/lib/utils/icons'
 
 import { GoogleLoginButton } from '@/app/login/google-login-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -74,7 +73,7 @@ export function NavUser() {
                   alt={user?.user_metadata.name}
                 />
                 <AvatarFallback className="rounded-lg">
-                  <UserIcon className="h-4 w-4" />
+                  <UserIcon className="size-4" />
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -100,7 +99,7 @@ export function NavUser() {
                     alt={user?.user_metadata.name}
                   />
                   <AvatarFallback className="rounded-lg">
-                    <UserIcon className="h-4 w-4" />
+                    <UserIcon className="size-4" />
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -114,33 +113,39 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck className="size-4 mr-2" />
+                <UserIcon className="size-4 mr-2" />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Bell className="size-4 mr-2" />
+                <BellIcon className="size-4 mr-2" />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => setTheme('light')}>
-                <Sun
-                  className={`mr-2 ${theme === 'light' ? 'text-primary' : ''}`}
+                <SunIcon
+                  className={`size-4 mr-2 ${
+                    theme === 'light' ? 'text-primary' : ''
+                  }`}
                 />
                 Light
                 {theme === 'light' && <Check className="ml-auto size-4" />}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setTheme('dark')}>
-                <Moon
-                  className={`mr-2 ${theme === 'dark' ? 'text-primary' : ''}`}
+                <MoonIcon
+                  className={`size-4 mr-2 ${
+                    theme === 'dark' ? 'text-primary' : ''
+                  }`}
                 />
                 Dark
                 {theme === 'dark' && <Check className="ml-auto size-4" />}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setTheme('system')}>
-                <Laptop
-                  className={`mr-2 ${theme === 'system' ? 'text-primary' : ''}`}
+                <LaptopIcon
+                  className={`size-4 mr-2 ${
+                    theme === 'system' ? 'text-primary' : ''
+                  }`}
                 />
                 System
                 {theme === 'system' && <Check className="ml-auto size-4" />}
@@ -148,7 +153,7 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOut}>
-              <LogOut className="mr-2" />
+              <LogOutIcon className="mr-2 size-4" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
