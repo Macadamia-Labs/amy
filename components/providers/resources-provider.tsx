@@ -20,6 +20,8 @@ interface Resource {
   processed?: boolean
   processing_result?: any
   processing_completed_at?: string
+  processing_status?: 'pending' | 'completed' | 'error'
+  processing_error?: string
 }
 
 interface ResourcesContextType {
@@ -67,14 +69,27 @@ export function ResourcesProvider({
         },
         payload => {
           const updatedResource = payload.new as Resource
-          if (updatedResource.processed) {
-            // Update the resource in state
-            setResources(prev =>
-              prev.map(resource =>
-                resource.id === updatedResource.id ? updatedResource : resource
-              )
+
+          // Update the resource in state
+          setResources(prev =>
+            prev.map(resource =>
+              resource.id === updatedResource.id ? updatedResource : resource
             )
-            // Clear processing state
+          )
+
+          // Update upload status based on processing_status
+          if (updatedResource.processing_status === 'completed') {
+            setUploadStatusMap(prev =>
+              new Map(prev).set(updatedResource.id, 'success')
+            )
+          } else if (updatedResource.processing_status === 'error') {
+            setUploadStatusMap(prev =>
+              new Map(prev).set(updatedResource.id, 'error')
+            )
+          }
+
+          // Clear processing state if done
+          if (updatedResource.processing_status !== 'pending') {
             clearProcessingResource(updatedResource.id)
           }
         }

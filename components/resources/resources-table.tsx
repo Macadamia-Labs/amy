@@ -118,7 +118,14 @@ export function ResourcesTable() {
                       className="flex items-center gap-2"
                     >
                       {StatusIcon && (
-                        <StatusIcon className={`h-4 w-4 ${statusColor}`} />
+                        <div className="relative group">
+                          <StatusIcon className={`h-4 w-4 ${statusColor}`} />
+                          {resource.processing_error && (
+                            <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
+                              {resource.processing_error}
+                            </div>
+                          )}
+                        </div>
                       )}
                       {resource.title}
                     </Link>

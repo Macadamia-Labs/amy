@@ -8,19 +8,20 @@ export const processFile = inngest.createFunction(
   { event: 'file.uploaded' },
   async ({ event }) => {
     const { fileUrl, resourceId } = event.data
+    const supabase = await createClient()
 
     try {
       // Process the file and get the results
       const result = await processFileFromUrl(fileUrl)
 
       // Update the resource status in the database
-      const supabase = await createClient()
       const { error: updateError } = await supabase
         .from('resources')
         .update({
           processed: true,
           processing_result: result,
-          processing_completed_at: new Date().toISOString()
+          processing_completed_at: new Date().toISOString(),
+          processing_status: 'completed'
         })
         .eq('id', resourceId)
 
@@ -28,17 +29,21 @@ export const processFile = inngest.createFunction(
         throw updateError
       }
 
-      // Return the processing results
-      return {
-        success: true,
-        result
-      }
+      return { success: true, result }
     } catch (error) {
       console.error('Error processing file:', error)
-      return {
-        success: false,
-        error: 'Failed to process file'
-      }
+
+      // Update the resource with error status
+      await supabase
+        .from('resources')
+        .update({
+          processed: false,
+          processing_error: error.message || 'Failed to process file',
+          processing_status: 'error'
+        })
+        .eq('id', resourceId)
+
+      return { success: false, error: 'Failed to process file' }
     }
   }
 )
