@@ -14,6 +14,7 @@ export const processFile = inngest.createFunction(
       // Process the file and get the results
       const result = await processFileFromUrl(fileUrl)
 
+      console.log('Updating database resource status to completed')
       // Update the resource status in the database
       const { error: updateError } = await supabase
         .from('resources')
@@ -21,9 +22,12 @@ export const processFile = inngest.createFunction(
           processed: true,
           processing_result: result,
           processing_completed_at: new Date().toISOString(),
-          processing_status: 'completed'
+          status: 'completed'
         })
         .eq('id', resourceId)
+
+      console.log('Database resource status updated to completed')
+      console.log('Result', result)
 
       if (updateError) {
         throw updateError
@@ -39,7 +43,7 @@ export const processFile = inngest.createFunction(
         .update({
           processed: false,
           processing_error: error.message || 'Failed to process file',
-          processing_status: 'error'
+          status: 'error'
         })
         .eq('id', resourceId)
 

@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       file_path: fileName,
       user_id: user.id,
       created_at: new Date().toISOString(),
-      processing_status: 'pending'
+      status: 'pending'
     }
 
     // Insert resource metadata in DB

@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@/lib/providers/auth-provider'
 import { createClient } from '@/lib/supabase/client'
 import {
   createContext,
@@ -9,7 +10,7 @@ import {
   useState
 } from 'react'
 
-interface Resource {
+export interface Resource {
   id: string
   title: string
   description: string
@@ -20,7 +21,7 @@ interface Resource {
   processed?: boolean
   processing_result?: any
   processing_completed_at?: string
-  processing_status?: 'pending' | 'completed' | 'error'
+  status?: 'pending' | 'completed' | 'error'
   processing_error?: string
 }
 
@@ -46,6 +47,7 @@ export function ResourcesProvider({
   children: ReactNode
   initialResources: Resource[]
 }) {
+  const { user } = useAuth()
   const [resources, setResources] = useState<Resource[]>(initialResources)
   const [processingResources, setProcessingResources] = useState<Set<string>>(
     new Set()
@@ -65,10 +67,13 @@ export function ResourcesProvider({
         {
           event: 'UPDATE',
           schema: 'public',
-          table: 'resources'
+          table: 'resources',
+          filter: `user_id=eq.${user?.id}`
         },
         payload => {
           const updatedResource = payload.new as Resource
+
+          console.log('updatedResource', updatedResource)
 
           // Update the resource in state
           setResources(prev =>
@@ -77,19 +82,19 @@ export function ResourcesProvider({
             )
           )
 
-          // Update upload status based on processing_status
-          if (updatedResource.processing_status === 'completed') {
+          // Update upload status based on status
+          if (updatedResource.status === 'completed') {
             setUploadStatusMap(prev =>
               new Map(prev).set(updatedResource.id, 'success')
             )
-          } else if (updatedResource.processing_status === 'error') {
+          } else if (updatedResource.status === 'error') {
             setUploadStatusMap(prev =>
               new Map(prev).set(updatedResource.id, 'error')
             )
           }
 
           // Clear processing state if done
-          if (updatedResource.processing_status !== 'pending') {
+          if (updatedResource.status !== 'pending') {
             clearProcessingResource(updatedResource.id)
           }
         }

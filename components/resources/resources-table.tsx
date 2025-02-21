@@ -1,6 +1,9 @@
 'use client'
 
-import { useResources } from '@/components/providers/resources-provider'
+import {
+  Resource,
+  useResources
+} from '@/components/providers/resources-provider'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -18,27 +21,39 @@ import {
 } from '@/components/ui/table'
 import { categoryIcons } from '@/lib/constants/resources'
 import { deleteResource, shareResource } from '@/lib/queries/client'
-import {
-  CheckCircle2,
-  Loader2,
-  MoreHorizontal,
-  Share,
-  Trash2,
-  XCircle
-} from 'lucide-react'
+import { CheckCircleIcon, XCircleIcon } from '@/lib/utils/icons'
+import { Loader2, MoreHorizontal, Share, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { SearchResources } from './search-resources'
 
 export function ResourcesTable() {
-  const { resources, removeResource, processingResources, uploadStatus } =
-    useResources()
+  const { resources, removeResource, processingResources } = useResources()
   const [filteredResources, setFilteredResources] = useState(resources)
 
   useEffect(() => {
     setFilteredResources(resources)
   }, [resources])
+
+  const getStatusIcon = (resource: Resource) => {
+    const IconComponent =
+      categoryIcons[resource.category as keyof typeof categoryIcons]
+
+    if (resource.status === 'pending' || processingResources.has(resource.id)) {
+      return <Loader2 className="size-6 text-blue-500 animate-spin" />
+    } else if (resource.status === 'error') {
+      return <XCircleIcon className="size-6 text-red-500" />
+    } else if (resource.status === 'completed') {
+      return <CheckCircleIcon className="size-6 text-green-500" />
+    } else if (IconComponent) {
+      return <IconComponent className="size-6 text-muted-foreground" />
+    }
+
+    return (
+      <div className="size-5 border-2 border-dashed border-muted-foreground rounded-full" />
+    )
+  }
 
   const handleShare = async (id: string) => {
     try {
@@ -85,48 +100,21 @@ export function ResourcesTable() {
           </TableHeader>
           <TableBody>
             {filteredResources.map(resource => {
-              const IconComponent =
-                categoryIcons[resource.category as keyof typeof categoryIcons]
-              const status = uploadStatus.get(resource.id)
-
-              let StatusIcon:
-                | typeof IconComponent
-                | typeof Loader2
-                | typeof XCircle
-                | typeof CheckCircle2 = IconComponent
-              let statusColor = 'text-muted-foreground'
-
-              if (
-                status === 'loading' ||
-                processingResources.has(resource.id)
-              ) {
-                StatusIcon = Loader2
-                statusColor = 'text-blue-500 animate-spin'
-              } else if (status === 'error') {
-                StatusIcon = XCircle
-                statusColor = 'text-red-500'
-              } else if (status === 'success') {
-                StatusIcon = CheckCircle2
-                statusColor = 'text-green-500'
-              }
-
               return (
                 <TableRow key={resource.id} className="hover:bg-muted/50">
                   <TableCell className="font-medium">
                     <Link
                       href={`/resources/${resource.id}`}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-3"
                     >
-                      {StatusIcon && (
-                        <div className="relative group">
-                          <StatusIcon className={`h-4 w-4 ${statusColor}`} />
-                          {resource.processing_error && (
-                            <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
-                              {resource.processing_error}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                      <div className="relative group">
+                        {getStatusIcon(resource)}
+                        {resource.processing_error && (
+                          <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
+                            {resource.processing_error}
+                          </div>
+                        )}
+                      </div>
                       {resource.title}
                     </Link>
                   </TableCell>

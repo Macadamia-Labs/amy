@@ -8,7 +8,11 @@ export async function processFileFromUrl(
   fileUrl: string
 ): Promise<ProcessedResult> {
   // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, 3000))
+  console.log('Processing file from URL:', fileUrl)
+  await new Promise(resolve => setTimeout(resolve, 9000))
+  console.log('File processed')
+
+  throw new Error('Failed to process file')
 
   // Return mock data
   return {
