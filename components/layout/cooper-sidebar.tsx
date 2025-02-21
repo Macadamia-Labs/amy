@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/sidebar'
 import * as React from 'react'
 import { ProjectSwitcher } from './app-switcher'
+import { NavActivity } from './nav-activity'
 import { NavHome } from './nav-home'
 import { NavIssues } from './nav-issues'
 import { NavResources } from './nav-resources'
@@ -35,6 +36,7 @@ export default function CooperSidebar(
           <NavHome />
           <NavIssues />
           <NavResources />
+          <NavActivity />
           {/* <NavDocs /> */}
         </SidebarGroup>
       </SidebarContent>

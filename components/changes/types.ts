@@ -12,13 +12,15 @@ export interface Change {
     name: string
     avatar?: string
   }
+  authorizedBy?: string
   action: string
-  target: string
+  target?: string
   targetLink?: string
   status?: ChangeStatus
   timestamp: string
   description?: string
   icon?: string
+  subChanges?: Change[]
 }
 
 export type ChangeAction =
@@ -26,3 +28,6 @@ export type ChangeAction =
   | 'changed contents of'
   | 'propagated changes from'
   | 'changed status'
+  | 'changed value'
+  | 'added new version of'
+  | 'on behalf of'
