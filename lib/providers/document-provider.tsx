@@ -46,9 +46,42 @@ export function DocumentProvider({
   function parseMarkdownSections(markdown: string): Section[] {
     const lines = markdown.split('\n')
     const sections: Section[] = []
-    let currentSection: Section | null = null
+    let currentSection: Section | null = {
+      level: 1,
+      title: 'Content',
+      content: '',
+      start: 0,
+      end: 0
+    }
 
     lines.forEach((line, index) => {
+      // Handle images as sections
+      if (line.trim().match(/^!\[.*?\]\(.*?\)/)) {
+        if (currentSection) {
+          currentSection.end = index - 1
+          if (currentSection.content.trim()) {
+            sections.push(currentSection)
+          }
+        }
+
+        currentSection = {
+          level: 2, // Treating images as level 2 sections
+          title: 'Image',
+          content: line + '\n',
+          start: index,
+          end: index
+        }
+        sections.push(currentSection)
+        currentSection = {
+          level: 1,
+          title: 'Content',
+          content: '',
+          start: index + 1,
+          end: index + 1
+        }
+        return
+      }
+
       if (line.startsWith('#')) {
         const level = line.match(/^#+/)?.[0].length || 0
         if (level > 2) {
@@ -60,7 +93,9 @@ export function DocumentProvider({
 
         if (currentSection) {
           currentSection.end = index - 1
-          sections.push(currentSection)
+          if (currentSection.content.trim()) {
+            sections.push(currentSection)
+          }
         }
 
         const title = line.replace(/^#+\s*/, '')
@@ -77,7 +112,7 @@ export function DocumentProvider({
       }
     })
 
-    if (currentSection) {
+    if (currentSection && currentSection.content.trim()) {
       sections.push(currentSection)
     }
 

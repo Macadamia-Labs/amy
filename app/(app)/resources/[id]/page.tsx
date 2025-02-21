@@ -10,6 +10,15 @@ const EXAMPLE = `
 
 ## General Provisions
 
+Image example:
+
+![Image example](https://api.trymacadamia.com/storage/v1/object/public/standards-images//page_102_cropped.svg)
+
+[this text is being lost]
+
+
+## dfadsfasdf
+
 ### Personnel Qualifications
 
 - **(g)** When the referencing Code Section does not specify qualifications or does not reference directly Article 1 of this Section, qualification may simply involve demonstration in routine manufacturing operations to show that the personnel performing the nondestructive examinations are competent to do so in accordance with the Manufacturer's established procedures.
