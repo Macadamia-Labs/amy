@@ -18,14 +18,22 @@ import {
 } from '@/components/ui/table'
 import { categoryIcons } from '@/lib/constants/resources'
 import { deleteResource, shareResource } from '@/lib/queries/client'
-import { MoreHorizontal, Share, Trash2 } from 'lucide-react'
+import {
+  CheckCircle2,
+  Loader2,
+  MoreHorizontal,
+  Share,
+  Trash2,
+  XCircle
+} from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { SearchResources } from './search-resources'
 
 export function ResourcesTable() {
-  const { resources, removeResource } = useResources()
+  const { resources, removeResource, processingResources, uploadStatus } =
+    useResources()
   const [filteredResources, setFilteredResources] = useState(resources)
 
   useEffect(() => {
@@ -79,6 +87,29 @@ export function ResourcesTable() {
             {filteredResources.map(resource => {
               const IconComponent =
                 categoryIcons[resource.category as keyof typeof categoryIcons]
+              const status = uploadStatus.get(resource.id)
+
+              let StatusIcon:
+                | typeof IconComponent
+                | typeof Loader2
+                | typeof XCircle
+                | typeof CheckCircle2 = IconComponent
+              let statusColor = 'text-muted-foreground'
+
+              if (
+                status === 'loading' ||
+                processingResources.has(resource.id)
+              ) {
+                StatusIcon = Loader2
+                statusColor = 'text-blue-500 animate-spin'
+              } else if (status === 'error') {
+                StatusIcon = XCircle
+                statusColor = 'text-red-500'
+              } else if (status === 'success') {
+                StatusIcon = CheckCircle2
+                statusColor = 'text-green-500'
+              }
+
               return (
                 <TableRow key={resource.id} className="hover:bg-muted/50">
                   <TableCell className="font-medium">
@@ -86,8 +117,8 @@ export function ResourcesTable() {
                       href={`/resources/${resource.id}`}
                       className="flex items-center gap-2"
                     >
-                      {IconComponent && (
-                        <IconComponent className="h-4 w-4 text-muted-foreground" />
+                      {StatusIcon && (
+                        <StatusIcon className={`h-4 w-4 ${statusColor}`} />
                       )}
                       {resource.title}
                     </Link>

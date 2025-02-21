@@ -1,4 +1,9 @@
 import {
+  ChangesList,
+  type Change,
+  type ChangeStatus
+} from '@/components/changes'
+import {
   Card,
   CardContent,
   CardDescription,
@@ -11,6 +16,23 @@ import {
   type ResourceItem
 } from '@/lib/constants/resources'
 import Link from 'next/link'
+
+const changes: Change[] = [
+  {
+    id: '1',
+    project: 'Vessel Design',
+    user: {
+      name: 'Abel',
+      avatar: '/avatars/abel.png'
+    },
+    action: 'edited',
+    target: 'Pressure Vessel Design',
+    targetLink: '/specs/pressure-vessel',
+    status: 'PASSING' as ChangeStatus,
+    timestamp: 'Friday at 9:22 PM',
+    description: 'Update pressure vessel design from vendor (#PR5)'
+  }
+]
 
 export default function AppPage() {
   // Sort resources by date (most recent first)
@@ -68,6 +90,7 @@ export default function AppPage() {
             )
           })}
         </div>
+        <ChangesList changes={changes} />
       </div>
     </div>
   )

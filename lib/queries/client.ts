@@ -210,6 +210,32 @@ export async function uploadFile(file: File): Promise<Resource> {
       created_at: fileRecord.created_at
     }
 
+    // Set up realtime subscription for processing status
+    const subscription = supabase
+      .channel('resource-processing')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'resources',
+          filter: `id=eq.${resource.id}`
+        },
+        payload => {
+          if (payload.new.processed) {
+            // Clean up subscription when processing is complete
+            subscription.unsubscribe()
+          }
+        }
+      )
+      .subscribe()
+
+    void fetch('/api/process-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resourceId: resource.id })
+    }).catch(err => console.error('Failed to trigger AI processing:', err))
+
     return resource
   } catch (error) {
     if (error instanceof Error) {

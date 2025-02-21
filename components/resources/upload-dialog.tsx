@@ -2,71 +2,71 @@
 
 import { useResources } from '@/components/providers/resources-provider'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
-import { uploadFile, uploadFolder } from '@/lib/queries/client'
-import { Plus } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { generateUUID } from '@/lib/utils/helpers'
+import * as React from 'react'
 import { toast } from 'sonner'
 
 export function UploadDialog() {
-  const { addResources } = useResources()
-  const [isUploading, setIsUploading] = useState(false)
-  const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
-  const folderInputRef = useRef<HTMLInputElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { addResources, setUploadStatus } = useResources()
+  const [uploading, setUploading] = React.useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null)
 
-  const handleFolderUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-    setIsUploading(true)
+    setUploading(true)
+    // Generate a local ID
+    const localId = generateUUID()
+
+    // Show loading toast
+    toast.loading('Uploading file...')
+
+    // Set initial upload status
+    setUploadStatus(localId, 'loading')
+
+    // Immediately add to context
+    addResources([
+      {
+        id: localId,
+        title: file.name,
+        description: '',
+        category: 'uncategorized',
+        file_path: '',
+        user_id: '',
+        created_at: new Date().toISOString()
+      }
+    ])
+
+    // Prepare the form data
+    const formData = new FormData()
+    formData.append('id', localId)
+    formData.append('file', file)
+
     try {
-      const files = Array.from(e.target.files)
-      const resources = await uploadFolder(files)
-      toast.success('Folder uploaded successfully')
-      addResources(resources)
-    } catch (error) {
-      console.error('Error uploading folder:', error)
-      if (error instanceof Error) {
-        toast.error(`Failed to upload folder: ${error.message}`)
-      } else {
-        toast.error('Failed to upload folder: An unexpected error occurred')
-      }
-    } finally {
-      setIsUploading(false)
-      setUploadDialogOpen(false)
-      if (folderInputRef.current) {
-        folderInputRef.current.value = ''
-      }
-    }
-  }
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return
-
-    setIsUploading(true)
-    try {
-      const file = e.target.files[0]
-      const resource = await uploadFile(file)
-      toast.success('File uploaded successfully')
-      addResources([resource])
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      if (error instanceof Error) {
-        toast.error(`Failed to upload file: ${error.message}`)
+      if (!response.ok) {
+        const msg = await response.text()
+        console.error('Upload failed:', msg)
+        toast.dismiss()
+        toast.error('Upload failed.')
+        setUploadStatus(localId, 'error')
       } else {
-        toast.error('Failed to upload file: An unexpected error occurred')
+        toast.dismiss()
+        toast.success('File upload initiated. Processing in background.')
+        setUploadStatus(localId, 'success')
       }
+    } catch (error) {
+      console.error('Error uploading:', error)
+      toast.dismiss()
+      toast.error('Upload error.')
+      setUploadStatus(localId, 'error')
     } finally {
-      setIsUploading(false)
-      setUploadDialogOpen(false)
+      setUploading(false)
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
@@ -74,58 +74,18 @@ export function UploadDialog() {
   }
 
   return (
-    <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Upload Resources
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Upload Resources</DialogTitle>
-          <DialogDescription>
-            Upload individual files or entire folders to add to your resources.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label>Upload Single File</Label>
-            <div className="grid gap-2">
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                onChange={handleFileUpload}
-                disabled={isUploading}
-              />
-              <p className="text-sm text-muted-foreground">
-                Select a single file to upload
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Upload Folder</Label>
-            <div className="grid gap-2">
-              <input
-                ref={folderInputRef}
-                type="file"
-                // @ts-ignore
-                webkitdirectory=""
-                directory=""
-                multiple
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                onChange={handleFolderUpload}
-                disabled={isUploading}
-              />
-              <p className="text-sm text-muted-foreground">
-                Select a folder to upload all its contents
-              </p>
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <div className="relative">
+      <input
+        ref={fileInputRef}
+        type="file"
+        onChange={handleFileChange}
+        disabled={uploading}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        aria-label="Upload file"
+      />
+      <Button disabled={uploading}>
+        {uploading ? 'Uploading...' : 'Upload'}
+      </Button>
+    </div>
   )
 }
