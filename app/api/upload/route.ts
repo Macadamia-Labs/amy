@@ -74,16 +74,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Get public URL from storage
-    const {
-      data: { publicUrl }
-    } = supabase.storage.from('resources').getPublicUrl(fileName)
+    const { data } = await supabase.storage.from('resources').createSignedUrl(fileName, 60)
+    
+    if (!data) {
+      throw new Error('Failed to create signed URL')
+    }
+
+    const { signedUrl } = data
+    console.log('[UPLOAD] Public URL:', signedUrl)
 
     // Trigger background process
     await inngest.send({
       name: 'file.uploaded',
       data: {
         resourceId,
-        fileUrl: publicUrl
+        fileUrl: signedUrl
       }
     })
 
@@ -92,7 +97,7 @@ export async function POST(request: NextRequest) {
         message: 'File uploaded successfully',
         resource: {
           ...resource,
-          file_path: publicUrl
+          file_path: signedUrl
         }
       },
       { status: 200 }

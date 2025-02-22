@@ -3,11 +3,11 @@
 import { useAuth } from '@/lib/providers/auth-provider'
 import { createClient } from '@/lib/supabase/client'
 import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState
 } from 'react'
 
 export interface Resource {
