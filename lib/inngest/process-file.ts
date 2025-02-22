@@ -19,64 +19,62 @@ export const processFile = inngest.createFunction(
         throw new Error('No file paths returned from processing')
       }
 
-      console.log('Creating/updating resource entries for each page')
+      console.log('Creating resource entry and related pages')
       
-      // Create/update entries for each page
-      for (let i = 0; i < result.filePaths.length; i++) {
-        const filePath = result.filePaths[i]
-        const isFirstPage = i === 0
-        
-        // Get public URL for this page
-        const { data: { publicUrl } } = supabase.storage
+      // Get public URL for the first page to use as preview
+      const { data: { publicUrl } } = supabase.storage
+        .from('resources')
+        .getPublicUrl(result.filePaths[0])
+
+      // Update the main resource entry
+      const { error: updateError } = await supabase
+        .from('resources')
+        .update({
+          file_path: result.filePaths[0], // Store first page as preview
+          processed: true,
+          processing_result: { 
+            publicUrl,
+            totalPages: result.filePaths.length,
+            fileType: 'pdf'
+          },
+          processing_completed_at: new Date().toISOString(),
+          status: 'completed'
+        })
+        .eq('id', resourceId)
+
+      if (updateError) {
+        throw updateError
+      }
+
+      // Create entries in pdf_pages table
+      const pageEntries = result.filePaths.map((filePath, index) => {
+        const { data: { publicUrl: pageUrl } } = supabase.storage
           .from('resources')
           .getPublicUrl(filePath)
 
-        if (isFirstPage) {
-          // Update the existing resource for the first page
-          const { error: updateError } = await supabase
-            .from('resources')
-            .update({
-              file_path: filePath,
-              processed: true,
-              processing_result: { publicUrl, originalId: resourceId, pageNumber: 1, totalPages: result.filePaths.length },
-              processing_completed_at: new Date().toISOString(),
-              status: 'completed'
-            })
-            .eq('id', resourceId)
-
-          if (updateError) {
-            throw updateError
-          }
-        } else {
-          // Create new resources for additional pages with new UUIDs
-          const pageId = generateUUID()
-          const { error: insertError } = await supabase
-            .from('resources')
-            .insert({
-              id: pageId,
-              title: `${title} - Page ${i + 1}`,
-              description: `Page ${i + 1} of ${title}`,
-              category,
-              file_path: filePath,
-              user_id: userId,
-              processed: true,
-              processing_result: { publicUrl, originalId: resourceId, pageNumber: i + 1, totalPages: result.filePaths.length },
-              processing_completed_at: new Date().toISOString(),
-              status: 'completed'
-            })
-
-          if (insertError) {
-            throw insertError
-          }
+        return {
+          id: generateUUID(),
+          resource_id: resourceId,
+          page_number: index + 1,
+          file_path: filePath,
+          public_url: pageUrl
         }
+      })
+
+      const { error: pagesError } = await supabase
+        .from('pdf_pages')
+        .insert(pageEntries)
+
+      if (pagesError) {
+        throw new Error(`Failed to create page entries: ${pagesError.message}`)
       }
 
-      console.log('Successfully created/updated resource entries for all pages')
+      console.log('Successfully created resource and related entries')
       return { success: true, result }
     } catch (error: any) {
       console.error('Error processing file:', error)
 
-      // Update only the original resource with error status
+      // Update the resource with error status
       await supabase
         .from('resources')
         .update({
