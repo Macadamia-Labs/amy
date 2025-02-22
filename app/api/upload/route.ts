@@ -88,7 +88,10 @@ export async function POST(request: NextRequest) {
       name: 'file.uploaded',
       data: {
         resourceId,
-        fileUrl: signedUrl
+        fileUrl: signedUrl,
+        userId: user.id,
+        title,
+        category
       }
     })
 
