@@ -5,7 +5,13 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import Image from 'next/image'
-import { DetailedHTMLProps, FC, ImgHTMLAttributes, memo, useState } from 'react'
+import React, {
+  DetailedHTMLProps,
+  FC,
+  ImgHTMLAttributes,
+  memo,
+  useState
+} from 'react'
 import ReactMarkdown, { Options } from 'react-markdown'
 import { ReactMarkdownProps } from 'react-markdown/lib/complex-types'
 
@@ -15,16 +21,29 @@ type MarkdownImageProps = Omit<
 > &
   ReactMarkdownProps
 
-const MarkdownImage: FC<MarkdownImageProps> = ({ src = '', alt, ...props }) => {
+const MarkdownImage: FC<MarkdownImageProps> = ({
+  src = '',
+  alt,
+  width,
+  height,
+  ...props
+}) => {
   const [showDialog, setShowDialog] = useState(false)
   const [dimensions, setDimensions] = useState<{
     width: number
     height: number
   } | null>(null)
+  const [error, setError] = useState(false)
 
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const img = event.target as HTMLImageElement
     setDimensions({ width: img.naturalWidth, height: img.naturalHeight })
+    setError(false)
+  }
+
+  const handleImageError = () => {
+    setError(true)
+    setDimensions(null)
   }
 
   const getDialogSize = () => {
@@ -48,15 +67,25 @@ const MarkdownImage: FC<MarkdownImageProps> = ({ src = '', alt, ...props }) => {
     }
   }
 
+  // If there's an error loading the image, render as a link
+  if (error) {
+    return (
+      <a href={src} target="_blank" rel="noopener noreferrer">
+        {src}
+      </a>
+    )
+  }
+
   return (
-    <>
+    <span className="block">
       <div
         className="relative"
         style={{
           width: '100%',
           aspectRatio: dimensions
             ? dimensions.width / dimensions.height
-            : 'auto'
+            : 'auto',
+          minHeight: dimensions ? undefined : '100px'
         }}
       >
         <Image
@@ -68,6 +97,7 @@ const MarkdownImage: FC<MarkdownImageProps> = ({ src = '', alt, ...props }) => {
           style={{ objectFit: 'contain' }}
           sizes="100vw"
           onLoad={handleImageLoad as any}
+          onError={handleImageError}
           {...props}
         />
       </div>
@@ -85,6 +115,7 @@ const MarkdownImage: FC<MarkdownImageProps> = ({ src = '', alt, ...props }) => {
               style={{ objectFit: 'contain' }}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
               priority
+              onError={handleImageError}
             />
           </div>
           {alt && (
@@ -94,7 +125,7 @@ const MarkdownImage: FC<MarkdownImageProps> = ({ src = '', alt, ...props }) => {
           )}
         </DialogContent>
       </Dialog>
-    </>
+    </span>
   )
 }
 MarkdownImage.displayName = 'MarkdownImage'
@@ -103,6 +134,21 @@ const MarkdownWrapper: FC<Options> = ({ components, ...props }) => (
   <ReactMarkdown
     components={{
       img: MarkdownImage,
+      // Override paragraph component to handle image children differently
+      p: ({ children, ...props }) => {
+        // Check if the only child is an img element
+        const hasOnlyImage = React.Children.toArray(children).every(
+          child => React.isValidElement(child) && child.type === MarkdownImage
+        )
+
+        // If it's just an image, don't wrap in p tag
+        if (hasOnlyImage) {
+          return <>{children}</>
+        }
+
+        // Otherwise render as normal paragraph
+        return <p {...props}>{children}</p>
+      },
       ...components
     }}
     {...props}

@@ -12,7 +12,7 @@ const EXAMPLE = `
 
 Image example:
 
-![Image example](https://api.trymacadamia.com/storage/v1/object/public/standards-images//page_102_cropped.svg)
+![Image example](https://api.trymacadamia.com/storage/v1/object/public/standards-images/page_102_cropped.svg)
 
 [this text is being lost]
 
