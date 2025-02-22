@@ -1,4 +1,7 @@
 'use client'
+import { useResources } from '@/components/providers/resources-provider'
+import { SearchResources } from '@/components/resources/search-resources'
+import { UploadDialog } from '@/components/resources/upload-dialog'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,12 +12,13 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { PlusIcon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import { Button } from '../ui/button'
+import { useState } from 'react'
 
 export default function ResourcesHeader() {
   const pathname = usePathname()
+  const { resources } = useResources()
+  const [filteredResources, setFilteredResources] = useState(resources)
 
   const getBreadcrumbItems = () => {
     const pathParts = pathname.split('/').filter(part => part)
@@ -73,11 +77,12 @@ export default function ResourcesHeader() {
       <Breadcrumb className="mr-auto">
         <BreadcrumbList>{getBreadcrumbItems()}</BreadcrumbList>
       </Breadcrumb>
-      <div className="ml-auto flex gap-2">
-        <Button variant="outline">
-          <PlusIcon className="size-4" />
-          Add Resource
-        </Button>
+      <div className="ml-auto flex items-center gap-4">
+        <SearchResources
+          resources={resources}
+          onFilter={setFilteredResources}
+        />
+        <UploadDialog />
       </div>
     </header>
   )

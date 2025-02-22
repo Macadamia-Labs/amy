@@ -1,9 +1,16 @@
+import { ResourcesProvider } from '@/components/providers/resources-provider'
 import { ChatsProvider } from '@/lib/providers/chats-provider'
-
-export default function DocsLayout({
+import { getResources } from '@/lib/queries/server'
+export default async function ResourcesLayout({
   children
 }: {
   children: React.ReactNode
 }) {
-  return <ChatsProvider>{children}</ChatsProvider>
+  const resources = await getResources()
+
+  return (
+    <ResourcesProvider initialResources={resources}>
+      <ChatsProvider>{children}</ChatsProvider>
+    </ResourcesProvider>
+  )
 }

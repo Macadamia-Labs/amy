@@ -9,10 +9,10 @@ import { Issue } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import {
   ActivityIcon,
+  CheckCircleIcon,
   CheckSquareIcon,
   ClockIcon,
   HardDriveIcon,
-  MapPinIcon,
   NotesIcon,
   TextFileIcon,
   WrenchIcon
@@ -60,16 +60,6 @@ export function IssueCard({ issue }: IssueCardProps) {
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <StatusIcon
-              className={cn(
-                'h-5 w-5',
-                issue.status === 'resolved' || issue.status === 'closed'
-                  ? 'text-green-500'
-                  : issue.status === 'in_progress'
-                  ? 'text-yellow-500'
-                  : 'text-blue-500'
-              )}
-            />
             <CategoryIcon className="h-5 w-5 text-muted-foreground" />
           </div>
           <span
@@ -80,21 +70,21 @@ export function IssueCard({ issue }: IssueCardProps) {
           >
             {issue.priority}
           </span>
+          <CheckCircleIcon className="h-4 w-4 text-green-500" />
         </div>
-        <div className="flex items-center gap-2 mt-2">
+        {/* <div className="flex items-center gap-2 mt-2">
           <MapPinIcon className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm text-muted-foreground">
             {issue.location}
           </span>
-        </div>
+        </div> */}
         <CardTitle className="text-lg mt-2">{issue.title}</CardTitle>
         <CardDescription className="line-clamp-2">
           {issue.description}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="border-t pt-4">
         <div className="space-y-4">
-          {/* Resources Section */}
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground">
               Resources
@@ -126,7 +116,6 @@ export function IssueCard({ issue }: IssueCardProps) {
               ))}
             </div>
           </div>
-
           {/* Standards Section */}
           {issue.standards.length > 0 && (
             <div className="space-y-2">
@@ -150,14 +139,13 @@ export function IssueCard({ issue }: IssueCardProps) {
               </div>
             </div>
           )}
-
           {/* Documents Section */}
           {issue.documents.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-muted-foreground">
                 Related Documents
               </h4>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {issue.documents.map(doc => {
                   const DocIcon = documentTypeIcons[doc.type]
                   return (
@@ -169,7 +157,7 @@ export function IssueCard({ issue }: IssueCardProps) {
                         <DocIcon className="h-4 w-4 text-muted-foreground" />
                         <span>{doc.title}</span>
                       </div>
-                      <span
+                      {/* <span
                         className={cn(
                           'px-2 py-0.5 rounded-full text-xs',
                           doc.status === 'approved'
@@ -180,7 +168,7 @@ export function IssueCard({ issue }: IssueCardProps) {
                         )}
                       >
                         {doc.status}
-                      </span>
+                      </span> */}
                     </div>
                   )
                 })}
