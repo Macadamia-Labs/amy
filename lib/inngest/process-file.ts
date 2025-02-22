@@ -1,4 +1,3 @@
-// src/inngest/functions/processFile.ts
 import { createClient } from '@/lib/supabase/server'
 import { processFileFromUrl } from '../process-file'
 import { inngest } from './client'
@@ -34,7 +33,7 @@ export const processFile = inngest.createFunction(
       }
 
       return { success: true, result }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error processing file:', error)
 
       // Update the resource with error status
