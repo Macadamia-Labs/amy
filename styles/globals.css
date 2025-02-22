@@ -102,3 +102,14 @@ body {
   color: #017aff; /* White text for Firefox */
   background-color: #ebf4ff; /* Sky-500 for Firefox */
 }
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
