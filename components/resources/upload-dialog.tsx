@@ -16,8 +16,9 @@ export function UploadDialog() {
     if (files.length === 0) return
 
     setUploading(true)
+    let successCount = 0
     const loadingToast = toast.loading(
-      `Uploading ${files.length} file${files.length > 1 ? 's' : ''}...`
+      `Processing: ${successCount}/${files.length} files uploaded`
     )
 
     // Process all files
@@ -37,7 +38,8 @@ export function UploadDialog() {
           category: 'uncategorized',
           file_path: '',
           user_id: '',
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
+          status: 'pending'
         }
       ])
 
@@ -54,34 +56,47 @@ export function UploadDialog() {
 
         if (!response.ok) {
           const msg = await response.text()
-          console.error('Upload failed:', msg)
-          toast.error(`Failed to upload ${file.name}`)
+          console.log('Upload failed:', msg)
           setUploadStatus(localId, 'error')
+          return false
         } else {
           setUploadStatus(localId, 'success')
+          successCount++
+          toast.loading(
+            `Processing: ${successCount}/${files.length} files uploaded`,
+            { id: loadingToast }
+          )
+          return true
         }
       } catch (error) {
         console.error('Error uploading:', error)
-        toast.error(`Error uploading ${file.name}`)
         setUploadStatus(localId, 'error')
+        return false
       }
     })
 
     try {
-      await Promise.all(uploadPromises)
-      toast.dismiss(loadingToast)
-      toast.success(
-        `Successfully uploaded ${files.length} file${
-          files.length > 1 ? 's' : ''
-        }`,
-        {
-          description: 'Processing in background...'
-        }
-      )
+      const results = await Promise.all(uploadPromises)
+      const finalSuccessCount = results.filter(Boolean).length
+
+      if (finalSuccessCount === files.length) {
+        toast.success(
+          `Successfully uploaded ${files.length} file${
+            files.length > 1 ? 's' : ''
+          }`,
+          { id: loadingToast }
+        )
+      } else if (finalSuccessCount > 0) {
+        toast.warning(
+          `${finalSuccessCount} out of ${files.length} files uploaded successfully`,
+          { id: loadingToast }
+        )
+      } else {
+        toast.error('All files failed to upload', { id: loadingToast })
+      }
     } catch (error) {
       console.error('Error in batch upload:', error)
-      toast.dismiss(loadingToast)
-      toast.error('Some files failed to upload')
+      toast.error('Failed to upload files', { id: loadingToast })
     } finally {
       setUploading(false)
       if (fileInputRef.current) {

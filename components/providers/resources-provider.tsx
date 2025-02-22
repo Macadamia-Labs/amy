@@ -3,11 +3,11 @@
 import { useAuth } from '@/lib/providers/auth-provider'
 import { createClient } from '@/lib/supabase/client'
 import {
-    createContext,
-    ReactNode,
-    useContext,
-    useEffect,
-    useState
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState
 } from 'react'
 
 export interface Resource {
@@ -135,9 +135,27 @@ export function ResourcesProvider({
       }
     )
 
-    setResources(prev => [...prev, ...validResources])
-    // Set processing state for new resources
-    validResources.forEach(resource => setProcessingResource(resource.id))
+    setResources(prev => {
+      // Create a map of existing resources for quick lookup
+      const existingMap = new Map(prev.map(r => [r.id, r]))
+
+      // Update existing resources or add new ones
+      validResources.forEach(resource => {
+        existingMap.set(resource.id, {
+          ...existingMap.get(resource.id),
+          ...resource
+        })
+      })
+
+      return Array.from(existingMap.values())
+    })
+
+    // Set processing state for new resources that are pending
+    validResources.forEach(resource => {
+      if (resource.status === 'pending') {
+        setProcessingResource(resource.id)
+      }
+    })
   }
 
   const removeResource = (id: string) => {

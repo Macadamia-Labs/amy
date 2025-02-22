@@ -30,7 +30,8 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 export function ResourcesTable() {
-  const { resources, removeResource, processingResources } = useResources()
+  const { resources, removeResource, processingResources, uploadStatus } =
+    useResources()
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
@@ -109,11 +110,16 @@ export function ResourcesTable() {
     const IconComponent =
       categoryIcons[resource.category as keyof typeof categoryIcons]
 
-    if (resource.status === 'pending' || processingResources.has(resource.id)) {
+    const currentUploadStatus = uploadStatus.get(resource.id)
+
+    if (currentUploadStatus === 'loading') {
       return <Loader2 className="size-6 text-blue-500 animate-spin" />
-    } else if (resource.status === 'error') {
+    } else if (currentUploadStatus === 'error' || resource.status === 'error') {
       return <XCircleIcon className="size-6 text-red-500" />
-    } else if (resource.status === 'completed') {
+    } else if (
+      currentUploadStatus === 'success' ||
+      resource.status === 'completed'
+    ) {
       return <CheckCircleIcon className="size-6 text-green-500" />
     } else if (IconComponent) {
       return <IconComponent className="size-6 text-muted-foreground" />
@@ -171,103 +177,112 @@ export function ResourcesTable() {
       </div>
 
       <div className="border rounded-lg">
-        <UITable>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Last Updated</TableHead>
-              <TableHead className="w-[50px]">Actions</TableHead>
-              <TableHead className="w-[50px]">
-                <Checkbox
-                  checked={
-                    selectedIds.size === resources.length &&
-                    resources.length > 0
-                  }
-                  onCheckedChange={toggleSelectAll}
-                />
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {resources.map(resource => (
-              <TableRow
-                key={resource.id}
-                className="hover:bg-muted/50 cursor-pointer"
-              >
-                <TableCell
-                  className="font-medium"
-                  onClick={() => router.push(`/resources/${resource.id}`)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="relative group">
-                      {getStatusIcon(resource)}
-                      {resource.processing_error && (
-                        <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
-                          {resource.processing_error}
-                        </div>
-                      )}
-                    </div>
-                    {resource.title}
-                  </div>
-                </TableCell>
-                <TableCell
-                  onClick={() => router.push(`/resources/${resource.id}`)}
-                >
-                  {resource.category}
-                </TableCell>
-                <TableCell
-                  onClick={() => router.push(`/resources/${resource.id}`)}
-                >
-                  {resource.description}
-                </TableCell>
-                <TableCell
-                  onClick={() => router.push(`/resources/${resource.id}`)}
-                >
-                  {new Date(resource.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell onClick={e => e.stopPropagation()}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => handleShare(resource.id)}
-                      >
-                        <Share className="h-4 w-4 mr-2" />
-                        Share
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleDelete(resource.id)}
-                        className="text-destructive focus:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-                <TableCell onClick={e => e.stopPropagation()}>
+        {resources.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 px-4 h-full">
+            <div className=" mb-2 font-medium">No resources found</div>
+            <p className="text-sm text-muted-foreground text-center">
+              Get started by adding your first resource.
+            </p>
+          </div>
+        ) : (
+          <UITable>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Last Updated</TableHead>
+                <TableHead className="w-[50px]">Actions</TableHead>
+                <TableHead className="w-[50px]">
                   <Checkbox
-                    checked={selectedIds.has(resource.id)}
-                    onCheckedChange={(checked: CheckedState) => {
-                      handleCheckboxChange(
-                        resource.id,
-                        checked === true,
-                        (window.event as MouseEvent)?.shiftKey ?? false
-                      )
-                    }}
+                    checked={
+                      selectedIds.size === resources.length &&
+                      resources.length > 0
+                    }
+                    onCheckedChange={toggleSelectAll}
                   />
-                </TableCell>
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </UITable>
+            </TableHeader>
+            <TableBody>
+              {resources.map(resource => (
+                <TableRow
+                  key={resource.id}
+                  className="hover:bg-muted/50 cursor-pointer"
+                >
+                  <TableCell
+                    className="font-medium"
+                    onClick={() => router.push(`/resources/${resource.id}`)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative group">
+                        {getStatusIcon(resource)}
+                        {resource.processing_error && (
+                          <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
+                            {resource.processing_error}
+                          </div>
+                        )}
+                      </div>
+                      {resource.title}
+                    </div>
+                  </TableCell>
+                  <TableCell
+                    onClick={() => router.push(`/resources/${resource.id}`)}
+                  >
+                    {resource.category}
+                  </TableCell>
+                  <TableCell
+                    onClick={() => router.push(`/resources/${resource.id}`)}
+                  >
+                    {resource.description}
+                  </TableCell>
+                  <TableCell
+                    onClick={() => router.push(`/resources/${resource.id}`)}
+                  >
+                    {new Date(resource.created_at).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell onClick={e => e.stopPropagation()}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() => handleShare(resource.id)}
+                        >
+                          <Share className="h-4 w-4 mr-2" />
+                          Share
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(resource.id)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                  <TableCell onClick={e => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selectedIds.has(resource.id)}
+                      onCheckedChange={(checked: CheckedState) => {
+                        handleCheckboxChange(
+                          resource.id,
+                          checked === true,
+                          (window.event as MouseEvent)?.shiftKey ?? false
+                        )
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </UITable>
+        )}
       </div>
     </div>
   )
