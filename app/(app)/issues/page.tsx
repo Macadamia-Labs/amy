@@ -5,6 +5,7 @@ import { IssueTable } from '@/components/issues/issue-table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Issue } from '@/lib/types'
 import { LayoutGridIcon, TableIcon } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 
 // Sample data for demonstration
@@ -246,7 +247,9 @@ export default function Page() {
         <TabsContent value="grid" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sampleIssues.map(issue => (
-              <IssueCard key={issue.id} issue={issue} />
+              <Link key={issue.id} href={`/issues/${issue.id}`}>
+                <IssueCard issue={issue} />
+              </Link>
             ))}
           </div>
         </TabsContent>

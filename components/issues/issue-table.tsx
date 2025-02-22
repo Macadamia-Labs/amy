@@ -17,6 +17,7 @@ import {
   StopIcon,
   WrenchIcon
 } from '@/lib/utils/icons'
+import Link from 'next/link'
 
 interface IssueTableProps {
   issues: Issue[]
@@ -27,6 +28,13 @@ const statusIcons = {
   in_progress: ClockIcon,
   resolved: CheckSquareIcon,
   closed: CheckSquareIcon
+}
+
+const statusColors = {
+  open: 'bg-blue-100 text-blue-800',
+  in_progress: 'bg-purple-100 text-purple-800',
+  resolved: 'bg-green-100 text-green-800',
+  closed: 'bg-gray-100 text-gray-800'
 }
 
 const priorityColors = {
@@ -71,37 +79,43 @@ export function IssueTable({ issues }: IssueTableProps) {
             const PriorityIcon = priorityIcons[issue.priority]
 
             return (
-              <TableRow key={issue.id} className="hover:bg-muted/50">
-                <TableCell>
-                  <span
-                    className={cn(
-                      'px-2 py-1 rounded-full text-xs font-medium flex items-center gap-2',
-                      priorityColors[issue.priority]
-                    )}
-                  >
-                    <PriorityIcon className="h-4 w-4" />
-                    {issue.priority}
-                  </span>
-                </TableCell>
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">{issue.title}</div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <CategoryIcon className="h-4 w-4 text-muted-foreground" />
-                    {issue.category}
-                  </div>
-                </TableCell>
-
-                <TableCell>{issue.location}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <StatusIcon className="h-4 w-4 text-muted-foreground" />
-                    {issue.status}
-                  </div>
-                </TableCell>
-                <TableCell>{issue.updatedAt.toLocaleDateString()}</TableCell>
-              </TableRow>
+              <Link key={issue.id} href={`/issues/${issue.id}`}>
+                <TableRow className="hover:bg-muted/50 cursor-pointer">
+                  <TableCell>
+                    <span
+                      className={cn(
+                        'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit',
+                        priorityColors[issue.priority]
+                      )}
+                    >
+                      <PriorityIcon className="h-4 w-4" />
+                      {issue.priority}
+                    </span>
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">{issue.title}</div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <CategoryIcon className="h-4 w-4 text-muted-foreground" />
+                      {issue.category}
+                    </div>
+                  </TableCell>
+                  <TableCell>{issue.location}</TableCell>
+                  <TableCell>
+                    <span
+                      className={cn(
+                        'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit',
+                        statusColors[issue.status]
+                      )}
+                    >
+                      <StatusIcon className="h-4 w-4" />
+                      {issue.status.replace('_', ' ')}
+                    </span>
+                  </TableCell>
+                  <TableCell>{issue.updatedAt.toLocaleDateString()}</TableCell>
+                </TableRow>
+              </Link>
             )
           })}
         </TableBody>
