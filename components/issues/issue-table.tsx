@@ -17,7 +17,7 @@ import {
   StopIcon,
   WrenchIcon
 } from '@/lib/utils/icons'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface IssueTableProps {
   issues: Issue[]
@@ -59,6 +59,8 @@ const categoryIcons = {
 }
 
 export function IssueTable({ issues }: IssueTableProps) {
+  const router = useRouter()
+
   return (
     <div className="border rounded-lg">
       <Table>
@@ -79,43 +81,45 @@ export function IssueTable({ issues }: IssueTableProps) {
             const PriorityIcon = priorityIcons[issue.priority]
 
             return (
-              <Link key={issue.id} href={`/issues/${issue.id}`}>
-                <TableRow className="hover:bg-muted/50 cursor-pointer">
-                  <TableCell>
-                    <span
-                      className={cn(
-                        'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit',
-                        priorityColors[issue.priority]
-                      )}
-                    >
-                      <PriorityIcon className="h-4 w-4" />
-                      {issue.priority}
-                    </span>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">{issue.title}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <CategoryIcon className="h-4 w-4 text-muted-foreground" />
-                      {issue.category}
-                    </div>
-                  </TableCell>
-                  <TableCell>{issue.location}</TableCell>
-                  <TableCell>
-                    <span
-                      className={cn(
-                        'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit',
-                        statusColors[issue.status]
-                      )}
-                    >
-                      <StatusIcon className="h-4 w-4" />
-                      {issue.status.replace('_', ' ')}
-                    </span>
-                  </TableCell>
-                  <TableCell>{issue.updatedAt.toLocaleDateString()}</TableCell>
-                </TableRow>
-              </Link>
+              <TableRow
+                key={issue.id}
+                className="hover:bg-muted/50 cursor-pointer"
+                onClick={() => router.push(`/issues/${issue.id}`)}
+              >
+                <TableCell>
+                  <span
+                    className={cn(
+                      'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit',
+                      priorityColors[issue.priority]
+                    )}
+                  >
+                    <PriorityIcon className="h-4 w-4" />
+                    {issue.priority}
+                  </span>
+                </TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-2">{issue.title}</div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <CategoryIcon className="h-4 w-4 text-muted-foreground" />
+                    {issue.category}
+                  </div>
+                </TableCell>
+                <TableCell>{issue.location}</TableCell>
+                <TableCell>
+                  <span
+                    className={cn(
+                      'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit',
+                      statusColors[issue.status]
+                    )}
+                  >
+                    <StatusIcon className="h-4 w-4" />
+                    {issue.status.replace('_', ' ')}
+                  </span>
+                </TableCell>
+                <TableCell>{issue.updatedAt.toLocaleDateString()}</TableCell>
+              </TableRow>
             )
           })}
         </TableBody>

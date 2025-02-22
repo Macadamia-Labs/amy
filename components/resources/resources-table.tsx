@@ -23,11 +23,12 @@ import { categoryIcons } from '@/lib/constants/resources'
 import { deleteResource, shareResource } from '@/lib/queries/client'
 import { CheckCircleIcon, XCircleIcon } from '@/lib/utils/icons'
 import { Loader2, MoreHorizontal, Share, Trash2 } from 'lucide-react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 export function ResourcesTable() {
   const { resources, removeResource, processingResources } = useResources()
+  const router = useRouter()
 
   const getStatusIcon = (resource: Resource) => {
     const IconComponent =
@@ -85,12 +86,13 @@ export function ResourcesTable() {
         <TableBody>
           {resources.map(resource => {
             return (
-              <TableRow key={resource.id} className="hover:bg-muted/50">
+              <TableRow
+                key={resource.id}
+                className="hover:bg-muted/50"
+                onClick={() => router.push(`/resources/${resource.id}`)}
+              >
                 <TableCell className="font-medium">
-                  <Link
-                    href={`/resources/${resource.id}`}
-                    className="flex items-center gap-3"
-                  >
+                  <div className="flex items-center gap-3">
                     <div className="relative group">
                       {getStatusIcon(resource)}
                       {resource.processing_error && (
@@ -100,22 +102,12 @@ export function ResourcesTable() {
                       )}
                     </div>
                     {resource.title}
-                  </Link>
+                  </div>
                 </TableCell>
+                <TableCell>{resource.category}</TableCell>
+                <TableCell>{resource.description} </TableCell>
                 <TableCell>
-                  <Link href={`/resources/${resource.id}`} className="block">
-                    {resource.category}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/resources/${resource.id}`} className="block">
-                    {resource.description}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/resources/${resource.id}`} className="block">
-                    {new Date(resource.created_at).toLocaleDateString()}
-                  </Link>
+                  {new Date(resource.created_at).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>

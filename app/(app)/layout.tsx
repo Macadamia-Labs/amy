@@ -1,4 +1,5 @@
 import CooperSidebar from '@/components/layout/cooper-sidebar'
+import Header from '@/components/layout/header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 
 export default function RootLayout({
@@ -10,7 +11,12 @@ export default function RootLayout({
     <SidebarProvider defaultOpen={false}>
       <div className="flex h-screen w-screen">
         <CooperSidebar />
-        <SidebarInset>{children}</SidebarInset>
+        <SidebarInset>
+          <div className="flex flex-col h-full">
+            <Header />
+            <div className="flex-1 overflow-auto">{children}</div>
+          </div>
+        </SidebarInset>
       </div>
     </SidebarProvider>
   )

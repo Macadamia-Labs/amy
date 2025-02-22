@@ -58,7 +58,7 @@ export function IssueCard({ issue }: IssueCardProps) {
   return (
     <Card className="h-full">
       <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
             <CategoryIcon className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -70,7 +70,7 @@ export function IssueCard({ issue }: IssueCardProps) {
           >
             {issue.priority}
           </span>
-          <CheckCircleIcon className="h-4 w-4 text-green-500" />
+          <CheckCircleIcon className="size-6 text-green-500 ml-auto" />
         </div>
         {/* <div className="flex items-center gap-2 mt-2">
           <MapPinIcon className="h-4 w-4 text-muted-foreground" />
