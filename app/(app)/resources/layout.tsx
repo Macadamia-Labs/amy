@@ -12,8 +12,10 @@ export default async function ResourcesLayout({
   return (
     <ResourcesProvider initialResources={resources}>
       <ChatsProvider>
-        <ResourcesHeader />
-        {children}
+        <div className="flex flex-col h-full">
+          <ResourcesHeader />
+          <div className="flex-1 overflow-auto">{children}</div>
+        </div>
       </ChatsProvider>
     </ResourcesProvider>
   )

@@ -1,4 +1,5 @@
-import { processFileFromUrl } from '@/lib/process-file'
+import { processResource } from '@/lib/processing/process-resource'
+import { authorizeUser } from '@/lib/supabase/authorize-user'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -12,7 +13,13 @@ export async function POST(request: Request) {
       )
     }
 
-    const result = await processFileFromUrl(fileUrl)
+    const { user } = await authorizeUser()
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const result = await processResource(fileUrl, user.id)
 
     return NextResponse.json(result)
   } catch (error) {

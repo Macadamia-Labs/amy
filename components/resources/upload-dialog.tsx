@@ -60,7 +60,6 @@ export function UploadDialog() {
           setUploadStatus(localId, 'error')
           return false
         } else {
-          setUploadStatus(localId, 'success')
           successCount++
           toast.loading(
             `Processing: ${successCount}/${files.length} files uploaded`,

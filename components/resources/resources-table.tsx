@@ -188,9 +188,8 @@ export function ResourcesTable() {
           <UITable>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
+                <TableHead>Resource</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead>Description</TableHead>
                 <TableHead>Last Updated</TableHead>
                 <TableHead className="w-[50px]">Actions</TableHead>
                 <TableHead className="w-[50px]">
@@ -223,18 +222,20 @@ export function ResourcesTable() {
                           </div>
                         )}
                       </div>
-                      {resource.title}
+                      <div>
+                        <div className="text-sm font-medium">
+                          {resource.title}
+                        </div>
+                        <div className="text-xs text-muted-foreground font-light">
+                          {resource.description || 'No description'}
+                        </div>
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell
                     onClick={() => router.push(`/resources/${resource.id}`)}
                   >
                     {resource.category}
-                  </TableCell>
-                  <TableCell
-                    onClick={() => router.push(`/resources/${resource.id}`)}
-                  >
-                    {resource.description}
                   </TableCell>
                   <TableCell
                     onClick={() => router.push(`/resources/${resource.id}`)}

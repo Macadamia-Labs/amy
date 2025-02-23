@@ -1,13 +1,13 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
-import { ResourceRecord } from '@/lib/queries'
+import { Resource } from '@/lib/queries'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 
 interface SearchResourcesProps {
-  resources: ResourceRecord[]
-  onFilter: (filtered: ResourceRecord[]) => void
+  resources: Resource[]
+  onFilter: (filtered: Resource[]) => void
 }
 
 export function SearchResources({ resources, onFilter }: SearchResourcesProps) {

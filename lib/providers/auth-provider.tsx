@@ -155,16 +155,19 @@ export default function AuthProvider({
 
   // Handle Auth State Changes and Initial Session
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        console.log('Recovered session for user:', session.user.email)
-        setSession(session)
-        setUser(session.user)
+    // Get initial user state securely
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        console.log('Recovered session for user:', user.email)
+        setUser(user)
+        // Also get session data for completeness
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          setSession(session)
+        })
 
         // Identify user in PostHog if session is recovered
-        posthog.identify(session.user.id, {
-          email: session.user.email
+        posthog.identify(user.id, {
+          email: user.email
         })
       } else {
         setSession(null)
@@ -183,14 +186,20 @@ export default function AuthProvider({
         setUser(null)
         router.push('/login')
       } else if (session) {
-        setSession(session)
-        setUser(session.user)
+        // Verify user authenticity when session changes
+        const {
+          data: { user }
+        } = await supabase.auth.getUser()
+        if (user) {
+          setSession(session)
+          setUser(user)
 
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          console.log('User session updated:', session.user.email)
-          posthog.identify(session.user.id, {
-            email: session.user.email
-          })
+          if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+            console.log('User session updated:', user.email)
+            posthog.identify(user.id, {
+              email: user.email
+            })
+          }
         }
       }
     })

@@ -1,4 +1,4 @@
-import { Chat, FileRecord, Project, ResourceRecord } from '@/lib/types/database'
+import { Chat, FileRecord, Project, Resource } from '@/lib/types/database'
 import { createClient } from '../supabase/server'
 
 // Project queries
@@ -59,7 +59,7 @@ export async function getFiles(): Promise<FileRecord[]> {
 }
 
 // Resource queries used in client components
-export async function getResources(): Promise<ResourceRecord[]> {
+export async function getResources(): Promise<Resource[]> {
   const supabase = await createClient()
   const {
     data: { user },
@@ -79,7 +79,7 @@ export async function getResources(): Promise<ResourceRecord[]> {
       .order('created_at', { ascending: false })
 
     if (error) throw error
-    return data as ResourceRecord[]
+    return data as Resource[]
   } catch (error) {
     console.error('Error fetching resources:', error)
     return []
@@ -113,4 +113,16 @@ export async function getRecentChats(limit: number): Promise<Chat[]> {
     console.error('Error fetching recent chats:', error)
     return []
   }
+}
+
+export async function getResource(resourceId: string): Promise<Resource> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('resources')
+    .select('*')
+    .eq('id', resourceId)
+    .single()
+
+  if (error) throw error
+  return data as Resource
 }

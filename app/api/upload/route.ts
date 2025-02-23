@@ -18,9 +18,6 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData()
   const file = formData.get('file') as File
   const title = (formData.get('title') as string) || file?.name || 'Untitled'
-  const description = (formData.get('description') as string) || ''
-  const category = (formData.get('category') as string) || 'uncategorized'
-  // Accept a client-provided resourceId
   const clientId = formData.get('id') as string | undefined
 
   if (!file) {
@@ -31,12 +28,12 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient()
     const resourceId = clientId || generateUUID()
     const fileExt = file.name?.split('.').pop() || ''
-    const fileName = `${user.id}/${resourceId}.${fileExt}`
+    const filePath = `${user.id}/${resourceId}.${fileExt}`
 
     // Upload file to Supabase storage
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('resources')
-      .upload(fileName, file)
+      .upload(filePath, file)
 
     if (uploadError) {
       console.error('Supabase storage error:', uploadError)
@@ -50,9 +47,8 @@ export async function POST(request: NextRequest) {
     const resource = {
       id: resourceId,
       title,
-      description,
-      category,
-      file_path: fileName,
+      file_path: filePath,
+      file_type: fileExt,
       user_id: user.id,
       created_at: new Date().toISOString(),
       status: 'pending'
@@ -61,11 +57,12 @@ export async function POST(request: NextRequest) {
     // Insert resource metadata in DB
     const { error: dbError } = await supabase
       .from('resources')
-      .insert([resource])
+      .insert(resource)
+      .select()
 
     if (dbError) {
       // If DB insert fails, remove uploaded file
-      await supabase.storage.from('resources').remove([fileName])
+      await supabase.storage.from('resources').remove([filePath])
       console.error('Database error:', dbError)
       return NextResponse.json(
         { error: 'Error saving resource metadata' },
@@ -73,35 +70,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get public URL from storage
-    const { data } = await supabase.storage.from('resources').createSignedUrl(fileName, 60)
-    
-    if (!data) {
-      throw new Error('Failed to create signed URL')
-    }
-
-    const { signedUrl } = data
-    console.log('[UPLOAD] Public URL:', signedUrl)
-
-    // Trigger background process
+    // Trigger inngest event, so that the file is processed in the background
     await inngest.send({
       name: 'file.uploaded',
       data: {
-        resourceId,
-        fileUrl: signedUrl,
-        userId: user.id,
-        title,
-        category
+        resource,
+        userId: user.id
       }
     })
 
+    // Return the resource
     return NextResponse.json(
       {
-        message: 'File uploaded successfully',
-        resource: {
-          ...resource,
-          file_path: signedUrl
-        }
+        message:
+          'File was uploaded successfully, and is being processed in the background.',
+        resource
       },
       { status: 200 }
     )
