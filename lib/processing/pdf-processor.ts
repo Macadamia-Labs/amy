@@ -41,6 +41,6 @@ export async function processPDF(
   return {
     imageUrl: publicUrl,
     filePaths: result.pages,
-    description: 'No description'
+    description: result.description
   }
 }

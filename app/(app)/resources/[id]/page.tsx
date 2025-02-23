@@ -1,6 +1,6 @@
 import { DocsLayout } from '@/components/layout/docs-layout'
 import { DocumentProvider } from '@/lib/providers/document-provider'
-import { getResourceWithFileUrl } from '@/lib/queries/server'
+import { getResourceEnriched } from '@/lib/queries/server'
 
 const EXAMPLE = `
 # Article 1
@@ -32,7 +32,7 @@ interface PageProps {
 
 export default async function ResourcePage({ params }: PageProps) {
   const { id } = await params
-  const resource = await getResourceWithFileUrl(id)
+  const resource = await getResourceEnriched(id)
   const content = resource.content || EXAMPLE
 
   return (

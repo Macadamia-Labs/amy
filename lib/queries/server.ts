@@ -127,7 +127,20 @@ export async function getResource(resourceId: string): Promise<Resource> {
   return data as Resource
 }
 
-export async function getResourceWithFileUrl(
+export async function getResourceEmbeddings(
+  resourceId: string
+): Promise<any[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('embeddingsamy')
+    .select('*')
+    .eq('resource_id', resourceId)
+
+  if (error) throw error
+  return data
+}
+
+export async function getResourceEnriched(
   resourceId: string
 ): Promise<Resource> {
   const supabase = await createClient()
@@ -136,5 +149,6 @@ export async function getResourceWithFileUrl(
     .from('resources')
     .getPublicUrl(resource.file_path)
 
-  return { ...resource, file_url: data.publicUrl }
+  const embeddings = await getResourceEmbeddings(resourceId)
+  return { ...resource, file_url: data.publicUrl, embeddings }
 }

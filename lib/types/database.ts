@@ -65,6 +65,7 @@ export interface Resource {
   created_at: string
   updated_at: string
   file_url?: string
+  embeddings?: any[]
 }
 
 export interface Project {

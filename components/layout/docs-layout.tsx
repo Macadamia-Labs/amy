@@ -1,6 +1,7 @@
 'use client'
 
 import { DocContent } from '@/app/(app)/resources/[id]/doc-content'
+import ResourceLoading from '@/app/(app)/resources/[id]/loading'
 import { DocumentChat } from '@/components/chat/document-chat'
 import { DocsSidebar } from '@/components/layout/docs-sidebar'
 import {
@@ -39,7 +40,7 @@ export function DocsLayout() {
     <Root
       source={resource?.file_url || fileUrl}
       className="h-full w-full"
-      loader={<div className="p-4">Loading...</div>}
+      loader={<ResourceLoading />}
     >
       <div className="relative h-full">
         <Tabs defaultValue="pdf" className="h-full">

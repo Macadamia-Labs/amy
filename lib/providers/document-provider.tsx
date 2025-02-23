@@ -6,8 +6,8 @@ export interface Section {
   level: number
   title: string
   content: string
-  start: number
-  end: number
+  start?: number
+  end?: number
 }
 
 interface DocumentContextType {
@@ -43,10 +43,18 @@ export function DocumentProvider({
   initialContent = '',
   resource
 }: DocumentProviderProps) {
-  const [content, setContent] = useState(initialContent)
+  const [content, setContent] = useState(
+    resource?.embeddings?.map(embedding => embedding.content).join('\n') ||
+      initialContent
+  )
   const [activeSection, setActiveSection] = useState<Section | null>(null)
-  const [sections, setSections] = useState<Section[]>(() =>
-    parseMarkdownSections(initialContent)
+  const [sections, setSections] = useState<Section[]>(
+    () =>
+      resource?.embeddings?.map(embedding => ({
+        level: 1,
+        title: embedding.content,
+        content: embedding.content
+      })) || []
   )
 
   function parseMarkdownSections(markdown: string): Section[] {

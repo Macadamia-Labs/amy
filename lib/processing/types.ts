@@ -1,5 +1,6 @@
 export interface ProcessingServiceResponse {
   pages: string[]
+  description: string
 }
 
 export interface ProcessedPDFResult {

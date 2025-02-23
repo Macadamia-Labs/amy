@@ -128,44 +128,47 @@ export async function deleteReport(id: string): Promise<void> {
   }
 }
 
-export async function deleteResource(id: string): Promise<void> {
+export async function deleteResources(ids: string[]): Promise<void> {
   try {
-    console.log('Deleting resource:', id)
-    const { data: resource, error: fetchError } = await supabase
+    // First fetch all resources to get their file paths
+    const { data: resources, error: fetchError } = await supabase
       .from('resources')
-      .select('file_path')
-      .eq('id', id)
-      .single()
+      .select('id, file_path')
+      .in('id', ids)
 
     if (fetchError) {
-      console.error('Error fetching resource:', fetchError)
+      console.error('Error fetching resources:', fetchError)
       throw fetchError
     }
 
-    // Delete the file from storage if it exists
-    if (resource?.file_path) {
+    // Delete files from storage if they exist
+    const filePaths =
+      resources?.filter(r => r.file_path).map(r => r.file_path) || []
+    if (filePaths.length > 0) {
       const { error: storageError } = await supabase.storage
         .from('resources')
-        .remove([resource.file_path])
+        .remove(filePaths)
 
       if (storageError) {
-        console.error('Error deleting file from storage:', storageError)
+        console.error('Error deleting files from storage:', storageError)
       }
     }
 
-    // Delete the resource record
+    // Delete all resource records in one command
     const { error: deleteError } = await supabase
       .from('resources')
       .delete()
-      .eq('id', id)
+      .in('id', ids)
 
     if (deleteError) throw deleteError
   } catch (error) {
-    console.error('Error deleting resource:', error)
+    console.error('Error deleting resources:', error)
     throw error
-  } finally {
-    console.log('Resource deleted successfully')
   }
+}
+
+export async function deleteResource(id: string): Promise<void> {
+  return deleteResources([id])
 }
 
 export async function shareResource(id: string): Promise<string> {

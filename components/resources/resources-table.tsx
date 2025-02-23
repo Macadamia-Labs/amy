@@ -21,7 +21,11 @@ import {
   Table as UITable
 } from '@/components/ui/table'
 import { categoryIcons } from '@/lib/constants/resources'
-import { deleteResource, shareResource } from '@/lib/queries/client'
+import {
+  deleteResource,
+  deleteResources,
+  shareResource
+} from '@/lib/queries/client'
 import { CheckCircleIcon, XCircleIcon } from '@/lib/utils/icons'
 import { CheckedState } from '@radix-ui/react-checkbox'
 import { Loader2, MoreHorizontal, Share, Trash2 } from 'lucide-react'
@@ -29,11 +33,26 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+const LoadingDots = () => {
+  return (
+    <span className="inline-flex">
+      <span className="animate-[loading_1.4s_ease-in-out_infinite]">.</span>
+      <span className="animate-[loading_1.4s_ease-in-out_0.2s_infinite]">
+        .
+      </span>
+      <span className="animate-[loading_1.4s_ease-in-out_0.4s_infinite]">
+        .
+      </span>
+    </span>
+  )
+}
+
 export function ResourcesTable() {
   const { resources, removeResource, uploadStatus } = useResources()
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())
 
   const toggleSelectAll = () => {
     if (selectedIds.size === resources.length) {
@@ -77,16 +96,16 @@ export function ResourcesTable() {
 
   const handleBulkDelete = async () => {
     try {
-      const deletePromises = Array.from(selectedIds).map(id =>
-        deleteResource(id)
-      )
-      await Promise.all(deletePromises)
+      setDeletingIds(new Set(selectedIds))
+      await deleteResources(Array.from(selectedIds))
       selectedIds.forEach(id => removeResource(id))
       setSelectedIds(new Set())
       toast.success('Selected resources deleted successfully')
     } catch (error) {
       console.error('Error deleting resources:', error)
       toast.error('Failed to delete some resources')
+    } finally {
+      setDeletingIds(new Set())
     }
   }
 
@@ -142,12 +161,15 @@ export function ResourcesTable() {
 
   const handleDelete = async (id: string) => {
     try {
+      setDeletingIds(new Set([id]))
       await deleteResource(id)
       removeResource(id)
       toast.success('Resource deleted successfully')
     } catch (error) {
       console.error('Error deleting resource:', error)
       toast.error('Failed to delete resource')
+    } finally {
+      setDeletingIds(new Set())
     }
   }
 
@@ -163,8 +185,17 @@ export function ResourcesTable() {
 
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-2">
-            <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
-              <Trash2 className="h-4 w-4 mr-2" />
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleBulkDelete}
+              disabled={deletingIds.size > 0}
+            >
+              {deletingIds.size > 0 ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4 mr-2" />
+              )}
               Delete Selected ({selectedIds.size})
             </Button>
             <Button variant="outline" size="sm" onClick={handleBulkShare}>
@@ -226,7 +257,14 @@ export function ResourcesTable() {
                           {resource.title}
                         </div>
                         <div className="text-xs text-muted-foreground font-light">
-                          {resource.description || 'No description'}
+                          {uploadStatus.get(resource.id) === 'loading' ? (
+                            <span>
+                              Processing
+                              <LoadingDots />
+                            </span>
+                          ) : (
+                            resource.description || 'No description'
+                          )}
                         </div>
                       </div>
                     </div>
@@ -259,8 +297,13 @@ export function ResourcesTable() {
                         <DropdownMenuItem
                           onClick={() => handleDelete(resource.id)}
                           className="text-destructive focus:text-destructive"
+                          disabled={deletingIds.has(resource.id)}
                         >
-                          <Trash2 className="h-4 w-4 mr-2" />
+                          {deletingIds.has(resource.id) ? (
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4 mr-2" />
+                          )}
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
