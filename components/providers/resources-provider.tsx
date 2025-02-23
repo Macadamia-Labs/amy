@@ -18,6 +18,7 @@ export interface Resource {
   file_path: string
   user_id: string
   created_at: string
+  origin: 'drive' | 'confluence' | 'solidworks' | 'matlab' | string
   processed?: boolean
   processing_result?: any
   processing_completed_at?: string

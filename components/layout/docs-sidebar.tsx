@@ -1,6 +1,5 @@
 'use client'
 
-import { docs } from '@/app/(app)/resources/content'
 import { Button } from '@/components/ui/button'
 import {
   Collapsible,
@@ -8,6 +7,7 @@ import {
   CollapsibleTrigger
 } from '@/components/ui/collapsible'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useDocument } from '@/lib/providers/document-provider'
 import { cn } from '@/lib/utils'
 import { ChevronRight, X } from 'lucide-react'
 
@@ -15,75 +15,12 @@ interface Section {
   level: number
   title: string
   content: string
-  start: number
-  end: number
+  start?: number
+  end?: number
   children?: Section[]
-}
-
-function buildHierarchy(sections: Section[]): Section[] {
-  const hierarchy: Section[] = []
-  const stack: Section[] = []
-
-  sections.forEach(section => {
-    while (stack.length > 0 && stack[stack.length - 1].level >= section.level) {
-      stack.pop()
-    }
-
-    const newSection = { ...section, children: [] }
-
-    if (stack.length === 0) {
-      hierarchy.push(newSection)
-    } else {
-      if (!stack[stack.length - 1].children) {
-        stack[stack.length - 1].children = []
-      }
-      stack[stack.length - 1].children?.push(newSection)
-    }
-
-    stack.push(newSection)
-  })
-
-  return hierarchy
-}
-
-function parseMarkdownSections(markdown: string): Section[] {
-  const lines = markdown.split('\n')
-  const sections: Section[] = []
-  let currentSection: Section | null = null
-
-  lines.forEach((line, index) => {
-    if (line.startsWith('#')) {
-      if (currentSection) {
-        currentSection.end = index - 1
-        sections.push(currentSection)
-      }
-
-      const level = line.match(/^#+/)?.[0].length || 0
-      const title = line.replace(/^#+\s*/, '')
-      currentSection = {
-        level,
-        title,
-        content: line + '\n',
-        start: index,
-        end: index
-      }
-    } else if (currentSection) {
-      currentSection.content += line + '\n'
-      currentSection.end = index
-    }
-  })
-
-  if (currentSection) {
-    sections.push(currentSection)
-  }
-
-  return sections
-}
-
-interface DocsSidebarProps {
-  onSectionSelect: (section: Section) => void
-  activeSection?: Section | null
-  onClose: () => void
+  imageUrl?: string
+  sourceUrl?: string
+  page?: number
 }
 
 function SectionItem({
@@ -112,7 +49,14 @@ function SectionItem({
           `ml-${level * 4}`
         )}
       >
-        <span className="truncate w-full text-left">{section.title}</span>
+        <div className="flex items-center justify-between">
+          <span className="truncate">{section.title}</span>
+          {section.page && (
+            <span className="text-xs text-muted-foreground">
+              p.{section.page}
+            </span>
+          )}
+        </div>
       </button>
     )
   }
@@ -123,17 +67,24 @@ function SectionItem({
         <CollapsibleTrigger className="flex items-center gap-2 text-sm hover:text-accent-foreground w-full">
           <div className={`ml-${level * 4} flex items-center gap-2`}>
             <ChevronRight className="h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
-            <span
-              onClick={() => onSectionSelect(section)}
-              className={cn(
-                'truncate w-full text-left',
-                activeSection?.title === section.title
-                  ? 'text-primary font-medium'
-                  : ''
+            <div className="flex items-center justify-between w-full">
+              <span
+                onClick={() => onSectionSelect(section)}
+                className={cn(
+                  'truncate',
+                  activeSection?.title === section.title
+                    ? 'text-primary font-medium'
+                    : ''
+                )}
+              >
+                {section.title}
+              </span>
+              {section.page && (
+                <span className="text-xs text-muted-foreground">
+                  p.{section.page}
+                </span>
               )}
-            >
-              {section.title}
-            </span>
+            </div>
           </div>
         </CollapsibleTrigger>
       </div>
@@ -154,13 +105,19 @@ function SectionItem({
   )
 }
 
+interface DocsSidebarProps {
+  onSectionSelect: (section: Section) => void
+  activeSection?: Section | null
+  onClose: () => void
+}
+
 export function DocsSidebar({
   onSectionSelect,
   activeSection,
   onClose
 }: DocsSidebarProps) {
-  const sections = parseMarkdownSections(docs['asme'])
-  const hierarchy = buildHierarchy(sections)
+  const { resource } = useDocument()
+  const outline = resource?.processing_result?.outline || []
 
   return (
     <div className="h-full">
@@ -178,7 +135,7 @@ export function DocsSidebar({
         </div>
         <ScrollArea className="flex-1">
           <div className="p-4">
-            {hierarchy.map((section, index) => (
+            {outline.map((section: Section, index: number) => (
               <SectionItem
                 key={index}
                 section={section}

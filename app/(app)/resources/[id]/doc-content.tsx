@@ -111,8 +111,8 @@ export function DocContent({
   }, [activeSection])
 
   return (
-    <div className=" overflow-y-auto h-full mx-auto max-w-4xl w-full">
-      <div className="prose dark:prose-invert space-y-2 h-full">
+    <div className="overflow-y-auto h-full w-full">
+      <div className="prose dark:prose-invert space-y-2 h-full mx-auto">
         {sections.map((section, index) => (
           <div
             key={index}
@@ -189,7 +189,7 @@ export function DocContent({
             <MemoizedReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}
-              className="prose-sm p-4"
+              className="prose-sm p-4 w-full max-w-4xl"
             >
               {section.content.trim()}
             </MemoizedReactMarkdown>

@@ -30,11 +30,11 @@ import {
 import { CheckCircleIcon, XCircleIcon } from '@/lib/utils/icons'
 import { CheckedState } from '@radix-ui/react-checkbox'
 import { Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import Loader from '../lottie/loader'
-
 const LoadingDots = () => {
   return (
     <span className="inline-flex">
@@ -243,6 +243,7 @@ export function ResourcesTable() {
               <TableRow>
                 <TableHead>Resource</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead>From</TableHead>
                 <TableHead>Last Updated</TableHead>
                 <TableHead className="w-[50px]">Actions</TableHead>
                 <TableHead className="w-[50px]">
@@ -303,6 +304,22 @@ export function ResourcesTable() {
                     onClick={() => router.push(`/resources/${resource.id}`)}
                   >
                     {resource.category}
+                  </TableCell>
+                  <TableCell
+                    onClick={() => router.push(`/resources/${resource.id}`)}
+                  >
+                    {resource.origin ? (
+                      resource.origin.charAt(0).toUpperCase() +
+                      resource.origin.slice(1)
+                    ) : (
+                      <Image
+                        src="/integrations/gdrive.avif"
+                        alt="File Text"
+                        className="mx-auto"
+                        width={16}
+                        height={16}
+                      />
+                    )}
                   </TableCell>
                   <TableCell
                     onClick={() => router.push(`/resources/${resource.id}`)}

@@ -13,6 +13,7 @@ import * as React from 'react'
 import { ProjectSwitcher } from './app-switcher'
 import { NavActivity } from './nav-activity'
 import { NavHome } from './nav-home'
+import { NavIntegrations } from './nav-integrations'
 import { NavIssues } from './nav-issues'
 import { NavResources } from './nav-resources'
 import { SearchForm } from './search-form'
@@ -36,6 +37,7 @@ export default function CooperSidebar(
           <NavHome />
           <NavIssues />
           <NavResources />
+          <NavIntegrations />
           <NavActivity />
           {/* <NavDocs /> */}
         </SidebarGroup>

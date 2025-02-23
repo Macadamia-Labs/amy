@@ -8,6 +8,8 @@ export interface Section {
   content: string
   start?: number
   end?: number
+  imageUrl?: string
+  sourceUrl?: string
 }
 
 interface DocumentContextType {
@@ -53,7 +55,9 @@ export function DocumentProvider({
       resource?.embeddings?.map(embedding => ({
         level: 1,
         title: embedding.content,
-        content: embedding.content
+        content: embedding.content,
+        imageUrl: embedding.image_url,
+        sourceUrl: embedding.source_url
       })) || []
   )
 

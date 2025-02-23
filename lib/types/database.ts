@@ -67,6 +67,9 @@ export interface Resource {
   file_url?: string
   embeddings?: any[]
   status: 'loading' | 'processing' | 'completed' | 'error'
+  processing_result?: {
+    outline: any[]
+  }
 }
 
 export interface Project {

@@ -160,13 +160,8 @@ export function DocsLayout() {
                   </Page>
                 </Pages>
               </TabsContent>
-              <TabsContent value="markdown">
-                <div className="flex-1 h-full overflow-auto">
-                  <DocContent
-                    sections={sections}
-                    activeSection={activeSection}
-                  />
-                </div>
+              <TabsContent value="markdown" className="h-full">
+                <DocContent sections={sections} activeSection={activeSection} />
               </TabsContent>
             </ResizablePanel>
             <ResizableHandle withHandle />
