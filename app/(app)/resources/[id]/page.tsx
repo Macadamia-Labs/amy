@@ -1,9 +1,6 @@
-'use client'
-
 import { DocsLayout } from '@/components/layout/docs-layout'
 import { DocumentProvider } from '@/lib/providers/document-provider'
-import { use } from 'react'
-import { docs } from '../content'
+import { getResourceWithFileUrl } from '@/lib/queries/server'
 
 const EXAMPLE = `
 # Article 1
@@ -33,12 +30,13 @@ interface PageProps {
   }>
 }
 
-export default function DocsPage({ params }: PageProps) {
-  const { id } = use(params)
-  const content = docs[id as keyof typeof docs] || EXAMPLE
+export default async function ResourcePage({ params }: PageProps) {
+  const { id } = await params
+  const resource = await getResourceWithFileUrl(id)
+  const content = resource.content || EXAMPLE
 
   return (
-    <DocumentProvider initialContent={content}>
+    <DocumentProvider initialContent={content} resource={resource}>
       <DocsLayout />
     </DocumentProvider>
   )

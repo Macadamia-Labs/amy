@@ -1,5 +1,7 @@
-import { createContext, ReactNode, useContext, useState } from 'react'
+'use client'
 
+import { createContext, ReactNode, useContext, useState } from 'react'
+import { Resource } from '../types/database'
 export interface Section {
   level: number
   title: string
@@ -15,6 +17,7 @@ interface DocumentContextType {
   setActiveSection: (section: Section | null) => void
   setContent: (content: string) => void
   getCurrentContext: () => { content: string; activeSection: Section | null }
+  resource: Resource | undefined
 }
 
 const DocumentContext = createContext<DocumentContextType | undefined>(
@@ -32,11 +35,13 @@ export function useDocument() {
 interface DocumentProviderProps {
   children: ReactNode
   initialContent?: string
+  resource?: Resource
 }
 
 export function DocumentProvider({
   children,
-  initialContent = ''
+  initialContent = '',
+  resource
 }: DocumentProviderProps) {
   const [content, setContent] = useState(initialContent)
   const [activeSection, setActiveSection] = useState<Section | null>(null)
@@ -136,7 +141,8 @@ export function DocumentProvider({
     activeSection,
     setActiveSection,
     setContent: handleSetContent,
-    getCurrentContext
+    getCurrentContext,
+    resource
   }
 
   return (

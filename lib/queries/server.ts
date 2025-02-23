@@ -126,3 +126,15 @@ export async function getResource(resourceId: string): Promise<Resource> {
   if (error) throw error
   return data as Resource
 }
+
+export async function getResourceWithFileUrl(
+  resourceId: string
+): Promise<Resource> {
+  const supabase = await createClient()
+  const resource = await getResource(resourceId)
+  const { data } = await supabase.storage
+    .from('resources')
+    .getPublicUrl(resource.file_path)
+
+  return { ...resource, file_url: data.publicUrl }
+}

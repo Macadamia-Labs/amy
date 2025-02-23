@@ -57,10 +57,20 @@ export interface Resource {
   id: string
   title: string
   description: string
+  content: string
   category: string
   file_path: string
   file_type: string
   user_id: string
+  created_at: string
+  updated_at: string
+  file_url?: string
+}
+
+export interface Project {
+  id: string
+  name: string
+  description: string
   created_at: string
   updated_at: string
 }
