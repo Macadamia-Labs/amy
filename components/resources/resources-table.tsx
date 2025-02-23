@@ -134,7 +134,11 @@ export function ResourcesTable() {
 
     const currentUploadStatus = uploadStatus.get(resource.id)
 
-    if (currentUploadStatus === 'loading') {
+    if (
+      currentUploadStatus === 'loading' ||
+      resource.status === 'loading' ||
+      resource.status === 'processing'
+    ) {
       return <Loader className="size-6 text-blue-500" />
     } else if (currentUploadStatus === 'error' || resource.status === 'error') {
       return <XCircleIcon className="size-6 text-red-500" />
@@ -276,10 +280,17 @@ export function ResourcesTable() {
                           {resource.title}
                         </div>
                         <div className="text-xs text-muted-foreground font-light">
-                          {uploadStatus.get(resource.id) === 'loading' ? (
+                          {resource.status === 'loading' ||
+                          resource.status === 'processing' ||
+                          uploadStatus.get(resource.id) === 'loading' ? (
                             <span>
                               Processing
                               <LoadingDots />
+                            </span>
+                          ) : resource.status === 'error' ||
+                            uploadStatus.get(resource.id) === 'error' ? (
+                            <span className="text-red-500">
+                              Processing failed
                             </span>
                           ) : (
                             resource.description || 'No description'

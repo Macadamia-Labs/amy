@@ -112,7 +112,7 @@ export function DocsLayout() {
                   </div>
                   <ScrollArea className="h-full">
                     <Thumbnails className="flex flex-col items-center py-4">
-                      <Thumbnail className="w-32 transition-all hover:shadow-lg hover:outline hover:outline-gray-300" />
+                      <Thumbnail className="w-48 transition-all hover:shadow-lg hover:outline hover:outline-gray-300" />
                     </Thumbnails>
                   </ScrollArea>
                 </ResizablePanel>

@@ -21,7 +21,7 @@ export interface Resource {
   processed?: boolean
   processing_result?: any
   processing_completed_at?: string
-  status?: 'pending' | 'completed' | 'error'
+  status?: 'pending' | 'loading' | 'processing' | 'completed' | 'error'
   processing_error?: string
 }
 

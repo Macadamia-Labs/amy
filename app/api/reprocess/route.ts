@@ -1,5 +1,5 @@
 import { inngest } from '@/lib/inngest/client'
-import { getResource } from '@/lib/queries/server'
+import { getResource, updateResource } from '@/lib/queries/server'
 import { authorizeUser } from '@/lib/supabase/authorize-user'
 import { NextResponse } from 'next/server'
 
@@ -22,6 +22,10 @@ export async function POST(request: Request) {
 
     // Get the resource to reprocess
     const resource = await getResource(resourceId)
+
+    await updateResource(resourceId, {
+      status: 'processing'
+    })
 
     // Trigger inngest event for reprocessing
     await inngest.send({

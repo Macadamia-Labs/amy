@@ -11,6 +11,7 @@ export const handleResourceSuccess = async (
     .from('resources')
     .update({
       description: result.description,
+      outline: 'outline' in result ? result.outline : null,
       processed: true,
       processing_result: result,
       processing_completed_at: new Date().toISOString(),

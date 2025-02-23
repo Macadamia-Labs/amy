@@ -7,6 +7,7 @@ export interface ProcessedPDFResult {
   imageUrl: string
   filePaths?: string[]
   description: string
+  outline: any
 }
 
 export interface ProcessedDocumentResult {

@@ -152,3 +152,16 @@ export async function getResourceEnriched(
   const embeddings = await getResourceEmbeddings(resourceId)
   return { ...resource, file_url: data.publicUrl, embeddings }
 }
+
+export async function updateResource(
+  resourceId: string,
+  updates: Partial<Resource>
+) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('resources')
+    .update(updates)
+    .eq('id', resourceId)
+
+  if (error) throw error
+}
