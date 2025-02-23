@@ -58,7 +58,7 @@ const PageNavigationButtons = () => {
               e.currentTarget.blur()
             }
           }}
-          className="w-10 h-7 text-center bg-muted border-none flex items-center justify-center rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+          className="w-12 h-7 pl-2 text-center bg-muted border-none flex items-center justify-center rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
         />
         <span className="text-sm text-muted-foreground font-medium min-w-[40px]">
           of {pages || 1}
