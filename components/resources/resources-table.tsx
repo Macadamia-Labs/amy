@@ -30,8 +30,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 export function ResourcesTable() {
-  const { resources, removeResource, processingResources, uploadStatus } =
-    useResources()
+  const { resources, removeResource, uploadStatus } = useResources()
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)

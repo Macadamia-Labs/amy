@@ -130,13 +130,17 @@ export async function deleteReport(id: string): Promise<void> {
 
 export async function deleteResource(id: string): Promise<void> {
   try {
+    console.log('Deleting resource:', id)
     const { data: resource, error: fetchError } = await supabase
       .from('resources')
       .select('file_path')
       .eq('id', id)
       .single()
 
-    if (fetchError) throw fetchError
+    if (fetchError) {
+      console.error('Error fetching resource:', fetchError)
+      throw fetchError
+    }
 
     // Delete the file from storage if it exists
     if (resource?.file_path) {
@@ -159,6 +163,8 @@ export async function deleteResource(id: string): Promise<void> {
   } catch (error) {
     console.error('Error deleting resource:', error)
     throw error
+  } finally {
+    console.log('Resource deleted successfully')
   }
 }
 
