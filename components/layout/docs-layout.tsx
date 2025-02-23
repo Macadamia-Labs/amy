@@ -122,7 +122,7 @@ export function DocsLayout() {
                 </TabsList>
               </div>
               <TabsContent value="pdf" className="h-full">
-                <Pages className="p-4 w-full h-full">
+                <Pages className="p-4 w-full h-full dark:invert-[94%] dark:hue-rotate-180 dark:brightness-[80%] dark:contrast-[228%]">
                   <Page className="h-full w-full">
                     <CanvasLayer />
                     <TextLayer />
