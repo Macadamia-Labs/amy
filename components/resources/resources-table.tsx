@@ -24,14 +24,16 @@ import { categoryIcons } from '@/lib/constants/resources'
 import {
   deleteResource,
   deleteResources,
+  reprocessResource,
   shareResource
 } from '@/lib/queries/client'
 import { CheckCircleIcon, XCircleIcon } from '@/lib/utils/icons'
 import { CheckedState } from '@radix-ui/react-checkbox'
-import { Loader2, MoreHorizontal, Share, Trash2 } from 'lucide-react'
+import { Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import Loader from '../lottie/loader'
 
 const LoadingDots = () => {
   return (
@@ -48,11 +50,13 @@ const LoadingDots = () => {
 }
 
 export function ResourcesTable() {
-  const { resources, removeResource, uploadStatus } = useResources()
+  const { resources, removeResource, uploadStatus, setUploadStatus } =
+    useResources()
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())
+  const [reprocessingIds, setReprocessingIds] = useState<Set<string>>(new Set())
 
   const toggleSelectAll = () => {
     if (selectedIds.size === resources.length) {
@@ -131,7 +135,7 @@ export function ResourcesTable() {
     const currentUploadStatus = uploadStatus.get(resource.id)
 
     if (currentUploadStatus === 'loading') {
-      return <Loader2 className="size-6 text-blue-500 animate-spin" />
+      return <Loader className="size-6 text-blue-500" />
     } else if (currentUploadStatus === 'error' || resource.status === 'error') {
       return <XCircleIcon className="size-6 text-red-500" />
     } else if (
@@ -156,6 +160,21 @@ export function ResourcesTable() {
     } catch (error) {
       console.error('Error sharing resource:', error)
       toast.error('Failed to share resource')
+    }
+  }
+
+  const handleReprocess = async (id: string) => {
+    try {
+      setReprocessingIds(new Set([id]))
+      setUploadStatus(id, 'loading')
+      await reprocessResource(id)
+      toast.success('Resource reprocessing started')
+    } catch (error) {
+      console.error('Error reprocessing resource:', error)
+      toast.error('Failed to reprocess resource')
+      setUploadStatus(id, 'error')
+    } finally {
+      setReprocessingIds(new Set())
     }
   }
 
@@ -293,6 +312,18 @@ export function ResourcesTable() {
                         >
                           <Share className="h-4 w-4 mr-2" />
                           Share
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleReprocess(resource.id)}
+                          disabled={reprocessingIds.has(resource.id)}
+                          className="focus:bg-muted"
+                        >
+                          {reprocessingIds.has(resource.id) ? (
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          ) : (
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                          )}
+                          Reprocess
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDelete(resource.id)}

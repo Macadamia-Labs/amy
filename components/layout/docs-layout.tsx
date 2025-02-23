@@ -27,6 +27,7 @@ import { XIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
 import { useRef, useState } from 'react'
 import { SearchUI } from '../custom-search'
+import PageNavigationButtons from '../page-navigation-buttons'
 import { Button } from '../ui/button'
 import { ScrollArea } from '../ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
@@ -111,7 +112,7 @@ export function DocsLayout() {
                   </div>
                   <ScrollArea className="h-full">
                     <Thumbnails className="flex flex-col items-center py-4">
-                      <Thumbnail className="w-32 transition-all hover:shadow-lg ring-2 ring rounded  ring-muted-foreground/20 hover:ring-muted-foreground/50" />
+                      <Thumbnail className="w-32 transition-all hover:shadow-lg hover:outline hover:outline-gray-300" />
                     </Thumbnails>
                   </ScrollArea>
                 </ResizablePanel>
@@ -124,37 +125,46 @@ export function DocsLayout() {
               order={1}
             >
               <div className="h-12 w-full border-b flex gap-2 px-2">
-                <Button variant="ghost" size="icon" onClick={toggleOutline}>
-                  <TextOutlineIcon className="size-5" />
-                </Button>
-                <Button variant="ghost" size="icon" onClick={toggleSearch}>
-                  <SearchIcon className="size-5" />
-                </Button>
-                <Button variant="ghost" size="icon" onClick={toggleThumbnails}>
-                  <ThumbnailIcon className="size-5" />
-                </Button>
-                <TabsList className="ml-auto">
-                  <TabsTrigger value="pdf">PDF</TabsTrigger>
-                  <TabsTrigger value="markdown">Markdown</TabsTrigger>
-                </TabsList>
+                <div className="basis-1/3 flex gap-2 items-center">
+                  <Button variant="ghost" size="icon" onClick={toggleOutline}>
+                    <TextOutlineIcon className="size-5" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={toggleSearch}>
+                    <SearchIcon className="size-5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleThumbnails}
+                  >
+                    <ThumbnailIcon className="size-5" />
+                  </Button>
+                </div>
+                <div className="basis-1/3 flex justify-center items-center">
+                  <PageNavigationButtons />
+                </div>
+
+                <div className="basis-1/3 flex justify-end items-center">
+                  <TabsList>
+                    <TabsTrigger value="pdf">PDF</TabsTrigger>
+                    <TabsTrigger value="markdown">Markdown</TabsTrigger>
+                  </TabsList>
+                </div>
               </div>
               <TabsContent value="pdf" className="h-full">
-                <ScrollArea className="h-full">
-                  <Pages className="w-full h-full dark:invert-[94%] dark:hue-rotate-180 dark:brightness-[80%] dark:contrast-[228%]">
-                    <Page className="h-full w-full">
-                      <CanvasLayer />
-                      <TextLayer />
-                      <HighlightLayer className="bg-yellow-200/70" />
-                    </Page>
-                  </Pages>
-                </ScrollArea>
+                <Pages className="w-full h-full dark:invert-[94%] dark:hue-rotate-180 dark:brightness-[80%] dark:contrast-[228%]">
+                  <Page>
+                    <CanvasLayer />
+                    <TextLayer />
+                    <HighlightLayer className="bg-yellow-200/70" />
+                  </Page>
+                </Pages>
               </TabsContent>
               <TabsContent value="markdown">
                 <div className="flex-1 h-full overflow-auto">
                   <DocContent
                     sections={sections}
                     activeSection={activeSection}
-                    onSectionSelect={setActiveSection}
                   />
                 </div>
               </TabsContent>

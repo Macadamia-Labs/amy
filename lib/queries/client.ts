@@ -196,3 +196,18 @@ export async function shareResource(id: string): Promise<string> {
     throw error
   }
 }
+
+export async function reprocessResource(id: string): Promise<void> {
+  const response = await fetch(`/api/reprocess`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ resourceId: id })
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error)
+  }
+}
