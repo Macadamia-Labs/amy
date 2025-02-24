@@ -14,7 +14,7 @@ export const sampleIssues: Issue[] = [
     id: '1',
     title: 'Shell Thickness Insufficient for 50 psig at 650 °F + Full Vacuum',
     description:
-      'The drawings list a 3/8" nominal shell for a vessel that must handle 50 psig at an elevated temperature of 650 °F, plus an external design of full vacuum. By checking allowable stress (S) for SA-516 Gr.70 at 650 °F (ASME BPVC II-D) and then applying the formula in UG-27 (ASME BPVC VIII DIV 1) for internal pressure, it becomes clear that 0.375" does not provide the necessary margin once you add the corrosion allowance (0.0625") and account for joint efficiency (E).\n\nA simplified example for the cylindrical shell under internal pressure (UG-27(c)(1)):\n\n\\[t_{\\text{internal}} = \\frac{PR}{SE - 0.6P}\\]\n\nWhere:\n- P = 50 psig (design pressure)\n- R = 48 in (vessel radius, 1/2 of 96" OD)\n- S = 17,000 psi (allowable stress at 650 °F for SA-516-70)\n- E = 0.85 to 1.0 (joint efficiency, depending on radiography)\n\nPlugging realistic values indicates the required shell thickness plus corrosion allowance exceeds 0.375". Thus, the shell thickness as drawn fails to meet the minimum code requirement for combined internal pressure and vacuum loading at this temperature.',
+      'The vessel drawings specify a **3/8" (0.375")** nominal shell for a horizontal pressure vessel intended to operate at **50 psig and 650 °F**, while also being designed for **full vacuum**.\n\n1. Internal-Pressure Check (**UG-27**): Using ASME BPVC Section II-D for **SA-516 Gr.70 at 650 °F**, the allowable stress is approximately **S = 17,000 psi** (exact value to be confirmed). Applying the internal-pressure formula from **UG-27(c)(1)**:\n\n    \\[t_{\\text{internal}} = \\frac{PR}{SE - 0.6P}\\]\n\n    Where:\n    - P = 50 psig (design pressure)\n    - R = 48 in (half of 96" OD)\n    - E = joint efficiency\n    - S = allowable stress at 650 °F\n\n    The calculated required thickness (plus **0.0625" corrosion allowance**) slightly exceeds **0.375"** once a realistic joint efficiency (<1.0) is used.\n\n2. External-Pressure (Vacuum) Check (**UG-28**): Under full vacuum, the vessel must also resist external pressure. Preliminary checks using UG-28 or external-pressure charts indicate that **0.375"** could be borderline or insufficient, especially at elevated temperature where creep effects or reduced modulus may also be considerations.\n\nAs a result, the current **3/8"** shell **does not meet** the combined internal and external design thickness required by the code at 650 °F.',
     status: 'open',
     priority: 'critical',
     category: 'Construction',
@@ -22,25 +22,12 @@ export const sampleIssues: Issue[] = [
     createdAt: new Date('2024-03-10'),
     updatedAt: new Date('2024-03-11'),
     proposedSolution:
-      'Re-verify the shell and head thickness calculations using the new design pressure of 50 psi according to UG-27. If the current thickness is insufficient, either: 1) Increase the shell and head thickness to meet code requirements, or 2) Reduce the system pressure back to the original 40 psi design pressure if operationally feasible.\n\nFor the nozzle reinforcement per UG-37, verify:\n\n\\[A_{\\text{required}} = t_{\\text{req}} \\times d_{\\text{opening}}\\]\n\nwhere:\n- \\(t_{\\text{req}}\\) = minimum required thickness of the shell for internal pressure (from UG-27)\n- \\(d_{\\text{opening}}\\) = finished diameter of the opening in the shell\n\nThen calculate the area available from:\n1. Excess thickness in the vessel shell\n2. The nozzle wall itself (above that required for nozzle pressure design)\n3. Any added repad or weld buildup\n\nIf \\(A_{\\text{available}} < A_{\\text{required}}\\), you do not meet UG-37 and will need a larger repad, thicker nozzle neck, or other design changes.',
+      '1. **Re-verify Shell and Head Thickness**\n\n    • Recalculate the required shell and head thickness for **50 psig at 650 °F** in strict accordance with **UG-27** (internal pressure) and **UG-28** (external pressure).\n\n    • Confirm the allowable stresses from Section II-D at the specified temperature and ensure that the chosen joint efficiency (E) is correct for your weld examination level.\n\n    • If the calculations confirm that 3/8" is insufficient, then:\n    a. **Increase the Shell and Head Thickness** to meet both internal- and external-pressure requirements, or\n    b. **Reduce the Design Pressure** (if operationally feasible) back to 40 psig, though the comments below suggest that is not viable.\n\n2. **Nozzle Reinforcement** (**UG-37**)\n\n    • For each nozzle opening, verify the required reinforcement area:\n    \\[A_{\\text{required}} = t_{\\text{req}} \\times d_{\\text{opening}}\\]\n    where \\(t_{\\text{req}}\\) is the required shell thickness from the internal-pressure calculations (UG-27), and\n    \\(d_{\\text{opening}}\\) is the finished diameter of the nozzle bore.\n\n    • Confirm that the total area available (from shell, nozzle neck, repad, etc.) is ≥ \\(A_{\\text{required}}\\). If not, design a larger repad, use a thicker nozzle neck, or apply another reinforcement method.\n\n3. **Stiffening for Vacuum**\n\n    • If the required thickness to resist vacuum is excessively large, consider **external stiffening rings** or other bracing to handle external pressure, especially for longer cylindrical sections or large diameters.',
     resources: mapResourceIds(['asme-bpvc-viii-div-1', 'asme-bpvc-ii-d', 'technical-drawing']),
     comments: [
       {
         id: 'comment-1',
-        content: 'I reviewed the calculations and agree that the current shell thickness is insufficient. We should proceed with option 1 to increase the shell thickness.',
-        author: {
-          id: 'eng-2',
-          name: 'James Rodriguez',
-          title: 'Lead Process Engineer',
-          specialty: 'Process Equipment',
-          email: 'j.rodriguez@example.com'
-        },
-        createdAt: new Date('2024-03-11T10:30:00'),
-        updatedAt: new Date('2024-03-11T10:30:00')
-      },
-      {
-        id: 'comment-2',
-        content: 'Based on the operational requirements, reducing the system pressure is not feasible. We need to proceed with increasing the shell thickness.',
+        content: 'We can’t reduce the pressure to 40 psig given our process needs, so we must go with a thicker shell. I’ll check nozzle reinforcements per UG‐37. Let’s finalize calculations and update the fabrication drawings.',
         author: {
           id: 'eng-3',
           name: 'Michael Chang',
