@@ -17,6 +17,7 @@ import { NavIntegrations } from './nav-integrations'
 import { NavIssues } from './nav-issues'
 import { NavProjects } from './nav-projects'
 import { NavResources } from './nav-resources'
+import { NavWorkflows } from './nav-workflows'
 import { SearchForm } from './search-form'
 
 export default function CooperSidebar(
@@ -41,6 +42,7 @@ export default function CooperSidebar(
           <NavResources />
           <NavIntegrations />
           <NavActivity />
+          <NavWorkflows />
           {/* <NavDocs /> */}
         </SidebarGroup>
       </SidebarContent>
