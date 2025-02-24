@@ -1,7 +1,9 @@
 import ResourceHeader from '@/components/layout/resource-header'
+import { defaultResources } from '@/data/resources'
 import { ChatsProvider } from '@/lib/providers/chats-provider'
 import { DocumentProvider } from '@/lib/providers/document-provider'
 import { getResourceEnriched } from '@/lib/queries/server'
+import { notFound } from 'next/navigation'
 
 export default async function ResourceLayout({
   children,
@@ -13,7 +15,16 @@ export default async function ResourceLayout({
   }>
 }) {
   const { id } = await params
-  const resource = await getResourceEnriched(id)
+  let resource = await getResourceEnriched(id)
+
+  if (!resource) {
+    resource = defaultResources.find(r => r.id === id) || null
+  }
+
+  if (!resource) {
+    notFound()
+  }
+
   const content = resource.content || 'No Content in Resource'
 
   return (

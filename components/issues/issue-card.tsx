@@ -3,6 +3,7 @@ import { Issue } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { CheckCircleIcon, NotesIcon, UserIcon } from '@/lib/utils/icons'
 import { getCategoryIcon, getPriorityColor } from '@/lib/utils/issue-helpers'
+import Link from 'next/link'
 import { MemoizedReactMarkdown } from '../ui/markdown'
 
 interface IssueCardProps {
@@ -55,15 +56,14 @@ export function IssueCard({ issue }: IssueCardProps) {
               </h4>
               <div className="space-y-1">
                 {issue.resources.map(resource => (
-                  <div
+                  <Link
                     key={resource.id}
-                    className="flex items-center justify-between text-sm"
+                    href={`/resources/${resource.id}`}
+                    className="flex items-center gap-2 text-sm hover:font-medium"
                   >
-                    <div className="flex items-center gap-2">
-                      <NotesIcon className="h-4 w-4 text-muted-foreground" />
-                      <span>{resource.title}</span>
-                    </div>
-                  </div>
+                    <NotesIcon className="h-4 w-4 text-muted-foreground" />
+                    <span>{resource.title}</span>
+                  </Link>
                 ))}
               </div>
             </div>

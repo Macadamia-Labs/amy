@@ -142,9 +142,10 @@ export async function getResourceEmbeddings(
 
 export async function getResourceEnriched(
   resourceId: string
-): Promise<Resource> {
+): Promise<Resource | null> {
   const supabase = await createClient()
   const resource = await getResource(resourceId)
+  if (!resource) return null
   const { data } = await supabase.storage
     .from('resources')
     .getPublicUrl(resource.file_path)
