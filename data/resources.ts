@@ -149,7 +149,7 @@ export const defaultResources: Resource[] = [
     origin: 'gdrive'
   },
   {
-    id: 'example-file-2',
+    id: 'technical-drawing',
     title: 'Technical Drawing.pdf',
     description: 'High-level system architecture diagrams',
     category: 'Engineering Drawings',
@@ -327,5 +327,6 @@ export const defaultResources: Resource[] = [
     status: 'completed',
     parent_id: 'example-folder',
     origin: 'gdrive'
-  }
+  }, 
+
 ]
