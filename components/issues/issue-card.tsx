@@ -1,9 +1,8 @@
 import { Issue } from '@/lib/types'
-import { NotesIcon } from '@/lib/utils/icons'
+import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import Link from 'next/link'
 import { MemoizedReactMarkdown } from '../ui/markdown'
-import { IssueCategoryBadge } from './issue-category-badge'
-import { IssuePriorityBadge } from './issue-priority-badge'
+import { IssuePriorityPills } from './issue-priority-pills'
 
 interface IssueCardProps {
   issue: Issue
@@ -21,14 +20,18 @@ export function IssueCard({ issue, onClick, className = '' }: IssueCardProps) {
       } ${className}`}
       onClick={onClick}
     >
-      <div className="p-6">
-        <div className="flex items-center gap-2 pb-2">
+      <div className="p-4">
+        <div className="flex items-center gap-3 pb-2">
           {/* <IssueCategoryBadge category={issue.category} /> */}
-          <span className="text-lg text-muted-foreground font-bold mr-auto">
+          <span className="text-lg text-muted-foreground font-bold">
             #{issue.id}
           </span>
-          <IssueCategoryBadge category={issue.category} />
-          <IssuePriorityBadge priority={issue.priority} />
+          {/* <IssueCategoryBadge category={issue.category} /> */}
+          <div className="ml-auto">
+            <IssuePriorityPills priority={issue.priority} />
+          </div>
+          {/* <IssueCategoryBadge category={issue.category} />
+          <IssuePriorityBadge priority={issue.priority} /> */}
         </div>
         <h3 className="text-lg font-semibold">{issue.title}</h3>
 
@@ -36,29 +39,33 @@ export function IssueCard({ issue, onClick, className = '' }: IssueCardProps) {
           {issue.description}
         </MemoizedReactMarkdown>
       </div>
-      {issue.resources.length > 0 && (
-        <div className="border-t pt-4 p-6 bg-muted rounded-b-xl flex-1">
-          <div className="space-y-4">
-            {issue.resources.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium">Related Resources</h4>
-                <div className="space-y-1">
+      <div className="border-t pt-4 p-6 bg-muted rounded-b-xl flex-1">
+        <div className="space-y-4">
+          {issue.resources.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium">Related Resources</h4>
+              {issue.resources.length > 0 ? (
+                <div className="space-y-2">
                   {issue.resources.map(resource => (
                     <Link
                       key={resource.id}
                       href={`/resources/${resource.id}`}
                       className="flex items-center gap-2 text-sm hover:font-medium"
                     >
-                      <NotesIcon className="h-4 w-4 text-muted-foreground" />
+                      {getResourceSourceIcon(resource)}
                       <span>{resource.title}</span>
                     </Link>
                   ))}
                 </div>
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="text-sm text-muted-foreground">
+                  No resources found
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

@@ -51,8 +51,8 @@ export default function IssuePage() {
             </TabsList>
             <TabsContent value="problem">
               {/* Description */}
-              <div className="border rounded-xl p-4">
-                <h2 className="text-xl font-semibold mb-4">Detected Problem</h2>
+              <div className="bg-muted rounded-xl p-6">
+                <h2 className="text-xl font-semibold mb-2">Detected Problem</h2>
                 <MemoizedReactMarkdown>
                   {preprocessLaTeX(issue.description)}
                 </MemoizedReactMarkdown>
@@ -60,8 +60,8 @@ export default function IssuePage() {
             </TabsContent>
             <TabsContent value="solution">
               {/* Proposed Solution */}
-              {issue.proposedSolution && (
-                <div className="border rounded-xl p-4">
+              {issue.proposedSolution ? (
+                <div className="bg-muted rounded-xl p-4">
                   <h2 className="text-2xl font-semibold mb-4">
                     Proposed Solution
                   </h2>
@@ -69,6 +69,14 @@ export default function IssuePage() {
                     <MemoizedReactMarkdown>
                       {preprocessLaTeX(issue.proposedSolution)}
                     </MemoizedReactMarkdown>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl p-4  h-32 bg-muted flex items-center justify-center flex-col">
+                  <h2 className="font-semibold">No Solution Proposed</h2>
+                  <div className="text-muted-foreground text-sm">
+                    No solution has been proposed yet. Check back later or
+                    suggest a solution in the comments.
                   </div>
                 </div>
               )}

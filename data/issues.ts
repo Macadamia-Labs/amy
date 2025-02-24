@@ -49,7 +49,7 @@ export const sampleIssues: Issue[] = [
     id: '2',
     title: 'Nozzle Reinforcement Deficiency',
     description:
-      "A new 6″ inlet nozzle was added to a pressure vessel shell but the repad or reinforcing calculation was not updated. The nozzle's large size and location near a weld seam make the existing reinforcement insufficient per ASME code requirements (UG‐37 and UG‐40).",
+      "A new **6″ inlet nozzle** was added to a pressure vessel shell but the repad or reinforcing calculation was not updated. The nozzle's **large size** and location **near a weld seam** make the existing reinforcement **insufficient** per **ASME code requirements** (**UG‐37** and **UG‐40**).",
     status: 'in_progress',
     priority: 'high',
     category: 'Calculation',
@@ -69,7 +69,7 @@ export const sampleIssues: Issue[] = [
     id: '3',
     title: 'Flow Rate/Pressure Mismatch in Piping (ASME B31.3)',
     description:
-      'A secondary cooling loop is specified to flow at 180 L/min (exceeding the original design of 150 L/min), causing the piping velocity and internal pressure to exceed what the line was originally designed to handle under ASME B31.3. This can lead to excessive pressure drop, possible water hammer, or insufficient pipe wall thickness.',
+      'A secondary cooling loop is specified to flow at **180 L/min** (exceeding the original design of **150 L/min**), causing the piping velocity and internal pressure to exceed what the line was originally designed to handle under **ASME B31.3**. This can lead to **excessive pressure drop**, possible **water hammer**, or **insufficient pipe wall thickness**.',
     status: 'in_progress',
     priority: 'high',
     category: 'Specification',
@@ -89,7 +89,7 @@ export const sampleIssues: Issue[] = [
     id: '4',
     title: 'Foundation Bearing Capacity Exceedance',
     description:
-      'Recent structural modifications have increased the load on foundation pad F-23 by approximately 15%. The geotechnical report indicates the soil bearing capacity is 2500 psf, but current calculations show loads approaching 2800 psf. This exceeds the safety factor requirements in ACI 318-19.',
+      'Recent structural modifications have increased the load on foundation pad **F-23** by approximately **15%**. The geotechnical report indicates the soil bearing capacity is **2500 psf**, but current calculations show loads approaching **2800 psf**. This exceeds the safety factor requirements in **ACI 318-19**.',
     status: 'open',
     priority: 'critical',
     category: 'Safety',
@@ -109,7 +109,7 @@ export const sampleIssues: Issue[] = [
     id: '5',
     title: 'Electrical Conduit Clearance Violation',
     description:
-      'The installation of new HVAC ductwork has created a clearance conflict with existing electrical conduits. Current spacing is 4 inches, violating NEC Article 110.26 requirement for minimum 6 inches clearance for 600V conductors.',
+      'The installation of new HVAC ductwork has created a clearance conflict with existing electrical conduits. Current spacing is **4 inches**, violating **NEC Article 110.26** requirement for minimum **6 inches clearance** for **600V conductors**.',
     status: 'open',
     priority: 'high',
     category: 'Construction',
@@ -129,7 +129,7 @@ export const sampleIssues: Issue[] = [
     id: '6',
     title: 'Lifting Lugs and Rigging Details',
     description:
-      'Recent tenant improvement modifications created a new enclosed office space (Room 415) without updating the fire sprinkler layout. Current sprinkler spacing exceeds NFPA 13 requirements for light hazard occupancy maximum protection area per sprinkler.',
+      'Recent tenant improvement modifications created a new enclosed office space (**Room 415**) without updating the fire sprinkler layout. Current sprinkler spacing **exceeds NFPA 13 requirements** for **light hazard occupancy** maximum protection area per sprinkler.',
     status: 'in_progress',
     priority: 'critical',
     category: 'Maintenance',
