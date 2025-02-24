@@ -47,40 +47,26 @@ export const BuildGrid = () => {
   useEffect(() => {
     const initialNodes: CADNode[] = [
       {
-        id: 'specs1',
-        type: 'specs',
-        position: { x: 0, y: 50 },
-        data: {
-          type: 'specs',
-          label: 'Project Requirements',
-          requirements: ['Max load: 1000N', 'Min safety factor: 2.0'],
-          constraints: {
-            maxWidth: 100,
-            maxHeight: 50
-          }
-        }
-      },
-      {
         id: 'resource1',
         type: 'standard',
-        position: { x: 0, y: 200 },
+        position: { x: 500, y: 280 },
         data: {
           type: 'standard',
           label: 'Design Standard',
-          name: 'Design Standard',
-          description: 'Process Piping Design Standards',
-          standardCode: 'ASME B31.3'
+          name: 'Extracted Design Parameters',
+          description: 'Pressure vessel parameters',
+          standardCode: 'E'
         }
       },
       {
         id: 'resource2',
         type: 'integration',
-        position: { x: 0, y: 350 },
+        position: { x: 150, y: 150 },
         data: {
           type: 'integration',
           label: 'Google Drive',
-          name: 'BOM Vessel #3',
-          description: 'Bill of Materials',
+          name: 'Pressure Vessel Requirements',
+          description: 'Customer specifications',
           integration: {
             type: 'Google Drive',
             logoSrc: '/integrations/gdrive.avif'
@@ -90,26 +76,56 @@ export const BuildGrid = () => {
       {
         id: 'resource3',
         type: 'integration',
-        position: { x: 0, y: 500 },
+        position: { x: 1200, y: 360 },
         data: {
           type: 'integration',
-          label: 'Confluence',
-          name: 'Design Documentation',
-          description: 'Project Requirements & Specs',
+          label: 'Google Drive',
+          name: 'Technical Drawing',
+          description: 'Pressure Vessel',
           integration: {
-            type: 'Confluence',
-            logoSrc: '/integrations/confluence.avif'
+            type: 'Google Drive',
+            logoSrc: '/integrations/gdrive.avif'
+          }
+        }
+      },
+      {
+        id: 'resource8',
+        type: 'integration',
+        position: { x: 1200, y: 480 },
+        data: {
+          type: 'integration',
+          label: 'Google Drive',
+          name: 'Bill of Materials',
+          description: 'Pressure Vessel Components',
+          integration: {
+            type: 'Google Drive',
+            logoSrc: '/integrations/gdrive.avif'
+          }
+        }
+      },
+      {
+        id: 'resource7',
+        type: 'integration',
+        position: { x: 1500, y: 150 },
+        data: {
+          type: 'integration',
+          label: 'Google Drive',
+          name: 'Simulation Report',
+          description: 'Static Pressure Analysis',
+          integration: {
+            type: 'Google Drive',
+            logoSrc: '/integrations/gdrive.avif'
           }
         }
       },
       {
         id: 'resource4',
         type: 'integration',
-        position: { x: 0, y: 650 },
+        position: { x: 1200, y: 150 },
         data: {
           type: 'integration',
           label: 'Ansys',
-          name: 'Ansys Workbench',
+          name: 'Ansys Mechanical',
           description: 'FEA Simulation Setup',
           integration: {
             type: 'Ansys',
@@ -117,6 +133,7 @@ export const BuildGrid = () => {
           }
         }
       },
+      /* Commented out nodes
       {
         id: 'geometry1',
         type: 'geometry',
@@ -146,6 +163,20 @@ export const BuildGrid = () => {
         }
       },
       {
+        id: 'material2',
+        type: 'material',
+        position: { x: 300, y: 200 },
+        data: {
+          type: 'material',
+          label: 'Extracted pressure vessel parameters',
+          material: 'Steel A516 Grade 70',
+          properties: {
+            density: 7.85,
+            elasticity: 200
+          }
+        }
+      },
+      {
         id: 'simulation1',
         type: 'simulation',
         position: { x: 600, y: 125 },
@@ -158,32 +189,81 @@ export const BuildGrid = () => {
             loadMagnitude: 1000
           }
         }
-      }
+      },
+      */
+      {
+        id: 'resource5',
+        type: 'integration',
+        position: { x: 900, y: 280 },
+        data: {
+          type: 'integration',
+          label: 'DS',
+          name: 'Solidworks',
+          description: '3D CAD model',
+          integration: {
+            type: 'DS',
+            logoSrc: '/integrations/DS.avif'
+          }
+        }
+      },
+      {
+        id: 'resource6',
+        type: 'integration',
+        position: { x: 150, y: 360 },
+        data: {
+          type: 'integration',
+          label: 'Google Drive',
+          name: 'ASME standards',
+          description: 'ASME standards',
+          integration: {
+            type: 'Google Drive',
+            logoSrc: '/integrations/gdrive.avif'
+          }
+        }
+      },
     ]
 
     const initialEdges: Edge[] = [
       {
         id: 'e1-2',
-        source: 'specs1',
-        target: 'geometry1',
+        source: 'resource2',
+        target: 'resource1',
         animated: true
       },
       {
-        id: 'er1-2',
-        source: 'resource1',
-        target: 'geometry1',
-        animated: true
-      },
-      {
-        id: 'e2-4',
-        source: 'geometry1',
-        target: 'simulation1',
+        id: 'e2-3',
+        source: 'resource6',
+        target: 'resource1',
         animated: true
       },
       {
         id: 'e3-4',
-        source: 'material1',
-        target: 'simulation1',
+        source: 'resource1',
+        target: 'resource5',
+        animated: true
+      },
+      {
+        id: 'e4-5',
+        source: 'resource5',
+        target: 'resource3',
+        animated: true
+      },
+      {
+        id: 'e5-6',
+        source: 'resource5',
+        target: 'resource4',
+        animated: true
+      },
+      {
+        id: 'e6-7',
+        source: 'resource4',
+        target: 'resource7',
+        animated: true
+      },
+      {
+        id: 'e5-8',
+        source: 'resource5',
+        target: 'resource8',
         animated: true
       }
     ]

@@ -30,7 +30,7 @@ export const sampleIssues: Issue[] = [
         content: 'We can’t reduce the pressure to 40 psig given our process needs, so we must go with a thicker shell. I’ll check nozzle reinforcements per UG‐37. Let’s finalize calculations and update the fabrication drawings.',
         author: {
           id: 'eng-3',
-          name: 'Michael Chang',
+          name: 'Brecht Pierreux',
           title: 'Senior Piping Engineer',
           specialty: 'Process Piping',
           email: 'm.chang@example.com'

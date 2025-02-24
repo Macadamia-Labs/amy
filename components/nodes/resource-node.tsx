@@ -63,7 +63,7 @@ export const StandardNode: ComponentType<
 
   return (
     <ResourceNodeContent
-      name={`${data.name} (${data.standardCode})`}
+      name={`${data.name}`}
       description={data.description}
     />
   )

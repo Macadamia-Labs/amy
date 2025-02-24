@@ -34,6 +34,13 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     isConnected: false
   },
   {
+    name: 'Dassault',
+    code: 'DS',
+    description: 'Link your Solidworks workspace',
+    logoSrc: '/integrations/DS.avif',
+    isConnected: false
+  },
+  {
     name: 'Google Drive',
     code: 'gdrive',
     description: 'Connect and manage your Google Drive files',
