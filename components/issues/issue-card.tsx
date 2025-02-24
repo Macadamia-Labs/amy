@@ -3,7 +3,7 @@ import { Issue } from '@/lib/types'
 import { NotesIcon } from '@/lib/utils/icons'
 import Link from 'next/link'
 import { MemoizedReactMarkdown } from '../ui/markdown'
-import { PriorityBadge } from './issue-table'
+import { IssuePriorityBadge } from './issue-priority-badge'
 
 interface IssueCardProps {
   issue: Issue
@@ -15,7 +15,7 @@ export function IssueCard({ issue }: IssueCardProps) {
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">{issue.title}</CardTitle>
         <div className="flex items-center justify-between gap-2">
-          <PriorityBadge priority={issue.priority} />
+          <IssuePriorityBadge priority={issue.priority} />
         </div>
         <MemoizedReactMarkdown className="text-sm line-clamp-3">
           {issue.description}

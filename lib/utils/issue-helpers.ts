@@ -84,3 +84,15 @@ export const getPriorityIcon = (priority: Issue['priority']) => {
   }
   return priorityIcons[priority]
 }
+
+export const getCategoryColor = (category: Issue['category']) => {
+  const categoryColors = {
+    Production: 'bg-blue-100 text-blue-800',
+    Construction: 'bg-green-100 text-green-800',
+    Maintenance: 'bg-yellow-100 text-yellow-800',
+    Safety: 'bg-red-100 text-red-800',
+    Design: 'bg-purple-100 text-purple-800',
+    Other: 'bg-gray-100 text-gray-800'
+  }
+  return categoryColors[category]
+}

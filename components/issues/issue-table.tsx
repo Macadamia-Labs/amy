@@ -6,35 +6,19 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import { Issue, IssuePriority } from '@/lib/types'
+import { Issue } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { UserIcon } from '@/lib/utils/icons'
 import {
   getCategoryIcon,
-  getPriorityColor,
-  getPriorityIcon,
   getStatusColor,
   getStatusIcon
 } from '@/lib/utils/issue-helpers'
 import { useRouter } from 'next/navigation'
+import { IssuePriorityBadge } from './issue-priority-badge'
 
 interface IssueTableProps {
   issues: Issue[]
-}
-
-export const PriorityBadge = ({ priority }: { priority: IssuePriority }) => {
-  const PriorityIcon = getPriorityIcon(priority)
-  return (
-    <span
-      className={cn(
-        'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit',
-        getPriorityColor(priority)
-      )}
-    >
-      <PriorityIcon className="h-4 w-4" />
-      {priority}
-    </span>
-  )
 }
 
 export function IssueTable({ issues }: IssueTableProps) {
@@ -65,7 +49,7 @@ export function IssueTable({ issues }: IssueTableProps) {
                 onClick={() => router.push(`/issues/${issue.id}`)}
               >
                 <TableCell>
-                  <PriorityBadge priority={issue.priority} />
+                  <IssuePriorityBadge priority={issue.priority} />
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">{issue.title}</div>

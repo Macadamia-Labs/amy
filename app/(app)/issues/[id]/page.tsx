@@ -1,21 +1,14 @@
 'use client'
 
 import { Comments } from '@/components/comments'
-import { Button } from '@/components/ui/button'
+import { IssueCategoryBadge } from '@/components/issues/issue-category-badge'
+import { IssuePriorityBadge } from '@/components/issues/issue-priority-badge'
+import { IssueStatusBadge } from '@/components/issues/issue-status-badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { sampleIssues } from '@/data/issues'
-import { cn } from '@/lib/utils'
-import {
-  getCategoryIcon,
-  getPriorityColor,
-  getPriorityIcon,
-  getStatusColor,
-  getStatusIcon
-} from '@/lib/utils/issue-helpers'
 import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import 'katex/dist/katex.min.css'
-import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
@@ -40,48 +33,9 @@ export default function IssuePage() {
     return <div>Issue not found</div>
   }
 
-  const StatusIcon = getStatusIcon(issue.status)
-  const CategoryIcon = getCategoryIcon(issue.category)
-
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <Link href="/issues">
-          <Button variant="ghost" className="mb-4">
-            <ChevronLeft className="h-5 w-5 mr-2" />
-            Back to Issues
-          </Button>
-        </Link>
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold">{issue.title}</h1>
-            <div className="flex items-center gap-4 mt-3 text-muted-foreground text-lg">
-              <div className="flex items-center gap-2">
-                <CategoryIcon className="h-5 w-5" />
-                <span>{issue.category}</span>
-              </div>
-              <span
-                className={cn(
-                  'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2',
-                  getStatusColor(issue.status)
-                )}
-              >
-                <StatusIcon className="h-5 w-5" />
-                {issue.status.replace('_', ' ')}
-              </span>
-            </div>
-          </div>
-          <span
-            className={cn(
-              'px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2',
-              getPriorityColor(issue.priority)
-            )}
-          >
-            {getPriorityIcon(issue.priority)({ className: 'h-4 w-4' })}
-            {issue.priority}
-          </span>
-        </div>
-      </div>
+      <h1 className="text-3xl font-bold mb-4">{issue.title}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
@@ -113,6 +67,26 @@ export default function IssuePage() {
         </div>
 
         <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <h2 className="text-xl font-semibold mb-4">Status</h2>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className=" text-sm font-medium mr-auto">Priority</span>
+                  <IssuePriorityBadge priority={issue.priority} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className=" text-sm font-medium mr-auto">Status</span>
+                  <IssueStatusBadge status={issue.status} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className=" text-sm font-medium mr-auto">Category</span>
+                  <IssueCategoryBadge category={issue.category} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Resources */}
           <Card>
             <CardContent className="pt-6">
