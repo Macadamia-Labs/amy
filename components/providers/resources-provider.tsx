@@ -1,6 +1,6 @@
 'use client'
 
-import { defaultFolders, defaultResources } from '@/lib/constants/resources'
+import { defaultFolders, defaultResources } from '@/data/resources'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { createClient } from '@/lib/supabase/client'
 import { Resource } from '@/lib/types'

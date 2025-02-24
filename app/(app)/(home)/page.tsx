@@ -8,11 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import {
-  categoryIcons,
-  resources,
-  type ResourceItem
-} from '@/lib/constants/resources'
+import { categoryIcons, resources, type ResourceItem } from '@/data/resources'
 import Link from 'next/link'
 
 export default function AppPage() {
@@ -31,9 +27,12 @@ export default function AppPage() {
         <div className="flex items-center gap-2">
           <div className="h-12 w-1 bg-purple-500 rounded-full"></div>
           <div>
-            <h1 className="text-2xl font-bold">Industrial Storage Tank for Water</h1>
+            <h1 className="text-2xl font-bold">
+              Industrial Storage Tank for Water
+            </h1>
             <p className="text-muted-foreground">
-            Customer X - Detailed design of 96” diameter pressure vessel for water storage
+              Customer X - Detailed design of 96” diameter pressure vessel for
+              water storage
             </p>
           </div>
         </div>

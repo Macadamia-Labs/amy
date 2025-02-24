@@ -17,7 +17,7 @@ import {
   TableRow,
   Table as UITable
 } from '@/components/ui/table'
-import { categoryIcons } from '@/lib/constants/resources'
+import { categoryIcons } from '@/data/resources'
 import {
   deleteResource,
   deleteResources,
