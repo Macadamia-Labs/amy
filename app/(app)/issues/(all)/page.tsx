@@ -5,11 +5,12 @@ import { IssueTable } from '@/components/issues/issue-table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { sampleIssues } from '@/data/issues'
 import { GridIcon, TableIcon } from '@/lib/utils/icons'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function Page() {
   const [view, setView] = useState<'grid' | 'table'>('grid')
+  const router = useRouter()
 
   return (
     <div className="p-4">
@@ -41,9 +42,11 @@ export default function Page() {
         <TabsContent value="grid" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sampleIssues.map(issue => (
-              <Link key={issue.id} href={`/issues/${issue.id}`}>
-                <IssueCard issue={issue} />
-              </Link>
+              <IssueCard
+                key={issue.id}
+                issue={issue}
+                onClick={() => router.push(`/issues/${issue.id}`)}
+              />
             ))}
           </div>
         </TabsContent>

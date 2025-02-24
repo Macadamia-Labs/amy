@@ -12,6 +12,7 @@ import {
   TextFileIcon,
   WrenchIcon
 } from '@/lib/utils/icons'
+import { VariableIcon } from 'lucide-react'
 
 export type DocumentType =
   | 'Drawing'
@@ -48,7 +49,9 @@ export const getCategoryIcon = (category: Issue['category']) => {
     Maintenance: WrenchIcon,
     Safety: ActivityIcon,
     Design: PencilIcon,
-    Other: BoxIcon
+    Other: BoxIcon,
+    Specification: TextFileIcon,
+    Calculation: VariableIcon
   }
   return categoryIcons[category]
 }
@@ -92,7 +95,9 @@ export const getCategoryColor = (category: Issue['category']) => {
     Maintenance: 'bg-yellow-100 text-yellow-800',
     Safety: 'bg-red-100 text-red-800',
     Design: 'bg-purple-100 text-purple-800',
-    Other: 'bg-gray-100 text-gray-800'
+    Other: 'bg-gray-100 text-gray-800',
+    Specification: 'bg-blue-100 text-blue-800',
+    Calculation: 'bg-green-100 text-green-800'
   }
   return categoryColors[category]
 }

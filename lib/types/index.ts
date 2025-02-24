@@ -144,6 +144,8 @@ export type IssueCategory =
   | 'Maintenance'
   | 'Safety'
   | 'Design'
+  | 'Specification'
+  | 'Calculation'
   | 'Other'
 
 export type IssuePriority = 'low' | 'medium' | 'high' | 'critical'
