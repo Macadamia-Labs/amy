@@ -1,25 +1,25 @@
-import { useOswald } from "@/lib/providers/oswald-provider";
-import { Button } from "../ui/button";
+import { useCooper } from '@/lib/providers/cooper-provider'
+import { Button } from '../ui/button'
 
 interface CitationProps {
-  id: string;
+  id: string
 }
 
 export default function Citation({ id }: CitationProps) {
-  const oswaldContext = useOswald();
+  const cooperContext = useCooper()
 
   // Find the source and its index
-  const sourceIndex = oswaldContext.sources.findIndex(
-    (source) => source.id === id
-  );
-  const source = oswaldContext.sources[sourceIndex];
+  const sourceIndex = cooperContext.sources.findIndex(
+    source => source.id === id
+  )
+  const source = cooperContext.sources[sourceIndex]
 
-  if (!source) return null;
+  if (!source) return null
 
   const handleClick = () => {
-    oswaldContext.setActiveSource(source);
-    oswaldContext.setActiveTab("sources");
-  };
+    cooperContext.setActiveSource(source)
+    cooperContext.setActiveTab('sources')
+  }
 
   return (
     <Button
@@ -30,5 +30,5 @@ export default function Citation({ id }: CitationProps) {
     >
       {sourceIndex + 1}
     </Button>
-  );
+  )
 }

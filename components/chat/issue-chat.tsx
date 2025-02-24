@@ -26,7 +26,7 @@ export function IssueChat({ id, initialMessages }: IssueChatProps) {
         {
           id: generateUUID(),
           role: 'assistant',
-          content: "Hi, I'm Oswald. How can I help with this issue?"
+          content: "Hi, I'm Cooper. How can I help with this issue?"
         }
       ]
 

@@ -26,7 +26,7 @@ export function DocumentChat({ id, initialMessages }: DocumentChatProps) {
         {
           id: generateUUID(),
           role: 'assistant',
-          content: "Hi, I'm Oswald. How can I help?"
+          content: "Hi, I'm Cooper. How can I help?"
         }
       ]
 

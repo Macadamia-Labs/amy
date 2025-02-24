@@ -200,7 +200,7 @@ export function Comments({ comments: initialComments }: CommentsProps) {
   }
 
   return (
-    <div className="w-full p-4 pt-2 rounded-lg bg-sidebar text-muted-foreground border">
+    <div className="w-full p-4 pt-2 rounded-lg text-muted-foreground border">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-2 border-b">
         <div className="flex items-center gap-2">

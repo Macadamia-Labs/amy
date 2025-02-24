@@ -1,29 +1,29 @@
-"use client";
+'use client'
 
-import { ResizablePanelGroup, ResizablePanel } from "@/components/ui/resizable";
-import { OswaldTabs } from "@/components/oswald-tabs";
-import { Chat } from "@/components/chat/chat";
-import { App } from "@/lib/types/apps";
-import { Message, CreateMessage } from "ai/react";
-import { Dispatch, SetStateAction } from "react";
-import { ChatRequestOptions } from "ai";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { MaximizeIcon, MinimizeIcon } from "lucide-react";
-import { useOswald } from "@/lib/providers/oswald-provider";
+import { Chat } from '@/components/chat/chat'
+import { CooperTabs } from '@/components/cooper-tabs'
+import { Button } from '@/components/ui/button'
+import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+import { useCooper } from '@/lib/providers/cooper-provider'
+import { App } from '@/lib/types/apps'
+import { cn } from '@/lib/utils'
+import { ChatRequestOptions } from 'ai'
+import { CreateMessage, Message } from 'ai/react'
+import { MaximizeIcon, MinimizeIcon } from 'lucide-react'
+import { Dispatch, SetStateAction } from 'react'
 
 interface ChatLayoutProps {
-  id: string;
-  messages: Message[];
+  id: string
+  messages: Message[]
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-  isLoading: boolean;
-  input: string;
-  setInput: Dispatch<SetStateAction<string>>;
-  reload?: any;
-  stop?: any;
+  ) => Promise<string | null | undefined>
+  isLoading: boolean
+  input: string
+  setInput: Dispatch<SetStateAction<string>>
+  reload?: any
+  stop?: any
 }
 
 export function ChatLayout({
@@ -34,9 +34,9 @@ export function ChatLayout({
   input,
   setInput,
   reload,
-  stop,
+  stop
 }: ChatLayoutProps) {
-  const { showTabs, setShowTabs, hasContent } = useOswald();
+  const { showTabs, setShowTabs, hasContent } = useCooper()
 
   return (
     <ResizablePanelGroup direction="horizontal" className="p-2 pt-0 gap-2">
@@ -61,8 +61,8 @@ export function ChatLayout({
 
         <Chat
           id={id}
-          app={App.Oswald}
-          header="Oswald"
+          app={App.Cooper}
+          header="Cooper"
           messages={messages}
           append={append}
           isLoading={isLoading}
@@ -76,13 +76,13 @@ export function ChatLayout({
       {showTabs && (
         <ResizablePanel
           className={cn(
-            "border h-full rounded-lg bg-sidebar transition-all duration-300 p-4"
+            'border h-full rounded-lg bg-sidebar transition-all duration-300 p-4'
           )}
           defaultSize={50}
         >
-          <OswaldTabs chatId={id} />
+          <CooperTabs chatId={id} />
         </ResizablePanel>
       )}
     </ResizablePanelGroup>
-  );
+  )
 }

@@ -1,31 +1,31 @@
-import * as React from "react";
-import { UseChatHelpers } from "ai/react";
-import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useBlockKeyPropagation } from "@/lib/hooks/use-block-key-propagation";
-import { SendIcon } from "@/lib/icons";
-import { motion } from "framer-motion";
-import { usePathname } from "next/navigation";
-import { Input } from "@/components/ui/input";
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import { useBlockKeyPropagation } from '@/lib/hooks/use-block-key-propagation'
+import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
+import { SendIcon } from '@/lib/icons'
+import { UseChatHelpers } from 'ai/react'
+import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
+import * as React from 'react'
 // import { BrainToggle } from "@/components/tools/brain-toggle";
-import { FilePicker } from "@/components/files/file-picker";
-import { useFiles } from "@/lib/providers/files-provider";
-import { Message } from "ai";
+import { FilePicker } from '@/components/files/file-picker'
+import { useFiles } from '@/lib/providers/files-provider'
+import { Message } from 'ai'
 // import { LinkedFiles } from "./linked-files";
 
 export interface PromptProps
-  extends Pick<UseChatHelpers, "input" | "setInput"> {
-  onSubmit: (value: string) => void;
-  isLoading: boolean;
-  isThinkingMode: boolean;
-  onThinkingModeToggle: (enabled: boolean) => void;
-  chatId?: string;
-  append?: (value: Message) => Promise<string | null | undefined>;
+  extends Pick<UseChatHelpers, 'input' | 'setInput'> {
+  onSubmit: (value: string) => void
+  isLoading: boolean
+  isThinkingMode: boolean
+  onThinkingModeToggle: (enabled: boolean) => void
+  chatId?: string
+  append?: (value: Message) => Promise<string | null | undefined>
 }
 
 export function PromptForm({
@@ -36,46 +36,46 @@ export function PromptForm({
   isThinkingMode,
   onThinkingModeToggle,
   chatId,
-  append,
+  append
 }: PromptProps) {
-  const { formRef, onKeyDown } = useEnterSubmit();
-  const inputRef = React.useRef<HTMLTextAreaElement | HTMLInputElement>(null);
-  const pathname = usePathname();
-  const isAmy = pathname.includes("/amy");
-  const { linkFileToChat } = useFiles();
+  const { formRef, onKeyDown } = useEnterSubmit()
+  const inputRef = React.useRef<HTMLTextAreaElement | HTMLInputElement>(null)
+  const pathname = usePathname()
+  const isCooper = pathname.includes('/cooper')
+  const { linkFileToChat } = useFiles()
 
-  useBlockKeyPropagation(true, formRef, ["Enter"]);
+  useBlockKeyPropagation(true, formRef, ['Enter'])
 
   const handleFileSelect = async (file: any) => {
-    console.log("handleFileSelect called with fileId:", file.id);
-    console.log("chatId:", chatId);
-    console.log("append:", !!append);
+    console.log('handleFileSelect called with fileId:', file.id)
+    console.log('chatId:', chatId)
+    console.log('append:', !!append)
     if (!chatId || !append) {
-      console.log("Early return due to missing chatId or append");
-      return;
+      console.log('Early return due to missing chatId or append')
+      return
     }
-    await linkFileToChat(chatId, file.id);
+    await linkFileToChat(chatId, file.id)
     await append({
-      role: "user",
+      role: 'user',
       content: `<file>
         <fileId>${file.id}</fileId>
         <fileName>${file?.name}</fileName>
         <fileType>${file?.type}</fileType>
       </file>`,
-      id: Date.now().toString(),
-    });
-  };
+      id: Date.now().toString()
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!input?.trim()) {
-      return;
+      return
     }
-    setInput("");
-    await onSubmit(input);
-  };
+    setInput('')
+    await onSubmit(input)
+  }
 
-  if (isAmy) {
+  if (isCooper) {
     return (
       <form onSubmit={handleSubmit} ref={formRef} className="w-full px-4">
         <motion.div
@@ -90,7 +90,7 @@ export function PromptForm({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setInput(e.target.value)
             }
-            placeholder={"Send a message"}
+            placeholder={'Send a message'}
             spellCheck={false}
             variant="ghost"
             autoFocus
@@ -107,7 +107,7 @@ export function PromptForm({
                   type="submit"
                   size="icon"
                   variant="outline"
-                  disabled={isLoading || input === ""}
+                  disabled={isLoading || input === ''}
                 >
                   <SendIcon />
                   <span className="sr-only">Send message</span>
@@ -118,7 +118,7 @@ export function PromptForm({
           </div>
         </motion.div>
       </form>
-    );
+    )
   } else {
     return (
       <form onSubmit={handleSubmit} ref={formRef}>
@@ -140,7 +140,7 @@ export function PromptForm({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setInput(e.target.value)
             }
-            placeholder={"Send a message"}
+            placeholder={'Send a message'}
             spellCheck={false}
             variant="ghost"
             className="p-4 h-16"
@@ -156,7 +156,7 @@ export function PromptForm({
                   type="submit"
                   size="icon"
                   variant="outline"
-                  disabled={isLoading || input === ""}
+                  disabled={isLoading || input === ''}
                 >
                   <SendIcon />
                   <span className="sr-only">Send message</span>
@@ -167,6 +167,6 @@ export function PromptForm({
           </div>
         </motion.div>
       </form>
-    );
+    )
   }
 }

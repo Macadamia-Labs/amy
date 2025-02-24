@@ -6,7 +6,7 @@ import { ChatRequestOptions, CoreMessage } from 'ai'
 import { CreateMessage, Message } from 'ai/react'
 import { toast } from 'sonner'
 // import { useAuth } from '../providers/auth-provider'
-// import { useOswald } from '../providers/oswald-provider'
+// import { useCooper } from '../providers/cooper-provider'
 // import { useToolCallHandler } from '../tool-calls/handle-tool-calls'
 // import { getCurrentSelection } from '../tools/handle-get-selection'
 // import { App } from '../types/apps'
@@ -30,7 +30,7 @@ interface UseToolChatProps {
 
 export function useToolChat({ id, initialMessages }: UseToolChatProps) {
   // const handleToolCall = useToolCallHandler()
-  // const { requirements, simulationSteps } = useOswald()
+  // const { requirements, simulationSteps } = useCooper()
 
   const { session } = useAuth()
   const token = session?.access_token

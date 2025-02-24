@@ -5,7 +5,7 @@ export const exampleChanges: Change[] = [
     id: '1',
     project: 'Vehicle Specifications',
     user: {
-      name: 'Amy',
+      name: 'Cooper',
       avatar: undefined
     },
     authorizedBy: 'Abel',
@@ -15,7 +15,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-1',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'changed contents of',
         target: 'Vehicle Specifications',
         timestamp: 'February 11, 2025 at 1:50 PM'
@@ -23,7 +23,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-2',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'added new version of',
         target: 'Table Vehicle Power vs Speed in Mild Weather',
         timestamp: 'February 11, 2025 at 1:50 PM'
@@ -31,7 +31,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-3',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'added new version of',
         target: 'Table Vehicle Power vs Speed in Cold Weather',
         timestamp: 'February 11, 2025 at 1:50 PM'
@@ -39,7 +39,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-4',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'changed value',
         target: 'Vehicle Range in Cold Weather',
         description: '453.3 → 444.5 km',
@@ -48,7 +48,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-5',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'changed value',
         target: 'Vehicle Range in Mild Weather',
         description: '533.5 → 521.5 km',
@@ -57,7 +57,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-6',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'added new version of',
         target: 'Plot - Vehicle Power vs Speed in Cold Weather',
         timestamp: 'February 11, 2025 at 1:50 PM'
@@ -65,7 +65,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-7',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'added new version of',
         target: 'Plot - Vehicle Power vs Speed in Mild Weather',
         timestamp: 'February 11, 2025 at 1:50 PM'
@@ -73,7 +73,7 @@ export const exampleChanges: Change[] = [
       {
         id: '1-8',
         project: 'Vehicle Specifications',
-        user: { name: 'Amy' },
+        user: { name: 'Cooper' },
         action: 'edited',
         target: 'Cold weather range needs to be greater than 450.0 km',
         timestamp: 'February 11, 2025 at 1:50 PM'
@@ -84,7 +84,7 @@ export const exampleChanges: Change[] = [
     id: '2',
     project: 'Battery Cell Specifications',
     user: {
-      name: 'Amy',
+      name: 'Cooper',
       avatar: undefined
     },
     action: 'propagated changes',

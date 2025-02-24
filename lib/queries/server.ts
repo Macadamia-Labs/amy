@@ -103,7 +103,7 @@ export async function getRecentChats(limit: number): Promise<Chat[]> {
       .from('chats')
       .select('*')
       .eq('user_id', user.id)
-      .eq('app', 'amy')
+      .eq('app', 'cooper')
       .order('last_message_at', { ascending: false })
       .limit(limit)
 
@@ -132,7 +132,7 @@ export async function getResourceEmbeddings(
 ): Promise<any[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('embeddingsamy')
+    .from('embeddingscooper')
     .select('*')
     .eq('resource_id', resourceId)
 

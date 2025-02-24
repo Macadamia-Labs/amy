@@ -1,6 +1,6 @@
 export enum App {
-  Casper = "casper",
-  Amy = "amy",
-  Oswald = "oswald",
-  Veronica = "veronica",
+  Casper = 'casper',
+  Cooper = 'cooper',
+  Cooper = 'cooper',
+  Veronica = 'veronica'
 }

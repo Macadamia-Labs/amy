@@ -1,22 +1,22 @@
-import { ToolInvocation } from "ai";
-import { RetrievalResult } from "./retrieval-card";
-import { useEffect } from "react";
-import { useOswald } from "@/lib/providers/oswald-provider";
-import Citation from "@/components/citation";
+import Citation from '@/components/citation'
+import { useCooper } from '@/lib/providers/cooper-provider'
+import { ToolInvocation } from 'ai'
+import { useEffect } from 'react'
+import { RetrievalResult } from './retrieval-card'
 
 export default function RetrieveDocumentationTool({
-  tool,
+  tool
 }: {
-  tool: ToolInvocation & { result: RetrievalResult[] };
+  tool: ToolInvocation & { result: RetrievalResult[] }
 }) {
-  const oswaldContext = useOswald();
+  const cooperContext = useCooper()
 
   useEffect(() => {
-    if (oswaldContext) {
-      console.log("adding sources", tool.result);
-      oswaldContext.addSources(tool.result);
+    if (cooperContext) {
+      console.log('adding sources', tool.result)
+      cooperContext.addSources(tool.result)
     }
-  }, [tool.result]);
+  }, [tool.result])
 
   return (
     <div className="flex items-center gap-1">
@@ -27,5 +27,5 @@ export default function RetrieveDocumentationTool({
         ))}
       </div>
     </div>
-  );
+  )
 }
