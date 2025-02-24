@@ -147,7 +147,7 @@ importers:
         specifier: ^22.1.0
         version: 22.1.0
       katex:
-        specifier: ^0.16.10
+        specifier: ^0.16.21
         version: 0.16.21
       lodash:
         specifier: ^4.17.21
@@ -197,6 +197,12 @@ importers:
       react-intersection-observer:
         specifier: ^9.15.1
         version: 9.15.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-katex:
+        specifier: ^3.0.1
+        version: 3.0.1(prop-types@15.8.1)(react@19.0.0)
+      react-lottie:
+        specifier: ^1.2.10
+        version: 1.2.10(react@19.0.0)
       react-markdown:
         specifier: ^8.0.7
         version: 8.0.7(@types/react@18.3.18)(react@19.0.0)
@@ -3372,6 +3378,17 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  react-katex@3.0.1:
+    resolution: {integrity: sha512-wIUW1fU5dHlkKvq4POfDkHruQsYp3fM8xNb/jnc8dnQ+nNCnaj0sx5pw7E6UyuEdLRyFKK0HZjmXBo+AtXXy0A==}
+    peerDependencies:
+      prop-types: ^15.8.1
+      react: '>=15.3.2 <=18'
+
+  react-lottie@1.2.10:
+    resolution: {integrity: sha512-x0eWX3Z6zSx1XM5QSjnLupc6D22LlMCB0PH06O/N/epR2hsLaj1Vxd9RtMnbbEHjJ/qlsgHJ6bpN3vnZI92hjw==}
+    peerDependencies:
+      react: '>=15.0.0'
 
   react-markdown@8.0.7:
     resolution: {integrity: sha512-bvWbzG4MtOU62XqBx3Xx+zB2raaFFsq4mYiAzfjXJMEz2sixgeAfraA3tvzULF02ZdOMUOKTBFFaZJDDrq+BJQ==}
@@ -7572,6 +7589,19 @@ snapshots:
   react-is@16.13.1: {}
 
   react-is@18.3.1: {}
+
+  react-katex@3.0.1(prop-types@15.8.1)(react@19.0.0):
+    dependencies:
+      katex: 0.16.21
+      prop-types: 15.8.1
+      react: 19.0.0
+
+  react-lottie@1.2.10(react@19.0.0):
+    dependencies:
+      babel-runtime: 6.26.0
+      lottie-web: 5.12.2
+      prop-types: 15.8.1
+      react: 19.0.0
 
   react-markdown@8.0.7(@types/react@18.3.18)(react@19.0.0):
     dependencies:

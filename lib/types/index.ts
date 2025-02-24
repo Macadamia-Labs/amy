@@ -164,6 +164,7 @@ export interface Issue {
   location: string
   createdAt: Date
   updatedAt: Date
+  proposedSolution?: string
   resources: ResourceType[]
   standards: Standard[]
   documents: Document[]

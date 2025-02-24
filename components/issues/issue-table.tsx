@@ -1,21 +1,21 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
 } from '@/components/ui/table'
 import { Issue } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import {
-  ActivityIcon,
-  BellIcon,
-  CheckSquareIcon,
-  ClockIcon,
-  HardDriveIcon,
-  StopIcon,
-  WrenchIcon
+    ActivityIcon,
+    BellIcon,
+    CheckSquareIcon,
+    ClockIcon,
+    HardDriveIcon,
+    StopIcon,
+    WrenchIcon
 } from '@/lib/utils/icons'
 import { useRouter } from 'next/navigation'
 

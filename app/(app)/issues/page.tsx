@@ -12,9 +12,9 @@ import { useState } from 'react'
 const sampleIssues: Issue[] = [
   {
     id: '1',
-    title: 'Pipe Flow Rate Mismatch with Heat Exchanger',
+    title: 'Shell Thickness Underrated for Internal Pressure',
     description:
-      'Flow rate in secondary cooling loop exceeds heat exchanger specifications, causing pressure buildup in section P-103',
+      'During the design revision on 2/23/2025, the vessel’s design pressure was increased (from 40 psi to 50 psi). The shell and heads were not re‐verified with the new pressure. UUnder UG‐27 of the ASME Boiler & Pressure Vessel Code (BPVC), Section VIII, Division 1, the required thickness may now exceed what was initially specified.',
     status: 'open',
     priority: 'critical',
     category: 'Construction',
@@ -44,7 +44,7 @@ const sampleIssues: Issue[] = [
     standards: [
       {
         id: 'std-1',
-        code: 'ASME B31.3',
+        code: 'ASME BPVC VIII-1',
         name: 'Process Piping',
         category: 'ASME',
         description: 'Standards for process piping design and construction',
@@ -80,9 +80,9 @@ const sampleIssues: Issue[] = [
   },
   {
     id: '2',
-    title: 'Structural Load Distribution Anomaly',
+    title: 'Nozzle Reinforcement Deficiency',
     description:
-      'Steel beam deflection exceeds calculated values at grid intersection B-4, potential design revision needed',
+      'A new 6″ inlet nozzle was added to a pressure vessel shell but the repad or reinforcing calculation was not updated. The nozzle’s large size and location near a weld seam make the existing reinforcement insufficient per ASME code requirements (UG‐37 and UG‐40).',
     status: 'in_progress',
     priority: 'high',
     category: 'Construction',
@@ -148,9 +148,9 @@ const sampleIssues: Issue[] = [
   },
   {
     id: '3',
-    title: 'HVAC Ductwork Size Conflict',
+    title: 'Flow Rate/Pressure Mismatch in Piping (ASME B31.3)',
     description:
-      'Main supply duct cross-section insufficient for specified airflow, causing excessive velocity and noise',
+      'A secondary cooling loop is specified to flow at 180 L/min (exceeding the original design of 150 L/min), causing the piping velocity and internal pressure to exceed what the line was originally designed to handle under ASME B31.3. This can lead to excessive pressure drop, possible water hammer, or insufficient pipe wall thickness.',
     status: 'in_progress',
     priority: 'high',
     category: 'Construction',

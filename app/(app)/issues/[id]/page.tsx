@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { MathText } from '@/components/ui/math-text'
 import { Issue } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import {
@@ -24,15 +25,17 @@ import { useParams } from 'next/navigation'
 const sampleIssues: Issue[] = [
   {
     id: '1',
-    title: 'Pipe Flow Rate Mismatch with Heat Exchanger',
+    title: 'Shell Thickness Underrated for Internal Pressure',
     description:
-      'Flow rate in secondary cooling loop exceeds heat exchanger specifications, causing pressure buildup in section P-103',
+      'During the design revision on 2/23/2025, the vessel\'s design pressure was increased (from 40 psi to 50 psi). The shell and heads were not re‐verified with the new pressure. UUnder UG‐27 of the ASME Boiler & Pressure Vessel Code (BPVC), Section VIII, Division 1, the required thickness may now exceed what was initially specified.',
     status: 'open',
     priority: 'critical',
     category: 'Construction',
     location: 'Building A - Mechanical Room 2',
     createdAt: new Date('2024-03-10'),
     updatedAt: new Date('2024-03-11'),
+    proposedSolution:
+      'Re-verify the shell and head thickness calculations using the new design pressure of 50 psi according to UG-27. If the current thickness is insufficient, either: 1) Increase the shell and head thickness to meet code requirements, or 2) Reduce the system pressure back to the original 40 psi design pressure if operationally feasible.\n\nFor the nozzle reinforcement per UG-37, verify:\n\n\\[A_{\\text{required}} = t_{\\text{req}} \\times d_{\\text{opening}}\\]\n\nwhere:\n- \\(t_{\\text{req}}\\) = minimum required thickness of the shell for internal pressure (from UG-27)\n- \\(d_{\\text{opening}}\\) = finished diameter of the opening in the shell\n\nThen calculate the area available from:\n1. Excess thickness in the vessel shell\n2. The nozzle wall itself (above that required for nozzle pressure design)\n3. Any added repad or weld buildup\n\nIf \\(A_{\\text{available}} < A_{\\text{required}}\\), you do not meet UG-37 and will need a larger repad, thicker nozzle neck, or other design changes.',
     resources: [
       {
         id: 'pipe-1',
@@ -92,15 +95,17 @@ const sampleIssues: Issue[] = [
   },
   {
     id: '2',
-    title: 'Structural Load Distribution Anomaly',
+    title: 'Nozzle Reinforcement Deficiency',
     description:
-      'Steel beam deflection exceeds calculated values at grid intersection B-4, potential design revision needed',
+      'A new 6″ inlet nozzle was added to a pressure vessel shell but the repad or reinforcing calculation was not updated. The nozzle\'s large size and location near a weld seam make the existing reinforcement insufficient per ASME code requirements (UG‐37 and UG‐40).',
     status: 'in_progress',
     priority: 'high',
     category: 'Construction',
     location: 'Tower 2 - Floor 15 - Grid B-4',
     createdAt: new Date('2024-03-11'),
     updatedAt: new Date('2024-03-11'),
+    proposedSolution:
+      'Perform a complete nozzle reinforcement calculation per UG-37 and UG-40, considering the nozzle size and proximity to the weld seam. Design and install additional reinforcement (such as a repad or integral reinforcement) to meet ASME code requirements. Verify weld details and NDE requirements for the reinforcement attachment.',
     resources: [
       {
         id: 'load-1',
@@ -169,6 +174,8 @@ const sampleIssues: Issue[] = [
     location: 'Building B - Floor 3 - Ceiling Plenum',
     createdAt: new Date('2024-03-09'),
     updatedAt: new Date('2024-03-10'),
+    proposedSolution:
+      'Increase the main supply duct cross-sectional area to reduce air velocity to acceptable levels per ASHRAE guidelines. Consider adding sound attenuators or duct silencers if noise levels remain above specifications after velocity reduction.',
     resources: [
       {
         id: 'airflow-1',
@@ -335,6 +342,18 @@ export default function IssuePage() {
               <p className="text-muted-foreground">{issue.description}</p>
             </CardContent>
           </Card>
+
+          {/* Proposed Solution */}
+          {issue.proposedSolution && (
+            <Card>
+              <CardContent className="pt-6">
+                <h2 className="text-lg font-semibold mb-2">Proposed Solution</h2>
+                <div className="text-muted-foreground">
+                  <MathText text={issue.proposedSolution} />
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Resources */}
           <Card>
