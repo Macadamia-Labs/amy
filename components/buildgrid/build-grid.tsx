@@ -18,6 +18,11 @@ import '@xyflow/react/dist/style.css'
 
 import { GeometryNode } from '@/components/nodes/geometry-node'
 import { MaterialNode } from '@/components/nodes/material-node'
+import {
+  IntegrationNode,
+  ResourceNode,
+  StandardNode
+} from '@/components/nodes/resource-node'
 import { SimulationNode } from '@/components/nodes/simulation-node'
 import { SpecsNode } from '@/components/nodes/specs-node'
 import { CADNode } from '@/lib/types/node-types'
@@ -27,7 +32,10 @@ const nodeTypes: NodeTypes = {
   simulation: SimulationNode,
   geometry: GeometryNode,
   specs: SpecsNode,
-  material: MaterialNode
+  material: MaterialNode,
+  resource: ResourceNode,
+  standard: StandardNode,
+  integration: IntegrationNode
 }
 
 const defaultViewport = { x: 0, y: 0, zoom: 1.5 }
@@ -49,6 +57,63 @@ export const BuildGrid = () => {
           constraints: {
             maxWidth: 100,
             maxHeight: 50
+          }
+        }
+      },
+      {
+        id: 'resource1',
+        type: 'standard',
+        position: { x: 0, y: 200 },
+        data: {
+          type: 'standard',
+          label: 'Design Standard',
+          name: 'Design Standard',
+          description: 'Process Piping Design Standards',
+          standardCode: 'ASME B31.3'
+        }
+      },
+      {
+        id: 'resource2',
+        type: 'integration',
+        position: { x: 0, y: 350 },
+        data: {
+          type: 'integration',
+          label: 'Google Drive',
+          name: 'BOM Vessel #3',
+          description: 'Bill of Materials',
+          integration: {
+            type: 'Google Drive',
+            logoSrc: '/integrations/gdrive.avif'
+          }
+        }
+      },
+      {
+        id: 'resource3',
+        type: 'integration',
+        position: { x: 0, y: 500 },
+        data: {
+          type: 'integration',
+          label: 'Confluence',
+          name: 'Design Documentation',
+          description: 'Project Requirements & Specs',
+          integration: {
+            type: 'Confluence',
+            logoSrc: '/integrations/confluence.avif'
+          }
+        }
+      },
+      {
+        id: 'resource4',
+        type: 'integration',
+        position: { x: 0, y: 650 },
+        data: {
+          type: 'integration',
+          label: 'Ansys',
+          name: 'Ansys Workbench',
+          description: 'FEA Simulation Setup',
+          integration: {
+            type: 'Ansys',
+            logoSrc: '/integrations/ansys.avif'
           }
         }
       },
@@ -100,6 +165,12 @@ export const BuildGrid = () => {
       {
         id: 'e1-2',
         source: 'specs1',
+        target: 'geometry1',
+        animated: true
+      },
+      {
+        id: 'er1-2',
+        source: 'resource1',
         target: 'geometry1',
         animated: true
       },
