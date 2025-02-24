@@ -1,6 +1,6 @@
 'use client'
 
-import { IntegrationCard } from '@/app/components/integrations/integration-card'
+import { IntegrationCard } from '@/components/integrations/integration-card'
 import { useEffect, useState } from 'react'
 
 interface Integration {
