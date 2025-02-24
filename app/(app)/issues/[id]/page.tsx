@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { MathText } from '@/components/ui/math-text'
+import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Issue } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import {
@@ -17,17 +17,33 @@ import {
   TextFileIcon,
   WrenchIcon
 } from '@/lib/utils/icons'
+import 'katex/dist/katex.min.css'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
+
+// Preprocess LaTeX equations to be rendered by KaTeX
+const preprocessLaTeX = (content: string) => {
+  const blockProcessedContent = content.replace(
+    /\\\[([\s\S]*?)\\\]/g,
+    (_, equation) => `$$${equation}$$`
+  )
+  const inlineProcessedContent = blockProcessedContent.replace(
+    /\\\(([\s\S]*?)\\\)/g,
+    (_, equation) => `$${equation}$`
+  )
+  return inlineProcessedContent
+}
 
 // Reuse the sample data from the main issues page
 const sampleIssues: Issue[] = [
   {
     id: '1',
-    title: 'Shell Thickness Underrated for Internal Pressure',
+    title: 'Undersized Shell Thickness for 50 psig at 650 °F + Full Vacuum',
     description:
-      'During the design revision on 2/23/2025, the vessel\'s design pressure was increased (from 40 psi to 50 psi). The shell and heads were not re‐verified with the new pressure. UUnder UG‐27 of the ASME Boiler & Pressure Vessel Code (BPVC), Section VIII, Division 1, the required thickness may now exceed what was initially specified.',
+      'The drawings list a 3/8" nominal shell for a vessel that must handle 50 psig at an elevated temperature of 650 °F, plus an external design of full vacuum. By checking allowable stress (S) for SA-516 Gr.70 at 650 °F (ASME II-D) and then applying the formula in UG-27 for internal pressure, it becomes clear that 0.375" does not provide the necessary margin once you add the corrosion allowance (0.0625") and account for joint efficiency (E).\n\nA simplified example for the cylindrical shell under internal pressure (UG-27(c)(1)):\n\nt_internal = (P × R)/(S × E - 0.6P)\n\n• P = 50 psig\n• R = 48 in (1/2 of 96" OD, ignoring small differences for ID)\n• S (allowable at 650 °F for SA-516-70) < the room-temp value; typical reduced stress might be ~17,000 psi (for example).\n• E could be 1.0 if fully radiographed; if not, it might be 0.85 or 0.90.\n\nPlugging realistic values indicates the required shell thickness plus corrosion allowance exceeds 0.375". Thus, the shell thickness as drawn fails to meet the minimum code requirement for combined internal pressure and vacuum loading at this temperature.',
     status: 'open',
     priority: 'critical',
     category: 'Construction',
@@ -338,8 +354,23 @@ export default function IssuePage() {
           {/* Description */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-lg font-semibold mb-2">Description</h2>
-              <p className="text-muted-foreground">{issue.description}</p>
+              <h2 className="text-lg font-semibold mb-4">Detected Problem</h2>
+              <div className="text-muted-foreground">
+                <MemoizedReactMarkdown
+                  remarkPlugins={[remarkMath]}
+                  rehypePlugins={[[rehypeKatex, { output: 'html' }]]}
+                  className="prose prose-sm dark:prose-invert max-w-none
+                    prose-p:my-4 
+                    prose-pre:my-4
+                    prose-ul:my-4 
+                    prose-li:my-0
+                    prose-li:marker:text-muted-foreground
+                    [&_.katex-display]:my-4
+                    [&_.katex]:leading-tight"
+                >
+                  {preprocessLaTeX(issue.description)}
+                </MemoizedReactMarkdown>
+              </div>
             </CardContent>
           </Card>
 
@@ -347,9 +378,22 @@ export default function IssuePage() {
           {issue.proposedSolution && (
             <Card>
               <CardContent className="pt-6">
-                <h2 className="text-lg font-semibold mb-2">Proposed Solution</h2>
+                <h2 className="text-lg font-semibold mb-4">Proposed Solution</h2>
                 <div className="text-muted-foreground">
-                  <MathText text={issue.proposedSolution} />
+                  <MemoizedReactMarkdown
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[[rehypeKatex, { output: 'html' }]]}
+                    className="prose prose-sm dark:prose-invert max-w-none
+                      prose-p:my-4 
+                      prose-pre:my-4
+                      prose-ul:my-4 
+                      prose-li:my-0
+                      prose-li:marker:text-muted-foreground
+                      [&_.katex-display]:my-4
+                      [&_.katex]:leading-tight"
+                  >
+                    {preprocessLaTeX(issue.proposedSolution)}
+                  </MemoizedReactMarkdown>
                 </div>
               </CardContent>
             </Card>
@@ -394,7 +438,7 @@ export default function IssuePage() {
           <Card>
             <CardContent className="pt-6">
               <h2 className="text-lg font-semibold mb-4">
-                Applicable Standards
+                Resources
               </h2>
               <div className="space-y-4">
                 {issue.standards.map(standard => (

@@ -154,6 +154,14 @@ export interface Document {
   status: 'draft' | 'review' | 'approved' | 'obsolete'
 }
 
+export interface Engineer {
+  id: string
+  name: string
+  title: string
+  specialty: string
+  email: string
+}
+
 export interface Issue {
   id: string
   title: string
@@ -162,6 +170,7 @@ export interface Issue {
   priority: 'low' | 'medium' | 'high' | 'critical'
   category: 'Production' | 'Construction' | 'Maintenance' | 'Safety'
   location: string
+  assignedEngineer?: Engineer
   createdAt: Date
   updatedAt: Date
   proposedSolution?: string

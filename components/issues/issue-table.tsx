@@ -15,6 +15,7 @@ import {
     ClockIcon,
     HardDriveIcon,
     StopIcon,
+    UserIcon,
     WrenchIcon
 } from '@/lib/utils/icons'
 import { useRouter } from 'next/navigation'
@@ -70,6 +71,7 @@ export function IssueTable({ issues }: IssueTableProps) {
             <TableHead>Issue</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Location</TableHead>
+            <TableHead>Assigned To</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Last Updated</TableHead>
           </TableRow>
@@ -107,6 +109,17 @@ export function IssueTable({ issues }: IssueTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>{issue.location}</TableCell>
+                <TableCell>
+                  {issue.assignedEngineer && (
+                    <div className="flex items-center gap-2">
+                      <UserIcon className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <div className="text-sm">{issue.assignedEngineer.name}</div>
+                        <div className="text-xs text-muted-foreground">{issue.assignedEngineer.specialty}</div>
+                      </div>
+                    </div>
+                  )}
+                </TableCell>
                 <TableCell>
                   <span
                     className={cn(

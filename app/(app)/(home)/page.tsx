@@ -31,9 +31,9 @@ export default function AppPage() {
         <div className="flex items-center gap-2">
           <div className="h-12 w-1 bg-purple-500 rounded-full"></div>
           <div>
-            <h1 className="text-2xl font-bold">My First Project</h1>
+            <h1 className="text-2xl font-bold">Industrial Storage Tank for Water</h1>
             <p className="text-muted-foreground">
-              Project to design a pressure vessel systems
+            Customer X - Detailed design of 96” diameter pressure vessel for water storage
             </p>
           </div>
         </div>

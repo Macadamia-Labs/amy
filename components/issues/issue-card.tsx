@@ -15,6 +15,7 @@ import {
   HardDriveIcon,
   NotesIcon,
   TextFileIcon,
+  UserIcon,
   WrenchIcon
 } from '@/lib/utils/icons'
 
@@ -70,6 +71,12 @@ export function IssueCard({ issue }: IssueCardProps) {
           >
             {issue.priority}
           </span>
+          {issue.assignedEngineer && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <UserIcon className="h-4 w-4" />
+              <span className="text-xs">{issue.assignedEngineer.name}</span>
+            </div>
+          )}
           <CheckCircleIcon className="size-6 text-green-500 ml-auto" />
         </div>
         {/* <div className="flex items-center gap-2 mt-2">
@@ -120,7 +127,7 @@ export function IssueCard({ issue }: IssueCardProps) {
           {issue.standards.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-muted-foreground">
-                Applicable Standards
+                Resources
               </h4>
               <div className="space-y-1">
                 {issue.standards.map(standard => (
