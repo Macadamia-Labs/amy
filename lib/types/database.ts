@@ -70,6 +70,7 @@ export interface Resource {
   processing_result?: {
     outline: any[]
   }
+  origin?: string
 }
 
 export interface Project {

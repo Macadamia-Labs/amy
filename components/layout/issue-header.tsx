@@ -8,9 +8,9 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Resource } from '@/lib/types'
+import { Issue } from '@/lib/types'
 
-export default function ResourceHeader({ resource }: { resource: Resource }) {
+export default function IssueHeader({ issue }: { issue: Issue }) {
   return (
     <header className="flex h-16 items-center gap-2 p-4 w-full border-b">
       <SidebarTrigger className="-ml-1" />
@@ -18,11 +18,11 @@ export default function ResourceHeader({ resource }: { resource: Resource }) {
       <Breadcrumb className="mr-auto">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/resources">Resources</BreadcrumbLink>
+            <BreadcrumbLink href="/issues">Issues</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem className="text-primary">
-            {resource.title}
+            {issue.title}
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

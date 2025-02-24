@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/lib/providers/auth-provider'
 import { createClient } from '@/lib/supabase/client'
+import { Resource } from '@/lib/types'
 import {
   createContext,
   ReactNode,
@@ -9,24 +10,6 @@ import {
   useEffect,
   useState
 } from 'react'
-
-export interface Resource {
-  id: string
-  title: string
-  description: string
-  category: string
-  file_path: string
-  user_id: string
-  created_at: string
-  origin: 'drive' | 'confluence' | 'solidworks' | 'matlab' | string
-  processed?: boolean
-  processing_result?: any
-  processing_completed_at?: string
-  status?: 'pending' | 'loading' | 'processing' | 'completed' | 'error'
-  processing_error?: string
-  is_folder?: boolean
-  parent_id?: string | null
-}
 
 interface ResourcesContextType {
   resources: Resource[]

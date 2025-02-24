@@ -1,10 +1,6 @@
 'use client'
 
-import { DEFAULT_INTEGRATIONS } from '@/app/(app)/integrations/page'
-import {
-  Resource,
-  useResources
-} from '@/components/providers/resources-provider'
+import { useResources } from '@/components/providers/resources-provider'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -28,21 +24,18 @@ import {
   reprocessResource,
   shareResource
 } from '@/lib/queries/client'
+import { Resource } from '@/lib/types'
+import { FolderIcon, FolderOpenIcon } from '@/lib/utils/icons'
 import {
-  CheckCircleIcon,
-  FileUploadIcon,
-  FolderIcon,
-  FolderOpenIcon,
-  IntegrationIcon,
-  XCircleIcon
-} from '@/lib/utils/icons'
+  getResourceSourceIcon,
+  getResourceSourceName,
+  getResourceStatusIcon
+} from '@/lib/utils/resource-helpers'
 import { CheckedState } from '@radix-ui/react-checkbox'
 import { Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
-import Loader from '../lottie/loader'
 import LoadingDots from '../magicui/loading-dots'
 
 interface ResourceSourceCellProps {
@@ -50,29 +43,13 @@ interface ResourceSourceCellProps {
 }
 
 function ResourceSourceCell({ resource }: ResourceSourceCellProps) {
-  const integration = DEFAULT_INTEGRATIONS.find(
-    (i: { code: string }) => i.code === resource.origin
-  )
-
   return (
     <div className="relative group">
       <div className="flex justify-center">
-        {integration ? (
-          <Image
-            src={integration.logoSrc}
-            alt={integration.name}
-            className="mx-auto"
-            width={16}
-            height={16}
-          />
-        ) : resource.origin === 'upload' ? (
-          <FileUploadIcon className="size-5 text-muted-foreground" />
-        ) : (
-          <IntegrationIcon className="size-5 text-muted-foreground" />
-        )}
+        {getResourceSourceIcon(resource)}
       </div>
       <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs">
-        {integration?.name || resource.origin || 'External Source'}
+        {getResourceSourceName(resource)}
       </div>
     </div>
   )
@@ -181,31 +158,7 @@ export function ResourcesTable() {
   }
 
   const getStatusIcon = (resource: Resource) => {
-    const IconComponent =
-      categoryIcons[resource.category as keyof typeof categoryIcons]
-
-    const currentUploadStatus = uploadStatus.get(resource.id)
-
-    if (
-      currentUploadStatus === 'loading' ||
-      resource.status === 'loading' ||
-      resource.status === 'processing'
-    ) {
-      return <Loader className="size-6 text-blue-500" />
-    } else if (currentUploadStatus === 'error' || resource.status === 'error') {
-      return <XCircleIcon className="size-6 text-red-500" />
-    } else if (
-      currentUploadStatus === 'success' ||
-      resource.status === 'completed'
-    ) {
-      return <CheckCircleIcon className="size-6 text-green-500" />
-    } else if (IconComponent) {
-      return <IconComponent className="size-6 text-muted-foreground" />
-    }
-
-    return (
-      <div className="size-5 border-2 border-dashed border-muted-foreground rounded-full" />
-    )
+    return getResourceStatusIcon(resource, uploadStatus)
   }
 
   const handleShare = async (id: string) => {
@@ -293,7 +246,7 @@ export function ResourcesTable() {
                 )}
                 <div className="flex-1">
                   <span className="text-sm font-medium">{resource.title}</span>
-                  <div className="text-xs text-muted-foreground font-light">
+                  <div className="text-xs text-muted-foreground font-light line-clamp-1">
                     {isFolder ? (
                       `${childResources.length} items`
                     ) : resource.status === 'loading' ||

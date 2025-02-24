@@ -114,46 +114,6 @@ export type SearXNGSearchResults = {
   query: string
 }
 
-export interface Resource {
-  id: string
-  name: string
-  type: 'CPU' | 'Memory' | 'Storage' | 'Network' | 'Other'
-  usage: number
-  total: number
-  unit: string
-}
-
-export interface ResourceType {
-  id: string
-  name: string
-  type: 'Equipment' | 'Material' | 'Labor' | 'Power' | 'Other'
-  category: 'Production' | 'Construction' | 'Maintenance' | 'Safety'
-  usage: number
-  total: number
-  unit: string
-}
-
-export interface Standard {
-  id: string
-  code: string
-  name: string
-  category: 'ISO' | 'ASTM' | 'DIN' | 'IEC' | 'ASME' | 'Other'
-  description: string
-  lastUpdated: Date
-  relevantSections: string[]
-}
-
-export interface Document {
-  id: string
-  type: 'Drawing' | 'Simulation' | 'Report' | 'Specification' | 'Manual'
-  title: string
-  fileUrl: string
-  version: string
-  createdAt: Date
-  updatedAt: Date
-  status: 'draft' | 'review' | 'approved' | 'obsolete'
-}
-
 export interface Engineer {
   id: string
   name: string
@@ -168,13 +128,35 @@ export interface Issue {
   description: string
   status: 'open' | 'in_progress' | 'resolved' | 'closed'
   priority: 'low' | 'medium' | 'high' | 'critical'
-  category: 'Production' | 'Construction' | 'Maintenance' | 'Safety'
+  category:
+    | 'Production'
+    | 'Construction'
+    | 'Maintenance'
+    | 'Safety'
+    | 'Design'
+    | 'Other'
   location: string
   assignedEngineer?: Engineer
   createdAt: Date
   updatedAt: Date
   proposedSolution?: string
-  resources: ResourceType[]
-  standards: Standard[]
-  documents: Document[]
+  resources: Resource[]
+}
+
+export interface Resource {
+  id: string
+  title: string
+  description: string
+  category: string
+  file_path: string
+  user_id: string
+  created_at: string
+  origin: 'drive' | 'confluence' | 'solidworks' | 'matlab' | string
+  processed?: boolean
+  processing_result?: any
+  processing_completed_at?: string
+  status?: 'pending' | 'loading' | 'processing' | 'completed' | 'error'
+  processing_error?: string
+  is_folder?: boolean
+  parent_id?: string | null
 }
