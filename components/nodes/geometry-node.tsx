@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { Handle, Position } from "@xyflow/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CADNodeProps } from "@/types/node-types";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { CADNodeProps } from '@/types/node-types'
+import { Handle, Position } from '@xyflow/react'
 
 export function GeometryNode({ data }: CADNodeProps) {
-  if (data.type !== "geometry") return null;
+  if (data.type !== 'geometry') return null
 
   return (
-    <Card className="w-[300px] border-none">
+    <Card className="w-[300px]">
       <CardHeader className="bg-green-500/50 rounded">
         <CardTitle className="text-sm font-medium">{data.label}</CardTitle>
       </CardHeader>
@@ -30,5 +30,5 @@ export function GeometryNode({ data }: CADNodeProps) {
       <Handle type="target" position={Position.Left} />
       <Handle type="source" position={Position.Right} />
     </Card>
-  );
+  )
 }
