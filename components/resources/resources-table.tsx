@@ -1,5 +1,6 @@
 'use client'
 
+import { DEFAULT_INTEGRATIONS } from '@/app/(app)/integrations/page'
 import {
   Resource,
   useResources
@@ -27,7 +28,14 @@ import {
   reprocessResource,
   shareResource
 } from '@/lib/queries/client'
-import { CheckCircleIcon, XCircleIcon } from '@/lib/utils/icons'
+import {
+  CheckCircleIcon,
+  FileUploadIcon,
+  FolderIcon,
+  FolderOpenIcon,
+  IntegrationIcon,
+  XCircleIcon
+} from '@/lib/utils/icons'
 import { CheckedState } from '@radix-ui/react-checkbox'
 import { Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
 import Image from 'next/image'
@@ -37,6 +45,39 @@ import { toast } from 'sonner'
 import Loader from '../lottie/loader'
 import LoadingDots from '../magicui/loading-dots'
 
+interface ResourceSourceCellProps {
+  resource: Resource
+}
+
+function ResourceSourceCell({ resource }: ResourceSourceCellProps) {
+  const integration = DEFAULT_INTEGRATIONS.find(
+    (i: { code: string }) => i.code === resource.origin
+  )
+
+  return (
+    <div className="relative group">
+      <div className="flex justify-center">
+        {integration ? (
+          <Image
+            src={integration.logoSrc}
+            alt={integration.name}
+            className="mx-auto"
+            width={16}
+            height={16}
+          />
+        ) : resource.origin === 'upload' ? (
+          <FileUploadIcon className="size-5 text-muted-foreground" />
+        ) : (
+          <IntegrationIcon className="size-5 text-muted-foreground" />
+        )}
+      </div>
+      <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs">
+        {integration?.name || resource.origin || 'External Source'}
+      </div>
+    </div>
+  )
+}
+
 export function ResourcesTable() {
   const { resources, removeResource, uploadStatus, setUploadStatus } =
     useResources()
@@ -45,6 +86,29 @@ export function ResourcesTable() {
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())
   const [reprocessingIds, setReprocessingIds] = useState<Set<string>>(new Set())
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
+
+  // Group resources by parent_id
+  const resourcesByParent = resources.reduce((acc, resource) => {
+    const parentId = resource.parent_id || 'root'
+    if (!acc[parentId]) {
+      acc[parentId] = []
+    }
+    acc[parentId].push(resource)
+    return acc
+  }, {} as Record<string, Resource[]>)
+
+  const toggleFolder = (folderId: string) => {
+    setExpandedFolders(prev => {
+      const next = new Set(prev)
+      if (next.has(folderId)) {
+        next.delete(folderId)
+      } else {
+        next.add(folderId)
+      }
+      return next
+    })
+  }
 
   const toggleSelectAll = () => {
     if (selectedIds.size === resources.length) {
@@ -184,6 +248,155 @@ export function ResourcesTable() {
     }
   }
 
+  const renderResourceRow = (resource: Resource, level: number = 0) => {
+    const isFolder = resource.is_folder
+    const isExpanded = expandedFolders.has(resource.id)
+    const childResources = resourcesByParent[resource.id] || []
+
+    return (
+      <React.Fragment key={resource.id}>
+        <TableRow
+          className="hover:bg-muted/50 cursor-pointer"
+          onClick={e => {
+            if (isFolder) {
+              e.stopPropagation()
+              toggleFolder(resource.id)
+            } else {
+              router.push(`/resources/${resource.id}`)
+            }
+          }}
+        >
+          <TableCell className="font-medium">
+            <div
+              className="flex items-center gap-3"
+              style={{ paddingLeft: `${level * 24}px` }}
+            >
+              <div className="flex items-center gap-3">
+                {isFolder ? (
+                  isExpanded ? (
+                    <FolderOpenIcon className="size-6 text-muted-foreground" />
+                  ) : (
+                    <FolderIcon className="size-6 text-muted-foreground" />
+                  )
+                ) : (
+                  categoryIcons[
+                    resource.category as keyof typeof categoryIcons
+                  ] &&
+                  React.createElement(
+                    categoryIcons[
+                      resource.category as keyof typeof categoryIcons
+                    ],
+                    {
+                      className: 'size-6 text-muted-foreground'
+                    }
+                  )
+                )}
+                <div className="flex-1">
+                  <span className="text-sm font-medium">{resource.title}</span>
+                  <div className="text-xs text-muted-foreground font-light">
+                    {isFolder ? (
+                      `${childResources.length} items`
+                    ) : resource.status === 'loading' ||
+                      resource.status === 'processing' ||
+                      uploadStatus.get(resource.id) === 'loading' ? (
+                      <span>
+                        Processing
+                        <LoadingDots />
+                      </span>
+                    ) : resource.status === 'error' ||
+                      uploadStatus.get(resource.id) === 'error' ? (
+                      <span className="text-red-500/80">Processing failed</span>
+                    ) : (
+                      resource.description || 'No description'
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TableCell>
+          <TableCell>
+            {!isFolder && (
+              <div className="relative group">
+                <div className="mx-auto w-fit m">{getStatusIcon(resource)}</div>
+                {resource.processing_error && (
+                  <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
+                    {resource.processing_error}
+                  </div>
+                )}
+              </div>
+            )}
+          </TableCell>
+          <TableCell>{!isFolder && resource.category}</TableCell>
+          <TableCell>
+            {!isFolder && <ResourceSourceCell resource={resource} />}
+          </TableCell>
+          <TableCell>
+            {new Date(resource.created_at).toLocaleDateString()}
+          </TableCell>
+          <TableCell onClick={e => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {!isFolder && (
+                  <>
+                    <DropdownMenuItem onClick={() => handleShare(resource.id)}>
+                      <Share className="h-4 w-4 mr-2" />
+                      Share
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleReprocess(resource.id)}
+                      disabled={reprocessingIds.has(resource.id)}
+                      className="focus:bg-muted"
+                    >
+                      {reprocessingIds.has(resource.id) ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                      )}
+                      Reprocess
+                    </DropdownMenuItem>
+                  </>
+                )}
+                <DropdownMenuItem
+                  onClick={() => handleDelete(resource.id)}
+                  className="text-destructive focus:text-destructive"
+                  disabled={deletingIds.has(resource.id)}
+                >
+                  {deletingIds.has(resource.id) ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4 mr-2" />
+                  )}
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </TableCell>
+          <TableCell onClick={e => e.stopPropagation()}>
+            <Checkbox
+              checked={selectedIds.has(resource.id)}
+              onCheckedChange={(checked: CheckedState) => {
+                handleCheckboxChange(
+                  resource.id,
+                  checked === true,
+                  (window.event as MouseEvent)?.shiftKey ?? false
+                )
+              }}
+            />
+          </TableCell>
+        </TableRow>
+        {isFolder &&
+          isExpanded &&
+          childResources.map(child => renderResourceRow(child, level + 1))}
+      </React.Fragment>
+    )
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -220,7 +433,7 @@ export function ResourcesTable() {
       <div className="border rounded-lg">
         {resources.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 px-4 h-full">
-            <div className=" mb-2 font-medium">No resources found</div>
+            <div className="mb-2 font-medium">No resources found</div>
             <p className="text-sm text-muted-foreground text-center">
               Get started by adding your first resource.
             </p>
@@ -233,7 +446,7 @@ export function ResourcesTable() {
                 <TableHead>Status</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>From</TableHead>
-                <TableHead>Last Updated</TableHead>
+                <TableHead>Date</TableHead>
                 <TableHead className="w-[50px]">Actions</TableHead>
                 <TableHead className="w-[50px]">
                   <Checkbox
@@ -247,147 +460,9 @@ export function ResourcesTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {resources.map(resource => (
-                <TableRow
-                  key={resource.id}
-                  className="hover:bg-muted/50 cursor-pointer"
-                >
-                  <TableCell
-                    className="font-medium"
-                    onClick={() => router.push(`/resources/${resource.id}`)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <div className="flex items-center gap-3">
-                          {categoryIcons[
-                            resource.category as keyof typeof categoryIcons
-                          ] &&
-                            React.createElement(
-                              categoryIcons[
-                                resource.category as keyof typeof categoryIcons
-                              ],
-                              {
-                                className: 'size-6 text-muted-foreground'
-                              }
-                            )}
-                          <div className="flex-1">
-                            <span className="text-sm font-medium">
-                              {resource.title}
-                            </span>
-                            <div className="text-xs text-muted-foreground font-light">
-                              {resource.status === 'loading' ||
-                              resource.status === 'processing' ||
-                              uploadStatus.get(resource.id) === 'loading' ? (
-                                <span>
-                                  Processing
-                                  <LoadingDots />
-                                </span>
-                              ) : resource.status === 'error' ||
-                                uploadStatus.get(resource.id) === 'error' ? (
-                                <span>Processing failed</span>
-                              ) : (
-                                resource.description || 'No description'
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="relative group">
-                      <div className="mx-auto w-fit">
-                        {getStatusIcon(resource)}
-                      </div>
-                      {resource.processing_error && (
-                        <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
-                          {resource.processing_error}
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell
-                    onClick={() => router.push(`/resources/${resource.id}`)}
-                  >
-                    {resource.category}
-                  </TableCell>
-                  <TableCell
-                    onClick={() => router.push(`/resources/${resource.id}`)}
-                  >
-                    {resource.origin ? (
-                      resource.origin.charAt(0).toUpperCase() +
-                      resource.origin.slice(1)
-                    ) : (
-                      <Image
-                        src="/integrations/gdrive.avif"
-                        alt="File Text"
-                        className="mx-auto"
-                        width={16}
-                        height={16}
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell
-                    onClick={() => router.push(`/resources/${resource.id}`)}
-                  >
-                    {new Date(resource.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell onClick={e => e.stopPropagation()}>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={() => handleShare(resource.id)}
-                        >
-                          <Share className="h-4 w-4 mr-2" />
-                          Share
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleReprocess(resource.id)}
-                          disabled={reprocessingIds.has(resource.id)}
-                          className="focus:bg-muted"
-                        >
-                          {reprocessingIds.has(resource.id) ? (
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          ) : (
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                          )}
-                          Reprocess
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDelete(resource.id)}
-                          className="text-destructive focus:text-destructive"
-                          disabled={deletingIds.has(resource.id)}
-                        >
-                          {deletingIds.has(resource.id) ? (
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          ) : (
-                            <Trash2 className="h-4 w-4 mr-2" />
-                          )}
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                  <TableCell onClick={e => e.stopPropagation()}>
-                    <Checkbox
-                      checked={selectedIds.has(resource.id)}
-                      onCheckedChange={(checked: CheckedState) => {
-                        handleCheckboxChange(
-                          resource.id,
-                          checked === true,
-                          (window.event as MouseEvent)?.shiftKey ?? false
-                        )
-                      }}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {(resourcesByParent['root'] || []).map(resource =>
+                renderResourceRow(resource)
+              )}
             </TableBody>
           </UITable>
         )}

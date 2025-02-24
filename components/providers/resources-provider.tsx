@@ -24,6 +24,8 @@ export interface Resource {
   processing_completed_at?: string
   status?: 'pending' | 'loading' | 'processing' | 'completed' | 'error'
   processing_error?: string
+  is_folder?: boolean
+  parent_id?: string | null
 }
 
 interface ResourcesContextType {
@@ -49,7 +51,59 @@ export function ResourcesProvider({
   initialResources: Resource[]
 }) {
   const { user } = useAuth()
-  const [resources, setResources] = useState<Resource[]>(initialResources)
+  const resourcesWithFolder = [
+    {
+      id: 'example-folder',
+      title: 'Example Folder',
+      description: 'A folder containing resources',
+      category: 'folder',
+      file_path: '',
+      user_id: user?.id || '',
+      created_at: new Date().toISOString(),
+      is_folder: true
+    } as Resource,
+    {
+      id: 'example-file-1',
+      title: 'Project Requirements.pdf',
+      description: 'Technical requirements document for the project',
+      category: 'Engineering Drawings',
+      file_path: '/example/requirements.pdf',
+      user_id: user?.id || '',
+      created_at: new Date().toISOString(),
+      status: 'completed',
+      parent_id: 'example-folder',
+      origin: 'gdrive'
+    } as Resource,
+    {
+      id: 'example-file-2',
+      title: 'System Architecture.pdf',
+      description: 'High-level system architecture diagrams',
+      category: 'Engineering Drawings',
+      file_path: '/example/architecture.pdf',
+      user_id: user?.id || '',
+      created_at: new Date().toISOString(),
+      status: 'completed',
+      parent_id: 'example-folder',
+      origin: 'confluence'
+    } as Resource,
+    {
+      id: 'example-file-3',
+      title: 'Component Specs.xlsx',
+      description: 'Detailed specifications for system components',
+      category: 'Excel Sheets',
+      file_path: '/example/specs.xlsx',
+      user_id: user?.id || '',
+      created_at: new Date().toISOString(),
+      status: 'completed',
+      parent_id: 'example-folder',
+      origin: 'gdrive'
+    } as Resource,
+    ...initialResources.map(r => ({
+      ...r,
+      parent_id: r.category === 'Engineering Drawings' ? 'example-folder' : null
+    }))
+  ]
+  const [resources, setResources] = useState<Resource[]>(resourcesWithFolder)
   const [processingResources, setProcessingResources] = useState<Set<string>>(
     new Set()
   )

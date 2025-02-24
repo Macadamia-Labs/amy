@@ -5,56 +5,65 @@ import { useEffect, useState } from 'react'
 
 interface Integration {
   name: string
+  code: string
   description: string
   logoSrc: string
   isConnected: boolean
 }
 
-const DEFAULT_INTEGRATIONS: Integration[] = [
+export const DEFAULT_INTEGRATIONS: Integration[] = [
   {
     name: 'Ansys',
+    code: 'ansys',
     description: 'Connect with your Ansys engineering simulations',
     logoSrc: '/integrations/ansys.avif',
     isConnected: false
   },
   {
     name: 'Autodesk',
+    code: 'autodesk',
     description: 'Access your Autodesk CAD files and projects',
     logoSrc: '/integrations/autodesk.avif',
     isConnected: false
   },
   {
     name: 'Confluence',
+    code: 'confluence',
     description: 'Link your Confluence workspace',
     logoSrc: '/integrations/confluence.avif',
     isConnected: false
   },
   {
     name: 'Google Drive',
+    code: 'gdrive',
     description: 'Connect and manage your Google Drive files',
     logoSrc: '/integrations/gdrive.avif',
     isConnected: false
   },
   {
     name: 'MATLAB',
+    code: 'matlab',
     description: 'Integrate with your MATLAB workflows',
     logoSrc: '/integrations/matlab.avif',
     isConnected: false
   },
   {
     name: 'OneDrive',
+    code: 'onedrive',
     description: 'Sync with your OneDrive storage',
     logoSrc: '/integrations/onedrive.avif',
     isConnected: false
   },
   {
     name: 'SharePoint',
+    code: 'sharepoint',
     description: 'Connect to your SharePoint sites and documents',
     logoSrc: '/integrations/sharepoint.avif',
     isConnected: false
   },
   {
     name: 'Slack',
+    code: 'slack',
     description: 'Integrate with your Slack channels',
     logoSrc: '/integrations/slack.avif',
     isConnected: false
