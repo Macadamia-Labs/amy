@@ -1,7 +1,7 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
-import { Resource } from '@/lib/queries'
+import { Resource } from '@/lib/types'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 
@@ -17,9 +17,11 @@ export function SearchResources({ resources, onFilter }: SearchResourcesProps) {
     setSearchQuery(query)
     const filtered = resources.filter(
       resource =>
-        resource.title.toLowerCase().includes(query.toLowerCase()) ||
-        resource.description.toLowerCase().includes(query.toLowerCase()) ||
-        resource.category.toLowerCase().includes(query.toLowerCase())
+        (resource.title?.toLowerCase() || '').includes(query.toLowerCase()) ||
+        (resource.description?.toLowerCase() || '').includes(
+          query.toLowerCase()
+        ) ||
+        (resource.category?.toLowerCase() || '').includes(query.toLowerCase())
     )
     onFilter(filtered)
   }
