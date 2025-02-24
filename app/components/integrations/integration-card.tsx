@@ -53,7 +53,7 @@ export function IntegrationCard({
     <>
       <Card
         className={cn(
-          'group flex flex-col items-center p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-all relative cursor-pointer',
+          'group flex flex-col items-center p-6 bg-muted rounded-lg border transition-all relative cursor-pointer',
           !isConnected && 'opacity-70 hover:opacity-100'
         )}
         onMouseEnter={() => setIsHovered(true)}
@@ -91,7 +91,7 @@ export function IntegrationCard({
           )}
         />
         <h3 className="text-lg font-semibold">{name}</h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
+        <p className="text-sm text-muted-foreground text-center mt-2">
           {description}
         </p>
       </Card>
@@ -107,7 +107,7 @@ export function IntegrationCard({
 
           <div className="flex flex-col items-center gap-4 py-4">
             <img src={logoSrc} alt={name} className="w-20 h-20" />
-            <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-center text-sm text-muted-foreground">
               {description}
             </p>
 

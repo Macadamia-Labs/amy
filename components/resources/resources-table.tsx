@@ -32,7 +32,7 @@ import { CheckedState } from '@radix-ui/react-checkbox'
 import { Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 import Loader from '../lottie/loader'
 import LoadingDots from '../magicui/loading-dots'
@@ -230,6 +230,7 @@ export function ResourcesTable() {
             <TableHeader>
               <TableRow>
                 <TableHead>Resource</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>From</TableHead>
                 <TableHead>Last Updated</TableHead>
@@ -256,36 +257,53 @@ export function ResourcesTable() {
                     onClick={() => router.push(`/resources/${resource.id}`)}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="relative group">
-                        {getStatusIcon(resource)}
-                        {resource.processing_error && (
-                          <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
-                            {resource.processing_error}
-                          </div>
-                        )}
-                      </div>
                       <div>
-                        <div className="text-sm font-medium">
-                          {resource.title}
-                        </div>
-                        <div className="text-xs text-muted-foreground font-light">
-                          {resource.status === 'loading' ||
-                          resource.status === 'processing' ||
-                          uploadStatus.get(resource.id) === 'loading' ? (
-                            <span>
-                              Processing
-                              <LoadingDots />
+                        <div className="flex items-center gap-3">
+                          {categoryIcons[
+                            resource.category as keyof typeof categoryIcons
+                          ] &&
+                            React.createElement(
+                              categoryIcons[
+                                resource.category as keyof typeof categoryIcons
+                              ],
+                              {
+                                className: 'size-6 text-muted-foreground'
+                              }
+                            )}
+                          <div className="flex-1">
+                            <span className="text-sm font-medium">
+                              {resource.title}
                             </span>
-                          ) : resource.status === 'error' ||
-                            uploadStatus.get(resource.id) === 'error' ? (
-                            <span className="text-red-500">
-                              Processing failed
-                            </span>
-                          ) : (
-                            resource.description || 'No description'
-                          )}
+                            <div className="text-xs text-muted-foreground font-light">
+                              {resource.status === 'loading' ||
+                              resource.status === 'processing' ||
+                              uploadStatus.get(resource.id) === 'loading' ? (
+                                <span>
+                                  Processing
+                                  <LoadingDots />
+                                </span>
+                              ) : resource.status === 'error' ||
+                                uploadStatus.get(resource.id) === 'error' ? (
+                                <span>Processing failed</span>
+                              ) : (
+                                resource.description || 'No description'
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="relative group">
+                      <div className="mx-auto w-fit">
+                        {getStatusIcon(resource)}
+                      </div>
+                      {resource.processing_error && (
+                        <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
+                          {resource.processing_error}
+                        </div>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell

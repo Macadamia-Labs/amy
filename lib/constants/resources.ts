@@ -1,4 +1,5 @@
 import {
+  BoxIcon,
   ChartColumnIcon,
   ConvoIcon,
   NotesIcon,
@@ -67,5 +68,7 @@ export const categoryIcons = {
   'ASME Standards': NotesIcon,
   'ACE Standards': NotesIcon,
   'Excel Sheets': ChartColumnIcon,
-  'Email Chains': ConvoIcon
+  'Email Chains': ConvoIcon,
+  'Geometry Files': BoxIcon,
+  uncategorized: TextFileIcon
 }
