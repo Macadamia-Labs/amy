@@ -1,6 +1,6 @@
 import IssueHeader from '@/components/layout/issue-header'
+import { sampleIssues } from '@/data/issues'
 import { notFound } from 'next/navigation'
-import { sampleIssues } from '../data'
 
 export default async function IssueLayout({
   children,

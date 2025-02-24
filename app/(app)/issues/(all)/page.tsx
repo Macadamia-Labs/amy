@@ -3,7 +3,7 @@
 import { IssueCard } from '@/components/issues/issue-card'
 import { IssueTable } from '@/components/issues/issue-table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { issues } from '@/data'
+import { sampleIssues } from '@/data/issues'
 import { LayoutGridIcon, TableIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -38,7 +38,7 @@ export default function Page() {
         </TabsList>
         <TabsContent value="grid" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {issues.map(issue => (
+            {sampleIssues.map(issue => (
               <Link key={issue.id} href={`/issues/${issue.id}`}>
                 <IssueCard issue={issue} />
               </Link>
@@ -46,7 +46,7 @@ export default function Page() {
           </div>
         </TabsContent>
         <TabsContent value="table" className="mt-4">
-          <IssueTable issues={issues} />
+          <IssueTable issues={sampleIssues} />
         </TabsContent>
       </Tabs>
     </div>

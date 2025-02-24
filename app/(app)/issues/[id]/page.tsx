@@ -3,25 +3,22 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
+import { sampleIssues } from '@/data/issues'
 import { cn } from '@/lib/utils'
 import {
-  ActivityIcon,
-  BellIcon,
-  CheckSquareIcon,
-  ClockIcon,
-  HardDriveIcon,
-  NotesIcon,
-  StopIcon,
-  TextFileIcon,
-  WrenchIcon
-} from '@/lib/utils/icons'
+  getCategoryIcon,
+  getPriorityColor,
+  getPriorityIcon,
+  getStatusColor,
+  getStatusIcon
+} from '@/lib/utils/issue-helpers'
+import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import 'katex/dist/katex.min.css'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
-import { sampleIssues } from '../data'
 
 // Preprocess LaTeX equations to be rendered by KaTeX
 const preprocessLaTeX = (content: string) => {
@@ -36,49 +33,6 @@ const preprocessLaTeX = (content: string) => {
   return inlineProcessedContent
 }
 
-const statusIcons = {
-  open: ActivityIcon,
-  in_progress: ClockIcon,
-  resolved: CheckSquareIcon,
-  closed: CheckSquareIcon
-}
-
-const statusColors = {
-  open: 'bg-blue-100 text-blue-800',
-  in_progress: 'bg-purple-100 text-purple-800',
-  resolved: 'bg-green-100 text-green-800',
-  closed: 'bg-gray-100 text-gray-800'
-}
-
-const priorityColors = {
-  low: 'bg-blue-100 text-blue-800',
-  medium: 'bg-yellow-100 text-yellow-800',
-  high: 'bg-orange-100 text-orange-800',
-  critical: 'bg-red-100 text-red-800'
-}
-
-const priorityIcons = {
-  low: ClockIcon,
-  medium: ActivityIcon,
-  high: BellIcon,
-  critical: StopIcon
-}
-
-const categoryIcons = {
-  Production: WrenchIcon,
-  Construction: HardDriveIcon,
-  Maintenance: WrenchIcon,
-  Safety: ActivityIcon
-}
-
-const documentTypeIcons = {
-  Drawing: TextFileIcon,
-  Simulation: WrenchIcon,
-  Report: NotesIcon,
-  Specification: TextFileIcon,
-  Manual: TextFileIcon
-}
-
 export default function IssuePage() {
   const params = useParams()
   const issue = sampleIssues.find(i => i.id === params.id)
@@ -87,8 +41,8 @@ export default function IssuePage() {
     return <div>Issue not found</div>
   }
 
-  const StatusIcon = statusIcons[issue.status]
-  const CategoryIcon = categoryIcons[issue.category]
+  const StatusIcon = getStatusIcon(issue.status)
+  const CategoryIcon = getCategoryIcon(issue.category)
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
@@ -110,7 +64,7 @@ export default function IssuePage() {
               <span
                 className={cn(
                   'p-1 pr-2 rounded-full text-xs font-medium flex items-center gap-2',
-                  statusColors[issue.status]
+                  getStatusColor(issue.status)
                 )}
               >
                 <StatusIcon className="h-4 w-4" />
@@ -121,10 +75,10 @@ export default function IssuePage() {
           <span
             className={cn(
               'px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2',
-              priorityColors[issue.priority]
+              getPriorityColor(issue.priority)
             )}
           >
-            {priorityIcons[issue.priority]({ className: 'h-4 w-4' })}
+            {getPriorityIcon(issue.priority)({ className: 'h-4 w-4' })}
             {issue.priority}
           </span>
         </div>
@@ -191,23 +145,15 @@ export default function IssuePage() {
               <div className="space-y-4">
                 {issue.resources.map(resource => (
                   <div key={resource.id} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <NotesIcon className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">{resource.title}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground pl-6">
-                      {resource.description}
-                    </p>
-                    <div className="text-sm text-muted-foreground pl-6 flex items-center gap-2">
-                      <span>Origin:</span>
-                      <span className="capitalize">{resource.origin}</span>
-                    </div>
-                    {resource.status && (
-                      <div className="text-sm text-muted-foreground pl-6 flex items-center gap-2">
-                        <span>Status:</span>
-                        <span className="capitalize">{resource.status}</span>
+                    <div className="flex items-center gap-4">
+                      {getResourceSourceIcon(resource)}
+                      <div>
+                        <span className="font-medium">{resource.title}</span>
+                        <p className="text-sm text-muted-foreground line-clamp-1">
+                          {resource.description}
+                        </p>
                       </div>
-                    )}
+                    </div>
                   </div>
                 ))}
               </div>

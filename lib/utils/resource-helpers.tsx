@@ -9,7 +9,7 @@ import {
   XCircleIcon
 } from '@/lib/utils/icons'
 import Image from 'next/image'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 export const getResourceStatusIcon = (
   resource: Resource,
@@ -51,7 +51,6 @@ export const getResourceSourceIcon = (resource: Resource): ReactElement => {
       <Image
         src={integration.logoSrc}
         alt={integration.name}
-        className="mx-auto"
         width={16}
         height={16}
       />
