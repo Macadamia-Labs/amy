@@ -140,6 +140,7 @@ const MarkdownWrapper: FC<Options> = ({
   ...props
 }) => (
   <ReactMarkdown
+    className="prose prose-base dark:prose-invert max-w-none"
     components={{
       img: MarkdownImage,
       // Override paragraph component to handle image children differently
