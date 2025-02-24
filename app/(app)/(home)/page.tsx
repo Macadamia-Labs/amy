@@ -72,7 +72,7 @@ export default function AppPage() {
           })}
         </div>
         <div className="flex items-center justify-between mt-8 mb-4">
-          <h2 className="text-xl font-semibold">Recent Changes</h2>
+          <h2 className="text-xl font-semibold">Activity</h2>
           <Button variant="ghost" asChild>
             <Link href="/activity">View all</Link>
           </Button>

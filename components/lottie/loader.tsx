@@ -1,18 +1,11 @@
-import Lottie from 'react-lottie'
+'use client'
+import Lottie from 'lottie-react'
 import loader from './loader.json'
 
 const Loader = ({ className }: { className?: string }) => {
-  const options = {
-    loop: true,
-    autoplay: true,
-    animationData: loader,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice'
-    }
-  }
   return (
     <div className={className}>
-      <Lottie options={options} />
+      <Lottie animationData={loader} loop={true} />
     </div>
   )
 }

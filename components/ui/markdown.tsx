@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
+import 'katex/dist/katex.min.css'
 import Image from 'next/image'
 import React, {
   DetailedHTMLProps,
@@ -14,6 +15,8 @@ import React, {
 } from 'react'
 import ReactMarkdown, { Options } from 'react-markdown'
 import { ReactMarkdownProps } from 'react-markdown/lib/complex-types'
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
 
 type MarkdownImageProps = Omit<
   DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>,
@@ -130,7 +133,12 @@ const MarkdownImage: FC<MarkdownImageProps> = ({
 }
 MarkdownImage.displayName = 'MarkdownImage'
 
-const MarkdownWrapper: FC<Options> = ({ components, ...props }) => (
+const MarkdownWrapper: FC<Options> = ({
+  components,
+  remarkPlugins = [],
+  rehypePlugins = [],
+  ...props
+}) => (
   <ReactMarkdown
     components={{
       img: MarkdownImage,
@@ -151,6 +159,8 @@ const MarkdownWrapper: FC<Options> = ({ components, ...props }) => (
       },
       ...components
     }}
+    remarkPlugins={[remarkMath, ...remarkPlugins]}
+    rehypePlugins={[[rehypeKatex, { output: 'html' }], ...rehypePlugins]}
     {...props}
   />
 )

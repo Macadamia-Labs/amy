@@ -19,19 +19,29 @@ import { SearchIcon } from '@/lib/utils/icons'
 
 const CHAT_TEMPLATES = [
   {
-    icon: '🏗️',
-    title: 'Perform a structural analysis',
-    prompt: 'I need to perform a structural analysis for my design.'
+    icon: '📋',
+    title: 'Check ASME compliance',
+    prompt: 'Is this design compliant with ASME standards?'
   },
   {
-    icon: '💨',
-    title: 'Analyze flow characteristics',
-    prompt: 'Help me analyze flow characteristics in my design.'
+    icon: '🔍',
+    title: 'Get current issues',
+    prompt: 'What are the current issues with this project?'
   },
   {
-    icon: '🛩️',
-    title: 'Optimize aerodynamics',
-    prompt: 'I want to optimize the aerodynamics of my design.'
+    icon: '📊',
+    title: 'Project status',
+    prompt: "What's the current status of this project?"
+  },
+  {
+    icon: '⚠️',
+    title: 'Safety analysis',
+    prompt: 'Perform a safety analysis of this design'
+  },
+  {
+    icon: '📐',
+    title: 'Design review',
+    prompt: 'Review this design for potential improvements'
   }
 ]
 
@@ -102,7 +112,7 @@ export function SearchForm({
         >
           <SearchIcon className="size-4 flex-shrink-0" />
           <div className="flex flex-1 items-center">
-            <span className="truncate">Search anything...</span>
+            <span className="truncate">Ask copilot...</span>
             <ShortCut className="hidden md:inline-flex ml-auto">/</ShortCut>
           </div>
         </SidebarMenuButton>
@@ -119,7 +129,7 @@ export function SearchForm({
             </div>
             <div className="w-full">
               <CommandInput
-                placeholder="Type a message..."
+                placeholder="Ask copilot..."
                 value={inputValue}
                 onValueChange={setInputValue}
                 onKeyDown={onKeyDown}

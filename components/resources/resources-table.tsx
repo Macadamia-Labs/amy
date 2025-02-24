@@ -35,19 +35,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import Loader from '../lottie/loader'
-const LoadingDots = () => {
-  return (
-    <span className="inline-flex">
-      <span className="animate-[loading_1.4s_ease-in-out_infinite]">.</span>
-      <span className="animate-[loading_1.4s_ease-in-out_0.2s_infinite]">
-        .
-      </span>
-      <span className="animate-[loading_1.4s_ease-in-out_0.4s_infinite]">
-        .
-      </span>
-    </span>
-  )
-}
+import LoadingDots from '../magicui/loading-dots'
 
 export function ResourcesTable() {
   const { resources, removeResource, uploadStatus, setUploadStatus } =

@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 
 import { cn } from '@/lib/utils/helpers'
 import '@/styles/globals.css'
+import 'katex/dist/katex.min.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import { Inter as FontSans } from 'next/font/google'
