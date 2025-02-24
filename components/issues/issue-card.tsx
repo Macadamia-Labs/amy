@@ -45,12 +45,12 @@ export function IssueCard({ issue, onClick, className = '' }: IssueCardProps) {
             <div className="space-y-2">
               <h4 className="text-sm font-medium">Related Resources</h4>
               {issue.resources.length > 0 ? (
-                <div className="space-y-2">
+                <div className="flex flex-row flex-wrap gap-2">
                   {issue.resources.map(resource => (
                     <Link
                       key={resource.id}
                       href={`/resources/${resource.id}`}
-                      className="flex items-center gap-2 text-sm hover:font-medium"
+                      className="flex items-center gap-2 text-sm hover:font-medium bg-background p-2 rounded-md"
                     >
                       {getResourceSourceIcon(resource)}
                       <span>{resource.title}</span>
