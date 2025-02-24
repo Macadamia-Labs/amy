@@ -71,6 +71,8 @@ export const categoryIcons = {
   'Excel Sheets': ChartColumnIcon,
   'Email Chains': ConvoIcon,
   'Geometry Files': BoxIcon,
+  'Specification': TextFileIcon,
+  'Technical Document': TextFileIcon,
   folder: BoxIcon,
   uncategorized: TextFileIcon
 }
@@ -138,7 +140,7 @@ export const defaultResources: Resource[] = [
     id: 'example-file-1',
     title: 'Project Requirements.pdf',
     description: 'Technical requirements document for the project',
-    category: 'Engineering Drawings',
+    category: 'Technical Document',
     file_path: '/example/requirements.pdf',
     user_id: '',
     created_at: new Date().toISOString(),
@@ -148,7 +150,7 @@ export const defaultResources: Resource[] = [
   },
   {
     id: 'example-file-2',
-    title: 'System Architecture.pdf',
+    title: 'Technical Drawing.pdf',
     description: 'High-level system architecture diagrams',
     category: 'Engineering Drawings',
     file_path: '/example/architecture.pdf',

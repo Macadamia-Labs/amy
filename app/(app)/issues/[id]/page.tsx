@@ -49,16 +49,16 @@ export default function IssuePage() {
       <div className="mb-6">
         <Link href="/issues">
           <Button variant="ghost" className="mb-4">
-            <ChevronLeft className="h-4 w-4 mr-2" />
+            <ChevronLeft className="h-5 w-5 mr-2" />
             Back to Issues
           </Button>
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">{issue.title}</h1>
-            <div className="flex items-center gap-4 mt-2 text-muted-foreground">
+            <h1 className="text-4xl font-bold">{issue.title}</h1>
+            <div className="flex items-center gap-4 mt-3 text-muted-foreground text-lg">
               <div className="flex items-center gap-2">
-                <CategoryIcon className="h-4 w-4" />
+                <CategoryIcon className="h-5 w-5" />
                 <span>{issue.category}</span>
               </div>
               <span
@@ -67,7 +67,7 @@ export default function IssuePage() {
                   getStatusColor(issue.status)
                 )}
               >
-                <StatusIcon className="h-4 w-4" />
+                <StatusIcon className="h-5 w-5" />
                 {issue.status.replace('_', ' ')}
               </span>
             </div>
@@ -89,12 +89,12 @@ export default function IssuePage() {
           {/* Description */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-lg font-semibold mb-4">Detected Problem</h2>
-              <div className="text-muted-foreground">
+              <h2 className="text-2xl font-semibold mb-4">Detected Problem</h2>
+              <div className="text-muted-foreground text-lg">
                 <MemoizedReactMarkdown
                   remarkPlugins={[remarkMath]}
                   rehypePlugins={[[rehypeKatex, { output: 'html' }]]}
-                  className="prose prose-sm dark:prose-invert max-w-none
+                  className="prose prose-lg dark:prose-invert max-w-none
                     prose-p:my-4 
                     prose-pre:my-4
                     prose-ul:my-4 
@@ -113,14 +113,14 @@ export default function IssuePage() {
           {issue.proposedSolution && (
             <Card>
               <CardContent className="pt-6">
-                <h2 className="text-lg font-semibold mb-4">
+                <h2 className="text-2xl font-semibold mb-4">
                   Proposed Solution
                 </h2>
-                <div className="text-muted-foreground">
+                <div className="text-muted-foreground text-lg">
                   <MemoizedReactMarkdown
                     remarkPlugins={[remarkMath]}
                     rehypePlugins={[[rehypeKatex, { output: 'html' }]]}
-                    className="prose prose-sm dark:prose-invert max-w-none
+                    className="prose prose-lg dark:prose-invert max-w-none
                       prose-p:my-4 
                       prose-pre:my-4
                       prose-ul:my-4 
@@ -141,7 +141,7 @@ export default function IssuePage() {
           {/* Resources */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-lg font-semibold mb-4">Resources</h2>
+              <h2 className="text-2xl font-semibold mb-4">Resources</h2>
               <div className="space-y-4">
                 {issue.resources.map(resource => (
                   <div key={resource.id} className="space-y-2">

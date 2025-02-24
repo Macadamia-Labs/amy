@@ -19,6 +19,7 @@ export type DocumentType =
   | 'Report'
   | 'Specification'
   | 'Manual'
+  | 'Technical Document'
 
 export const getStatusIcon = (status: Issue['status']) => {
   const statusIcons = {
@@ -58,7 +59,8 @@ export const getDocumentTypeIcon = (type: DocumentType) => {
     Simulation: WrenchIcon,
     Report: NotesIcon,
     Specification: TextFileIcon,
-    Manual: TextFileIcon
+    Manual: TextFileIcon,
+    'Technical Document': TextFileIcon
   }
   return documentTypeIcons[type]
 }
