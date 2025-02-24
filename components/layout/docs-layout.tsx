@@ -51,7 +51,7 @@ export function DocsLayout() {
 
   return (
     <Root
-      source={resource?.file_url || fileUrl}
+      source={resource?.file_url || resource?.file_path || fileUrl}
       className="h-full w-full"
       loader={<ResourceLoading />}
     >
