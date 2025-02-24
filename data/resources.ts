@@ -221,6 +221,18 @@ export const defaultResources: Resource[] = [
     origin: 'gdrive'
   },
   {
+    id: 'asme-bpvc-ii-d',
+    title: 'ASME BPVC II-D.pdf',
+    description: 'Boiler and Pressure Vessel Code Section II-D',
+    category: 'Standards',
+    file_path: '/demo/asme/ASME BPVC II-D.pdf',
+    user_id: '',
+    created_at: new Date().toISOString(),
+    status: 'completed',
+    parent_id: 'example-folder',
+    origin: 'gdrive'
+  },
+  {
     id: 'asme-bpvc-iv',
     title: 'ASME BPVC IV.pdf',
     description: 'Boiler and Pressure Vessel Code Section IV',

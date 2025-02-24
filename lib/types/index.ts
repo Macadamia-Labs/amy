@@ -122,6 +122,14 @@ export interface Engineer {
   email: string
 }
 
+export interface Comment {
+  id: string
+  content: string
+  author: Engineer
+  createdAt: Date
+  updatedAt: Date
+}
+
 export interface Issue {
   id: string
   title: string
@@ -141,6 +149,7 @@ export interface Issue {
   updatedAt: Date
   proposedSolution?: string
   resources: Resource[]
+  comments?: Comment[]
 }
 
 export interface Resource {

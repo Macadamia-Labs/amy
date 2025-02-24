@@ -14,7 +14,7 @@ import {
 } from '@/lib/utils/issue-helpers'
 import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import 'katex/dist/katex.min.css'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import rehypeKatex from 'rehype-katex'
@@ -141,7 +141,7 @@ export default function IssuePage() {
           {/* Resources */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-2xl font-semibold mb-4">Resources</h2>
+              <h2 className="text-2xl font-semibold mb-4">Related Resources</h2>
               <div className="space-y-4">
                 {issue.resources.map(resource => (
                   <div key={resource.id} className="space-y-2">
@@ -156,6 +156,42 @@ export default function IssuePage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Comments Section */}
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-semibold">Comments</h2>
+                <Button variant="outline">Add Comment</Button>
+              </div>
+              
+              <div className="space-y-4">
+                {issue.comments?.length ? (
+                  issue.comments.map(comment => (
+                    <div key={comment.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <UserIcon className="h-5 w-5 text-muted-foreground" />
+                          <span className="font-medium">{comment.author.name}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {comment.author.title}
+                          </span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(comment.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-sm">{comment.content}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No comments yet. Be the first to comment!
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
