@@ -5,6 +5,12 @@ import { DocumentProvider } from '@/lib/providers/document-provider'
 import { getResourceEnriched } from '@/lib/queries/server'
 import { notFound } from 'next/navigation'
 
+export function isUUID(str: string): boolean {
+  const uuidPattern =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  return uuidPattern.test(str)
+}
+
 export default async function ResourceLayout({
   children,
   params
@@ -15,10 +21,11 @@ export default async function ResourceLayout({
   }>
 }) {
   const { id } = await params
-  let resource = await getResourceEnriched(id)
-
-  if (!resource) {
+  let resource
+  if (!isUUID(id)) {
     resource = defaultResources.find(r => r.id === id) || null
+  } else {
+    resource = await getResourceEnriched(id)
   }
 
   if (!resource) {

@@ -130,19 +130,33 @@ export interface Comment {
   updatedAt: Date
 }
 
+export type IssueType =
+  | 'Design Error'
+  | 'Production Error'
+  | 'Construction Error'
+  | 'Maintenance Error'
+  | 'Safety Error'
+  | 'Other'
+
+export type IssueCategory =
+  | 'Production'
+  | 'Construction'
+  | 'Maintenance'
+  | 'Safety'
+  | 'Design'
+  | 'Other'
+
+export type IssuePriority = 'low' | 'medium' | 'high' | 'critical'
+
+export type IssueStatus = 'open' | 'in_progress' | 'resolved' | 'closed'
+
 export interface Issue {
   id: string
   title: string
   description: string
-  status: 'open' | 'in_progress' | 'resolved' | 'closed'
-  priority: 'low' | 'medium' | 'high' | 'critical'
-  category:
-    | 'Production'
-    | 'Construction'
-    | 'Maintenance'
-    | 'Safety'
-    | 'Design'
-    | 'Other'
+  status: IssueStatus
+  priority: IssuePriority
+  category: IssueCategory
   location: string
   assignedEngineer?: Engineer
   createdAt: Date
@@ -152,6 +166,20 @@ export interface Issue {
   comments?: Comment[]
 }
 
+export type ResourceOrigin =
+  | 'drive'
+  | 'confluence'
+  | 'solidworks'
+  | 'matlab'
+  | string
+
+export type ResourceStatus =
+  | 'pending'
+  | 'loading'
+  | 'processing'
+  | 'completed'
+  | 'error'
+
 export interface Resource {
   id: string
   title: string
@@ -160,11 +188,11 @@ export interface Resource {
   file_path: string
   user_id: string
   created_at: string
-  origin: 'drive' | 'confluence' | 'solidworks' | 'matlab' | string
+  origin: ResourceOrigin
   processed?: boolean
   processing_result?: any
   processing_completed_at?: string
-  status?: 'pending' | 'loading' | 'processing' | 'completed' | 'error'
+  status?: ResourceStatus
   processing_error?: string
   is_folder?: boolean
   parent_id?: string | null

@@ -17,8 +17,6 @@ import 'katex/dist/katex.min.css'
 import { ChevronLeft, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import rehypeKatex from 'rehype-katex'
-import remarkMath from 'remark-math'
 
 // Preprocess LaTeX equations to be rendered by KaTeX
 const preprocessLaTeX = (content: string) => {
@@ -89,23 +87,10 @@ export default function IssuePage() {
           {/* Description */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-2xl font-semibold mb-4">Detected Problem</h2>
-              <div className="text-muted-foreground text-lg">
-                <MemoizedReactMarkdown
-                  remarkPlugins={[remarkMath]}
-                  rehypePlugins={[[rehypeKatex, { output: 'html' }]]}
-                  className="prose prose-lg dark:prose-invert max-w-none
-                    prose-p:my-4 
-                    prose-pre:my-4
-                    prose-ul:my-4 
-                    prose-li:my-0
-                    prose-li:marker:text-muted-foreground
-                    [&_.katex-display]:my-4
-                    [&_.katex]:leading-tight"
-                >
-                  {preprocessLaTeX(issue.description)}
-                </MemoizedReactMarkdown>
-              </div>
+              <h2 className="text-xl font-semibold mb-4">Detected Problem</h2>
+              <MemoizedReactMarkdown>
+                {preprocessLaTeX(issue.description)}
+              </MemoizedReactMarkdown>
             </CardContent>
           </Card>
 
@@ -117,18 +102,7 @@ export default function IssuePage() {
                   Proposed Solution
                 </h2>
                 <div className="text-muted-foreground text-lg">
-                  <MemoizedReactMarkdown
-                    remarkPlugins={[remarkMath]}
-                    rehypePlugins={[[rehypeKatex, { output: 'html' }]]}
-                    className="prose prose-lg dark:prose-invert max-w-none
-                      prose-p:my-4 
-                      prose-pre:my-4
-                      prose-ul:my-4 
-                      prose-li:my-0
-                      prose-li:marker:text-muted-foreground
-                      [&_.katex-display]:my-4
-                      [&_.katex]:leading-tight"
-                  >
+                  <MemoizedReactMarkdown>
                     {preprocessLaTeX(issue.proposedSolution)}
                   </MemoizedReactMarkdown>
                 </div>
@@ -141,11 +115,11 @@ export default function IssuePage() {
           {/* Resources */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-2xl font-semibold mb-4">Related Resources</h2>
-              <div className="space-y-4">
+              <h2 className="text-xl font-semibold mb-4">Resources</h2>
+              <div className="space-y-1">
                 {issue.resources.map(resource => (
-                  <div key={resource.id} className="space-y-2">
-                    <div className="flex items-center gap-4">
+                  <Link key={resource.id} href={`/resources/${resource.id}`}>
+                    <div className="flex items-center gap-4 p-2 px-3 hover:bg-muted rounded">
                       {getResourceSourceIcon(resource)}
                       <div>
                         <span className="font-medium">{resource.title}</span>
@@ -154,7 +128,7 @@ export default function IssuePage() {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </CardContent>

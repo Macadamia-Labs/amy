@@ -4,7 +4,7 @@ import { IssueCard } from '@/components/issues/issue-card'
 import { IssueTable } from '@/components/issues/issue-table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { sampleIssues } from '@/data/issues'
-import { LayoutGridIcon, TableIcon } from 'lucide-react'
+import { GridIcon, TableIcon } from '@/lib/utils/icons'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -28,7 +28,7 @@ export default function Page() {
       >
         <TabsList>
           <TabsTrigger value="grid" className="flex items-center gap-2">
-            <LayoutGridIcon className="h-4 w-4" />
+            <GridIcon className="h-4 w-4" />
             Grid View
           </TabsTrigger>
           <TabsTrigger value="table" className="flex items-center gap-2">
