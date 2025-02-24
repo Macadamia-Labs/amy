@@ -5,7 +5,9 @@ import { IssueCategoryBadge } from '@/components/issues/issue-category-badge'
 import { IssuePriorityBadge } from '@/components/issues/issue-priority-badge'
 import { IssueStatusBadge } from '@/components/issues/issue-status-badge'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { sampleIssues } from '@/data/issues'
+import { BulbIcon, FireIcon } from '@/lib/utils/icons'
 import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import 'katex/dist/katex.min.css'
 import Link from 'next/link'
@@ -33,34 +35,49 @@ export default function IssuePage() {
   }
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">{issue.title}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-6">
-          {/* Description */}
-          <div className="border rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-4">Detected Problem</h2>
-            <MemoizedReactMarkdown>
-              {preprocessLaTeX(issue.description)}
-            </MemoizedReactMarkdown>
-          </div>
-
-          {/* Proposed Solution */}
-          {issue.proposedSolution && (
-            <div className="border rounded-lg p-4">
-              <h2 className="text-2xl font-semibold mb-4">Proposed Solution</h2>
-              <div className="text-muted-foreground text-lg">
+          <Tabs defaultValue="problem">
+            <TabsList className="w-full rounded-xl">
+              <TabsTrigger value="problem" className="w-full rounded-lg">
+                <FireIcon className="w-4 h-4 mr-2" /> Detected Problem
+              </TabsTrigger>
+              <TabsTrigger value="solution" className="w-full rounded-lg">
+                <BulbIcon className="w-4 h-4 mr-2" /> Proposed Solution
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="problem">
+              {/* Description */}
+              <div className="border rounded-xl p-4">
+                <h2 className="text-xl font-semibold mb-4">Detected Problem</h2>
                 <MemoizedReactMarkdown>
-                  {preprocessLaTeX(issue.proposedSolution)}
+                  {preprocessLaTeX(issue.description)}
                 </MemoizedReactMarkdown>
               </div>
-            </div>
-          )}
+            </TabsContent>
+            <TabsContent value="solution">
+              {/* Proposed Solution */}
+              {issue.proposedSolution && (
+                <div className="border rounded-xl p-4">
+                  <h2 className="text-2xl font-semibold mb-4">
+                    Proposed Solution
+                  </h2>
+                  <div className="text-muted-foreground text-lg">
+                    <MemoizedReactMarkdown>
+                      {preprocessLaTeX(issue.proposedSolution)}
+                    </MemoizedReactMarkdown>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
 
         <div className="space-y-4">
-          <div className="border rounded-lg p-4">
+          <div className="border rounded-xl p-4">
             <h2 className="text-xl font-semibold mb-4">Status</h2>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -79,7 +96,7 @@ export default function IssuePage() {
           </div>
 
           {/* Resources */}
-          <div className="border rounded-lg p-4">
+          <div className="border rounded-xl p-4">
             <h2 className="text-xl font-semibold mb-4">Resources</h2>
             <div className="space-y-1">
               {issue.resources.map(resource => (

@@ -114,6 +114,9 @@ export default function IntegrationsPage() {
   return (
     <div className="flex flex-col h-full p-4">
       <h1 className="text-2xl font-bold">Integrations</h1>
+      <p className="text-muted-foreground">
+        Connect your tools and data sources to use in your projects.
+      </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {[...integrations]
           .sort((a, b) => (b.isConnected ? 1 : 0) - (a.isConnected ? 1 : 0))

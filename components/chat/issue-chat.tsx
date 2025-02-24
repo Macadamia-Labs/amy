@@ -17,7 +17,7 @@ interface IssueChatProps {
 export function IssueChat({ id, initialMessages }: IssueChatProps) {
   const { createNewChat, chats } = useChats()
   const { user } = useAuth()
-  const { getCurrentContext } = useIssue()
+  const { getCurrentContext, issue } = useIssue()
 
   const chat = id ? chats.find(c => c.id === id) : null
   const chatMessages = chat
@@ -61,7 +61,8 @@ export function IssueChat({ id, initialMessages }: IssueChatProps) {
       ...chatRequestOptions,
       body: {
         ...chatRequestOptions?.body,
-        context
+        context,
+        data
       }
     })
   }
@@ -86,7 +87,8 @@ export function IssueChat({ id, initialMessages }: IssueChatProps) {
       ...chatRequestOptions,
       body: {
         ...chatRequestOptions?.body,
-        context
+        context,
+        data
       }
     })
   }
@@ -94,7 +96,19 @@ export function IssueChat({ id, initialMessages }: IssueChatProps) {
   return (
     <Chat
       id={id}
-      data={data}
+      data={{
+        issue: issue
+          ? {
+              id: issue.id,
+              title: issue.title,
+              description: issue.description,
+              status: issue.status,
+              priority: issue.priority,
+              category: issue.category,
+              proposedSolution: issue.proposedSolution
+            }
+          : null
+      }}
       messages={messages}
       setMessages={setMessages}
       append={appendWithContext}
