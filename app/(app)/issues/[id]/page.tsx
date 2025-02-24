@@ -34,11 +34,11 @@ export default function IssuePage() {
   }
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{issue.title}</h1>
+    <div className="h-full overflow-auto">
+      <div className="p-4 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold mb-4">{issue.title}</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* Description */}
           <Card>
             <CardContent className="pt-6">
@@ -66,61 +66,67 @@ export default function IssuePage() {
           )}
         </div>
 
-        <div className="space-y-6">
-          <Card>
-            <CardContent className="pt-6">
-              <h2 className="text-xl font-semibold mb-4">Status</h2>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className=" text-sm font-medium mr-auto">Priority</span>
-                  <IssuePriorityBadge priority={issue.priority} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <Card>
+              <CardContent className="pt-6">
+                <h2 className="text-xl font-semibold mb-4">Status</h2>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className=" text-sm font-medium mr-auto">
+                      Priority
+                    </span>
+                    <IssuePriorityBadge priority={issue.priority} />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className=" text-sm font-medium mr-auto">Status</span>
+                    <IssueStatusBadge status={issue.status} />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className=" text-sm font-medium mr-auto">
+                      Category
+                    </span>
+                    <IssueCategoryBadge category={issue.category} />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className=" text-sm font-medium mr-auto">Status</span>
-                  <IssueStatusBadge status={issue.status} />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className=" text-sm font-medium mr-auto">Category</span>
-                  <IssueCategoryBadge category={issue.category} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* Resources */}
-          <Card>
-            <CardContent className="pt-6">
-              <h2 className="text-xl font-semibold mb-4">Resources</h2>
-              <div className="space-y-1">
-                {issue.resources.map(resource => (
-                  <Link key={resource.id} href={`/resources/${resource.id}`}>
-                    <div className="flex items-center gap-4 p-2 px-3 hover:bg-muted rounded">
-                      {getResourceSourceIcon(resource)}
-                      <div>
-                        <span className="font-medium">{resource.title}</span>
-                        <p className="text-sm text-muted-foreground line-clamp-1">
-                          {resource.description}
-                        </p>
+            {/* Resources */}
+            <Card>
+              <CardContent className="pt-6">
+                <h2 className="text-xl font-semibold mb-4">Resources</h2>
+                <div className="space-y-1">
+                  {issue.resources.map(resource => (
+                    <Link key={resource.id} href={`/resources/${resource.id}`}>
+                      <div className="flex items-center gap-4 p-2 px-3 hover:bg-muted rounded">
+                        {getResourceSourceIcon(resource)}
+                        <div>
+                          <span className="font-medium">{resource.title}</span>
+                          <p className="text-sm text-muted-foreground line-clamp-1">
+                            {resource.description}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-          <Comments
-            comments={
-              issue.comments?.map(comment => ({
-                id: comment.id,
-                content: comment.content,
-                author: {
-                  name: comment.author.name
-                },
-                createdAt: new Date(comment.createdAt).toLocaleDateString()
-              })) || []
-            }
-          />
+            <Comments
+              comments={
+                issue.comments?.map(comment => ({
+                  id: comment.id,
+                  content: comment.content,
+                  author: {
+                    name: comment.author.name
+                  },
+                  createdAt: new Date(comment.createdAt).toLocaleDateString()
+                })) || []
+              }
+            />
+          </div>
         </div>
       </div>
     </div>
