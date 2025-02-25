@@ -106,10 +106,10 @@ export default function IssuePage() {
           {/* Resources */}
           <div className="border rounded-xl p-4">
             <h2 className="text-xl font-semibold mb-4">Resources</h2>
-            <div className="space-y-1">
+            <div className="flex flex-row flex-wrap gap-3">
               {issue.resources.map(resource => (
                 <Link key={resource.id} href={`/resources/${resource.id}`}>
-                  <div className="flex items-center gap-4 p-2 px-3 hover:bg-muted rounded">
+                  <div className="flex items-center gap-3 p-2 px-3 hover:bg-muted rounded border bg-card">
                     {getResourceSourceIcon(resource)}
                     <div>
                       <span className="font-medium">{resource.title}</span>
