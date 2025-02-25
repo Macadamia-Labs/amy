@@ -1,7 +1,14 @@
 'use client'
 
-import { IntegrationCard } from '@/components/integrations/integration-card'
-import { useEffect, useState } from 'react'
+import { IntegrationCard } from '@/components/integrations/integration-card';
+import { useEffect, useState } from 'react';
+
+// Declare global window property
+declare global {
+  interface Window {
+    clearIntegrationsStorage?: () => void;
+  }
+}
 
 interface Integration {
   name: string
@@ -27,6 +34,20 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     isConnected: false
   },
   {
+    name: 'Abaqus FEA',
+    code: 'abaqus',
+    description: 'Connect with your Abaqus finite element analysis simulations',
+    logoSrc: '/integrations/DS.avif',
+    isConnected: false
+  },
+  {
+    name: 'COMPRESS',
+    code: 'codeware',
+    description: 'Integrate with COMPRESS pressure vessel design software',
+    logoSrc: '/integrations/codeware.avif',
+    isConnected: false
+  },
+  {
     name: 'Confluence',
     code: 'confluence',
     description: 'Link your Confluence workspace',
@@ -34,10 +55,17 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     isConnected: false
   },
   {
-    name: 'Dassault',
+    name: 'Solidworks',
     code: 'DS',
     description: 'Link your Solidworks workspace',
     logoSrc: '/integrations/DS.avif',
+    isConnected: false
+  },
+  {
+    name: 'Gmail',
+    code: 'gmail',
+    description: 'Connect and manage your Gmail account',
+    logoSrc: '/integrations/gmail.jpg',
     isConnected: false
   },
   {
@@ -62,10 +90,31 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     isConnected: false
   },
   {
+    name: 'Onshape',
+    code: 'onshape',
+    description: 'Access your Onshape CAD models and assemblies',
+    logoSrc: '/integrations/onshape.avif',
+    isConnected: false
+  },
+  {
+    name: 'Outlook',
+    code: 'outlook',
+    description: 'Connect and manage your Outlook email and calendar',
+    logoSrc: '/integrations/outlook.avif',
+    isConnected: false
+  },
+  {
     name: 'SharePoint',
     code: 'sharepoint',
     description: 'Connect to your SharePoint sites and documents',
     logoSrc: '/integrations/sharepoint.avif',
+    isConnected: false
+  },
+  {
+    name: 'Siemens NX',
+    code: 'siemensnx',
+    description: 'Access your Siemens NX CAD models and projects',
+    logoSrc: '/integrations/siemens.avif',
     isConnected: false
   },
   {
@@ -84,16 +133,56 @@ export default function IntegrationsPage() {
     // Load integrations from localStorage or use defaults
     const savedIntegrations = localStorage.getItem('integrations')
     if (savedIntegrations) {
-      setIntegrations(JSON.parse(savedIntegrations))
+      const parsedIntegrations = JSON.parse(savedIntegrations);
+      
+      // Check for duplicates and log them
+      const codeCount: Record<string, number> = {};
+      parsedIntegrations.forEach((integration: Integration) => {
+        codeCount[integration.code] = (codeCount[integration.code] || 0) + 1;
+      });
+      
+      const duplicates = Object.entries(codeCount)
+        .filter(([_, count]) => count > 1)
+        .map(([code]) => code);
+      
+      if (duplicates.length > 0) {
+        console.warn('Duplicate integration codes found:', duplicates);
+      }
+      
+      // Check if any new default integrations need to be added
+      const existingCodes = new Set(parsedIntegrations.map((i: Integration) => i.code));
+      const newIntegrations = DEFAULT_INTEGRATIONS.filter(
+        integration => !existingCodes.has(integration.code)
+      );
+      
+      if (newIntegrations.length > 0) {
+        // Add new integrations to the existing ones
+        setIntegrations([...parsedIntegrations, ...newIntegrations]);
+      } else {
+        setIntegrations(parsedIntegrations);
+      }
     } else {
-      setIntegrations(DEFAULT_INTEGRATIONS)
+      // Ensure no duplicate codes in DEFAULT_INTEGRATIONS
+      const uniqueDefaultIntegrations = Array.from(
+        new Map(DEFAULT_INTEGRATIONS.map(item => [item.code, item])).values()
+      );
+      setIntegrations(uniqueDefaultIntegrations);
     }
   }, [])
 
   // Save to localStorage whenever integrations change
   useEffect(() => {
     if (integrations.length > 0) {
-      localStorage.setItem('integrations', JSON.stringify(integrations))
+      // Remove any duplicates before saving to localStorage
+      const uniqueIntegrations = Array.from(
+        new Map(integrations.map(item => [item.code, item])).values()
+      );
+      localStorage.setItem('integrations', JSON.stringify(uniqueIntegrations))
+      
+      // If we removed duplicates, update the state as well
+      if (uniqueIntegrations.length !== integrations.length) {
+        setIntegrations(uniqueIntegrations);
+      }
     }
   }, [integrations])
 
@@ -118,6 +207,26 @@ export default function IntegrationsPage() {
     console.log(`Syncing ${integrations[index].name}...`)
   }
 
+  // Function to clear localStorage - can be called from browser console
+  // To use: open browser console and type: window.clearIntegrationsStorage()
+  useEffect(() => {
+    window.clearIntegrationsStorage = () => {
+      localStorage.removeItem('integrations');
+      // Ensure no duplicate codes in DEFAULT_INTEGRATIONS before setting state
+      const uniqueDefaultIntegrations = Array.from(
+        new Map(DEFAULT_INTEGRATIONS.map(item => [item.code, item])).values()
+      );
+      setIntegrations(uniqueDefaultIntegrations);
+      console.log('Integrations storage cleared and reset to defaults');
+      // Reload the page to ensure a clean state
+      window.location.reload();
+    };
+    
+    return () => {
+      delete window.clearIntegrationsStorage;
+    };
+  }, []);
+
   return (
     <div className="flex flex-col h-full p-4">
       <h1 className="text-2xl font-bold">Integrations</h1>
@@ -129,11 +238,11 @@ export default function IntegrationsPage() {
           .sort((a, b) => (b.isConnected ? 1 : 0) - (a.isConnected ? 1 : 0))
           .map((integration, index) => {
             const originalIndex = integrations.findIndex(
-              i => i.name === integration.name
+              i => i.code === integration.code
             )
             return (
               <IntegrationCard
-                key={integration.name}
+                key={`${integration.code}-${index}`}
                 {...integration}
                 onConnect={() => handleConnect(originalIndex)}
                 onDisconnect={() => handleDisconnect(originalIndex)}
