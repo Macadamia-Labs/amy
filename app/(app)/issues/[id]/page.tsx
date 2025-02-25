@@ -109,7 +109,7 @@ export default function IssuePage() {
             <div className="flex flex-row flex-wrap gap-3">
               {issue.resources.map(resource => (
                 <Link key={resource.id} href={`/resources/${resource.id}`}>
-                  <div className="flex items-center gap-3 p-2 px-3 hover:bg-muted rounded border bg-card">
+                  <div className="flex items-center gap-3 p-2 px-3 hover:bg-muted rounded bg-card">
                     {getResourceSourceIcon(resource)}
                     <div>
                       <span className="font-medium">{resource.title}</span>
@@ -130,7 +130,7 @@ export default function IssuePage() {
               <div className="space-y-2">
                 {issue.affectedWorkflows.map(workflow => (
                   <Link key={workflow.id} href={`/workflows/${workflow.id}`}>
-                    <div className="flex items-center justify-between p-2 hover:bg-muted rounded border bg-card">
+                    <div className="flex items-center justify-between p-2 hover:bg-muted rounded bg-card">
                       <div className="flex items-center">
                         <WorkflowIcon className="w-4 h-4 mr-2 text-blue-600" />
                         <span className="font-medium">{workflow.title}</span>
