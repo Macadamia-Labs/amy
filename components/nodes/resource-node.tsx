@@ -7,8 +7,8 @@ import {
   ResourceNodeData,
   StandardNodeData
 } from '@/lib/types/node-types'
+import { AlertIcon, CheckCircleIcon } from '@/lib/utils/icons'
 import { Handle, Position } from '@xyflow/react'
-import { AlertCircle, CheckCircle, Clock, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import { ComponentType, ReactNode } from 'react'
 
@@ -36,13 +36,13 @@ function StatusIcon({
 }) {
   switch (status) {
     case 'completed':
-      return <CheckCircle className="h-4 w-4 text-green-500" />
+      return <CheckCircleIcon className="size-5 text-green-500" />
     case 'running':
-      return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+      return null
     case 'failed':
-      return <AlertCircle className="h-4 w-4 text-red-500" />
+      return <AlertIcon className="size-5 text-red-500" />
     default:
-      return <Clock className="h-4 w-4 text-gray-500" />
+      return null
   }
 }
 
@@ -63,13 +63,16 @@ function ResourceNodeContent({
         )}
         <div className="flex flex-col flex-1">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">{name}</span>
+            <span className="text-sm font-medium mr-4">{name}</span>
             <StatusIcon status={status} />
           </div>
           <span className="text-sm text-muted-foreground">{description}</span>
           {/* Progress bar */}
           {status === 'running' && (
-            <Progress value={progress} className="h-1 mt-2" />
+            <Progress
+              value={progress}
+              className="h-1 mt-2 transition-progress"
+            />
           )}
         </div>
       </div>

@@ -13,7 +13,7 @@ interface ExecutionLogProps {
 export function ExecutionLog({ className }: ExecutionLogProps) {
   const { executionLog } = useWorkflows()
   const logEndRef = useRef<HTMLDivElement>(null)
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   // Auto-scroll to the bottom when new logs arrive
   useEffect(() => {

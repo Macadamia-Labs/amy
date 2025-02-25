@@ -62,6 +62,10 @@ export function WorkflowsProvider({
   const [completedNodeIds, setCompletedNodeIds] = useState<Set<string>>(
     new Set()
   )
+  // Track execution attempts for debugging
+  const [executionAttempts, setExecutionAttempts] = useState<
+    Record<string, number>
+  >({})
 
   useEffect(() => {
     const supabase = createClient()
@@ -180,6 +184,10 @@ export function WorkflowsProvider({
   }
 
   const executeWorkflow = async (id: string) => {
+    // Increment execution attempts counter
+    const attemptCount = (executionAttempts[id] || 0) + 1
+    setExecutionAttempts(prev => ({ ...prev, [id]: attemptCount }))
+
     // Prevent executing a workflow that's already running
     if (runningWorkflows.has(id)) {
       console.warn('Workflow is already running, ignoring execution request')
@@ -190,6 +198,8 @@ export function WorkflowsProvider({
     }
 
     try {
+      console.log(`Execution attempt #${attemptCount} for workflow: ${id}`)
+
       // Reset ALL execution state to avoid carryover from previous runs
       setExecutionLog([])
       setProcessedNodeIds(new Set())
@@ -197,7 +207,9 @@ export function WorkflowsProvider({
       setNodeStatus({})
       setNodeProgress({})
 
-      addExecutionLog(`Starting workflow execution: ${id}`)
+      addExecutionLog(
+        `Starting workflow execution: ${id} (attempt #${attemptCount})`
+      )
 
       // Mark workflow as running
       setRunningWorkflows(prev => new Set([...prev, id]))
@@ -207,6 +219,15 @@ export function WorkflowsProvider({
       const workflow = workflows.find(w => w.id === id)
       if (!workflow) {
         throw new Error('Workflow not found')
+      }
+
+      // Double check the workflow is now marked as running
+      if (workflow.status !== 'running') {
+        console.log('Ensuring workflow status is set to running')
+        // Force status update to ensure it's running
+        updateWorkflow(id, { status: 'running' })
+        // Allow state to settle
+        await new Promise(resolve => setTimeout(resolve, 50))
       }
 
       // Initialize all nodes as pending with 0% progress
@@ -240,6 +261,7 @@ export function WorkflowsProvider({
 
       // Wait a moment for all state to be reset
       await new Promise(resolve => setTimeout(resolve, 50))
+      console.log('State reset completed, starting execution')
 
       // Get dependency map and node durations
       const dependencyMap = buildDependencyMap(workflow)
@@ -266,8 +288,10 @@ export function WorkflowsProvider({
       })
 
       // Execute the workflow nodes based on dependencies
+      console.log('Starting simulation with dependency map:', dependencyMap)
       await simulateExecution(workflow, dependencyMap, nodeDurations)
 
+      console.log('Simulation completed successfully')
       addExecutionLog('Workflow execution completed successfully')
 
       // Update workflow status to completed
@@ -296,9 +320,19 @@ export function WorkflowsProvider({
     dependencyMap: Record<string, string[]>,
     nodeDurations: Record<string, number>
   ) => {
+    console.log('Initializing simulation with local state tracking')
+
     // Create local tracking sets to ensure consistent state during execution
     const localProcessedNodeIds = new Set<string>()
     const localCompletedNodeIds = new Set<string>()
+
+    // Create a local copy of node status to avoid race conditions with React state updates
+    const localNodeStatus: Record<string, NodeStatus> = {}
+
+    // Initialize all nodes as pending in our local state
+    workflow.nodes.forEach(node => {
+      localNodeStatus[node.id] = 'pending'
+    })
 
     // Continue execution until all nodes are processed
     let remainingIterations = 100 // Safety limit
@@ -320,8 +354,9 @@ export function WorkflowsProvider({
       const executableNodeIds = workflow.nodes
         .filter(node => {
           // Skip nodes that aren't pending or have already been processed
+          // Using local state instead of global state to avoid race conditions
           if (
-            nodeStatus[node.id] !== 'pending' ||
+            localNodeStatus[node.id] !== 'pending' ||
             localProcessedNodeIds.has(node.id)
           ) {
             return false
@@ -338,7 +373,7 @@ export function WorkflowsProvider({
         // Check if any nodes are still pending
         const pendingNodes = workflow.nodes.filter(
           node =>
-            nodeStatus[node.id] === 'pending' &&
+            localNodeStatus[node.id] === 'pending' &&
             !localProcessedNodeIds.has(node.id)
         )
 
@@ -402,7 +437,8 @@ export function WorkflowsProvider({
             workflow,
             nodeId,
             nodeDurations[nodeId],
-            localCompletedNodeIds
+            localCompletedNodeIds,
+            localNodeStatus
           )
         )
       )
@@ -425,17 +461,19 @@ export function WorkflowsProvider({
     workflow: Workflow,
     nodeId: string,
     duration: number,
-    localCompletedNodeIds: Set<string>
+    localCompletedNodeIds: Set<string>,
+    localNodeStatus: Record<string, NodeStatus>
   ) => {
     // Safety check - don't execute a node that has already been processed or isn't pending
-    if (localCompletedNodeIds.has(nodeId) || nodeStatus[nodeId] !== 'pending') {
-      console.warn(
-        `Skipping node ${nodeId} as it's already processed or not pending`
-      )
+    if (localCompletedNodeIds.has(nodeId)) {
+      console.warn(`Skipping node ${nodeId} as it's already processed`)
       return
     }
 
     try {
+      // Update local status first
+      localNodeStatus[nodeId] = 'running'
+
       // Mark node as running
       updateNodeState(workflow.id, nodeId, 'running', 0)
 
@@ -469,6 +507,9 @@ export function WorkflowsProvider({
         )
       }
 
+      // Update local status
+      localNodeStatus[nodeId] = 'completed'
+
       // Mark node as completed (single update for all state)
       updateNodeState(workflow.id, nodeId, 'completed', 100)
 
@@ -484,6 +525,9 @@ export function WorkflowsProvider({
       addExecutionLog(`Completed: ${getNodeDescription(node)}`)
     } catch (error) {
       console.error(`Error executing node ${nodeId}:`, error)
+
+      // Update local status
+      localNodeStatus[nodeId] = 'failed'
 
       // Mark node as failed
       updateNodeState(workflow.id, nodeId, 'failed', 0)
