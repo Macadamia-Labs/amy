@@ -12,7 +12,7 @@ import {
   useEdgesState,
   useNodesState
 } from '@xyflow/react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import '@xyflow/react/dist/style.css'
 
@@ -25,10 +25,11 @@ import {
 } from '@/components/nodes/resource-node'
 import { SimulationNode } from '@/components/nodes/simulation-node'
 import { SpecsNode } from '@/components/nodes/specs-node'
+import { useWorkflows } from '@/components/providers/workflows-provider'
 import { CADNode } from '@/lib/types/node-types'
 
-const snapGrid: [number, number] = [20, 20]
-const nodeTypes: NodeTypes = {
+// Define a more flexible type for node types to accommodate type checking
+const nodeTypes = {
   simulation: SimulationNode,
   geometry: GeometryNode,
   specs: SpecsNode,
@@ -36,246 +37,169 @@ const nodeTypes: NodeTypes = {
   resource: ResourceNode,
   standard: StandardNode,
   integration: IntegrationNode
-}
+} as NodeTypes
 
+const snapGrid: [number, number] = [20, 20]
 const defaultViewport = { x: 0, y: 0, zoom: 1.5 }
 
-export const BuildGrid = () => {
+// Edge style definitions with better organization
+const edgeStyles = {
+  default: { stroke: '#64748b', strokeWidth: 1 },
+  active: { stroke: '#3b82f6', strokeWidth: 2 },
+  completed: { stroke: '#22c55e', strokeWidth: 2 },
+  failed: { stroke: '#ef4444', strokeWidth: 2 }
+}
+
+interface BuildGridProps {
+  workflowId?: string
+}
+
+export const BuildGrid = ({ workflowId = 'workflow-1' }: BuildGridProps) => {
+  const { workflows, nodeStatus, nodeProgress } = useWorkflows()
   const [nodes, setNodes, onNodesChange] = useNodesState<CADNode>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
 
+  // Track initialization to prevent animations on first load
+  const initialized = useRef(false)
+
+  // Use this to track the last updated status to avoid unnecessary re-renders
+  const [lastStatusUpdate, setLastStatusUpdate] = useState<number>(0)
+
+  // Get current workflow
+  const workflow = workflows.find(w => w.id === workflowId)
+
+  // Initialize nodes and edges from workflow
   useEffect(() => {
-    const initialNodes: CADNode[] = [
-      {
-        id: 'resource1',
-        type: 'standard',
-        position: { x: 500, y: 280 },
-        data: {
-          type: 'standard',
-          label: 'Design Standard',
-          name: 'Extracted Design Parameters',
-          description: 'Pressure vessel parameters',
-          standardCode: 'E'
-        }
-      },
-      {
-        id: 'resource2',
-        type: 'integration',
-        position: { x: 150, y: 150 },
-        data: {
-          type: 'integration',
-          label: 'Google Drive',
-          name: 'Pressure Vessel Requirements',
-          description: 'Customer specifications',
-          integration: {
-            type: 'Google Drive',
-            logoSrc: '/integrations/gdrive.avif'
-          }
-        }
-      },
-      {
-        id: 'resource3',
-        type: 'integration',
-        position: { x: 1200, y: 360 },
-        data: {
-          type: 'integration',
-          label: 'Google Drive',
-          name: 'Technical Drawing',
-          description: 'Pressure Vessel',
-          integration: {
-            type: 'Google Drive',
-            logoSrc: '/integrations/gdrive.avif'
-          }
-        }
-      },
-      {
-        id: 'resource8',
-        type: 'integration',
-        position: { x: 1200, y: 480 },
-        data: {
-          type: 'integration',
-          label: 'Google Drive',
-          name: 'Bill of Materials',
-          description: 'Pressure Vessel Components',
-          integration: {
-            type: 'Google Drive',
-            logoSrc: '/integrations/gdrive.avif'
-          }
-        }
-      },
-      {
-        id: 'resource7',
-        type: 'integration',
-        position: { x: 1500, y: 150 },
-        data: {
-          type: 'integration',
-          label: 'Google Drive',
-          name: 'Simulation Report',
-          description: 'Static Pressure Analysis',
-          integration: {
-            type: 'Google Drive',
-            logoSrc: '/integrations/gdrive.avif'
-          }
-        }
-      },
-      {
-        id: 'resource4',
-        type: 'integration',
-        position: { x: 1200, y: 150 },
-        data: {
-          type: 'integration',
-          label: 'Ansys',
-          name: 'Ansys Mechanical',
-          description: 'FEA Simulation Setup',
-          integration: {
-            type: 'Ansys',
-            logoSrc: '/integrations/ansys.avif'
-          }
-        }
-      },
-      /* Commented out nodes
-      {
-        id: 'geometry1',
-        type: 'geometry',
-        position: { x: 300, y: 50 },
-        data: {
-          type: 'geometry',
-          label: 'Part Geometry',
-          shape: 'cylinder',
-          dimensions: {
-            radius: 25,
-            height: 100
-          }
-        }
-      },
-      {
-        id: 'material1',
-        type: 'material',
-        position: { x: 300, y: 200 },
-        data: {
-          type: 'material',
-          label: 'Material Selection',
-          material: 'Aluminum 6061',
-          properties: {
-            density: 2.7,
-            elasticity: 69
-          }
-        }
-      },
-      {
-        id: 'material2',
-        type: 'material',
-        position: { x: 300, y: 200 },
-        data: {
-          type: 'material',
-          label: 'Extracted pressure vessel parameters',
-          material: 'Steel A516 Grade 70',
-          properties: {
-            density: 7.85,
-            elasticity: 200
-          }
-        }
-      },
-      {
-        id: 'simulation1',
-        type: 'simulation',
-        position: { x: 600, y: 125 },
-        data: {
-          type: 'simulation',
-          label: 'Stress Analysis',
-          simulationType: 'static',
-          parameters: {
-            meshSize: 2.5,
-            loadMagnitude: 1000
-          }
-        }
-      },
-      */
-      {
-        id: 'resource5',
-        type: 'integration',
-        position: { x: 900, y: 280 },
-        data: {
-          type: 'integration',
-          label: 'DS',
-          name: 'Solidworks',
-          description: '3D CAD model',
-          integration: {
-            type: 'DS',
-            logoSrc: '/integrations/DS.avif'
-          }
-        }
-      },
-      {
-        id: 'resource6',
-        type: 'integration',
-        position: { x: 150, y: 360 },
-        data: {
-          type: 'integration',
-          label: 'Google Drive',
-          name: 'ASME standards',
-          description: 'ASME standards',
-          integration: {
-            type: 'Google Drive',
-            logoSrc: '/integrations/gdrive.avif'
-          }
-        }
-      },
-    ]
+    if (!workflow) return
 
-    const initialEdges: Edge[] = [
-      {
-        id: 'e1-2',
-        source: 'resource2',
-        target: 'resource1',
-        animated: true
-      },
-      {
-        id: 'e2-3',
-        source: 'resource6',
-        target: 'resource1',
-        animated: true
-      },
-      {
-        id: 'e3-4',
-        source: 'resource1',
-        target: 'resource5',
-        animated: true
-      },
-      {
-        id: 'e4-5',
-        source: 'resource5',
-        target: 'resource3',
-        animated: true
-      },
-      {
-        id: 'e5-6',
-        source: 'resource5',
-        target: 'resource4',
-        animated: true
-      },
-      {
-        id: 'e6-7',
-        source: 'resource4',
-        target: 'resource7',
-        animated: true
-      },
-      {
-        id: 'e5-8',
-        source: 'resource5',
-        target: 'resource8',
-        animated: true
-      }
-    ]
+    // First time initialization
+    if (!initialized.current) {
+      // Set nodes with initial status
+      setNodes(
+        workflow.nodes.map(node => ({
+          ...node,
+          data: {
+            ...node.data,
+            status: nodeStatus[node.id] || 'pending',
+            progress: nodeProgress[node.id] || 0
+          }
+        }))
+      )
 
-    setNodes(initialNodes)
-    setEdges(initialEdges)
-  }, [])
+      // Set edges with no animation initially
+      setEdges(
+        workflow.edges.map(edge => ({
+          ...edge,
+          animated: false,
+          style: edgeStyles.default
+        }))
+      )
 
+      initialized.current = true
+      setLastStatusUpdate(Date.now())
+    }
+  }, [workflow, nodeStatus, nodeProgress])
+
+  // Separate effect to handle node status and progress updates
+  useEffect(() => {
+    if (!initialized.current || !workflow) return
+
+    // Update nodes with latest status and progress
+    setNodes(prevNodes =>
+      prevNodes.map(node => ({
+        ...node,
+        data: {
+          ...node.data,
+          status: nodeStatus[node.id] || node.data.status,
+          progress:
+            nodeProgress[node.id] !== undefined
+              ? nodeProgress[node.id]
+              : node.data.progress
+        }
+      }))
+    )
+
+    // Record this update timestamp
+    setLastStatusUpdate(Date.now())
+  }, [nodeStatus, nodeProgress, workflow])
+
+  // Handle edge updates separately for better performance
+  useEffect(() => {
+    if (!initialized.current || !workflow) return
+
+    // Debounce edge updates slightly to ensure node states are settled
+    const timer = setTimeout(() => {
+      const updatedEdges = workflow.edges.map(edge => {
+        const sourceStatus = nodeStatus[edge.source] || 'pending'
+        const targetStatus = nodeStatus[edge.target] || 'pending'
+
+        // Determine edge style and animation based on connected nodes' statuses
+        let style = { ...edgeStyles.default }
+        let animated = false
+
+        // Active flow: source is completed and target is processing
+        if (sourceStatus === 'completed' && targetStatus === 'running') {
+          style = { ...edgeStyles.active }
+          animated = true
+        }
+        // Connection is ready but not yet flowing
+        else if (sourceStatus === 'running' && targetStatus === 'pending') {
+          style = { ...edgeStyles.active }
+          animated = false
+        }
+        // Both nodes completed successfully
+        else if (sourceStatus === 'completed' && targetStatus === 'completed') {
+          style = { ...edgeStyles.completed }
+          animated = false
+        }
+        // One or both nodes failed
+        else if (sourceStatus === 'failed' || targetStatus === 'failed') {
+          style = { ...edgeStyles.failed }
+          animated = false
+        }
+
+        return {
+          ...edge,
+          animated,
+          style
+        }
+      })
+
+      setEdges(updatedEdges)
+    }, 10) // Small timeout for debouncing
+
+    return () => clearTimeout(timer)
+  }, [lastStatusUpdate, workflow])
+
+  // Handle new connections
   const onConnect = useCallback(
-    (params: Connection) =>
-      setEdges(eds => addEdge({ ...params, animated: true }, eds)),
-    []
+    (params: Connection) => {
+      // Add new edge with default style and no animation
+      setEdges(eds =>
+        addEdge(
+          {
+            ...params,
+            animated: false,
+            style: edgeStyles.default,
+            type: 'default'
+          },
+          eds
+        )
+      )
+    },
+    [setEdges]
+  )
+
+  // Function to determine if we should animate an edge
+  const shouldAnimateEdge = useCallback(
+    (sourceId: string, targetId: string) => {
+      const sourceStatus = nodeStatus[sourceId]
+      const targetStatus = nodeStatus[targetId]
+
+      // Animate only when data is flowing from completed to running
+      return sourceStatus === 'completed' && targetStatus === 'running'
+    },
+    [nodeStatus]
   )
 
   const proOptions = { hideAttribution: true }
@@ -296,7 +220,6 @@ export const BuildGrid = () => {
       proOptions={proOptions}
     >
       <Background variant={BackgroundVariant.Dots} />
-
       <Controls className="text-primary bg-muted" />
     </ReactFlow>
   )

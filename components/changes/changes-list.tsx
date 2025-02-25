@@ -2,7 +2,6 @@ import { MailIcon, UserIcon } from '@/lib/utils/icons'
 import Image from 'next/image'
 import Loader from '../lottie/loader'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { ChangeItem } from './change-item'
 import { Change } from './types'
 
 interface ChangesListProps {
@@ -26,14 +25,14 @@ export const UploadedFileExample = () => {
   return (
     <div className="rounded-lg w-full border p-4 flex items-center gap-2 pr-6">
       <Avatar className="size-8">
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>
+        <AvatarImage src="https://github.com/.png" />
+        <AvatarFallback className="bg-green-100 text-green-600">
           <UserIcon className="size-4" />
         </AvatarFallback>
       </Avatar>
       <div className="ml-2 flex flex-col">
         <p className="text-sm">
-          <span className="font-bold text-purple-500">Brecht</span> uploaded{' '}
+          <span className="font-bold text-green-600">Brecht</span> uploaded{' '}
           <span className="font-medium font-mono">Design_1.fmu</span>
         </p>
         <span className="text-xs text-muted-foreground">
@@ -57,14 +56,14 @@ export const EmailForwardingExample = () => {
   return (
     <div className="rounded-lg w-full border p-4 flex items-center gap-2 pr-6">
       <Avatar className="size-8">
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>
+        <AvatarImage src="https://github.com/.png" />
+        <AvatarFallback className="bg-purple-100 text-purple-600">
           <UserIcon className="size-4" />
         </AvatarFallback>
       </Avatar>
       <div className="ml-2 flex flex-col">
         <p className="text-sm">
-          <span className="font-bold text-purple-500">Brecht</span> forwarded an
+          <span className="font-bold text-purple-600">Abel</span> forwarded an
           email to <span className="font-medium font-mono">Design_1.fmu</span>
         </p>
         <span className="text-xs text-muted-foreground">
@@ -89,9 +88,9 @@ export function ChangesList({ changes }: ChangesListProps) {
       <AnalyzingChangesExample />
       <UploadedFileExample />
       <EmailForwardingExample />
-      {changes.map(change => (
+      {/* {changes.map(change => (
         <ChangeItem key={change.id} change={change} />
-      ))}
+      ))} */}
     </div>
   )
 }

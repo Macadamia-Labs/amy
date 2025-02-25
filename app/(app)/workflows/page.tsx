@@ -1,6 +1,12 @@
-import { BuildGrid } from '@/components/buildgrid/build-grid'
-import '@xyflow/react/dist/style.css'
+import { WorkflowsProvider } from '@/components/providers/workflows-provider'
+import { WorkflowsTable } from '@/components/workflows/workflows-table'
 
-export default function FlowPage() {
-  return <BuildGrid />
+export default function WorkflowsPage() {
+  return (
+    <WorkflowsProvider>
+      <div className="container py-6">
+        <WorkflowsTable />
+      </div>
+    </WorkflowsProvider>
+  )
 }

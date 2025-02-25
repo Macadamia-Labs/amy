@@ -2,6 +2,9 @@ import { Node } from '@xyflow/react'
 
 export interface BaseNodeData extends Record<string, unknown> {
   label: string
+  status?: 'pending' | 'running' | 'completed' | 'failed'
+  progress?: number
+  duration?: number // execution duration in ms
 }
 
 export interface SimulationNodeData extends BaseNodeData {
