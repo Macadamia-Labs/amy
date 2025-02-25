@@ -14,7 +14,7 @@ const pressureVesselNodes: CADNode[] = [
       name: 'Extracted Design Parameters',
       description: 'Pressure vessel parameters',
       standardCode: 'E',
-      duration: 4000 // 4 seconds
+      duration: 2000 // 4 seconds
     }
   },
   {
@@ -30,7 +30,7 @@ const pressureVesselNodes: CADNode[] = [
         type: 'Google Drive',
         logoSrc: '/integrations/gdrive.avif'
       },
-      duration: 3500 // 3.5 seconds
+      duration: 2000 // 3.5 seconds
     }
   },
   {
@@ -46,7 +46,7 @@ const pressureVesselNodes: CADNode[] = [
         type: 'Google Drive',
         logoSrc: '/integrations/gdrive.avif'
       },
-      duration: 5000 // 5 seconds
+      duration: 1000 // 5 seconds
     }
   },
   {
@@ -62,7 +62,7 @@ const pressureVesselNodes: CADNode[] = [
         type: 'Google Drive',
         logoSrc: '/integrations/gdrive.avif'
       },
-      duration: 4200 // 4.2 seconds
+      duration: 1500 // 4.2 seconds
     }
   },
   {
@@ -78,7 +78,7 @@ const pressureVesselNodes: CADNode[] = [
         type: 'Google Drive',
         logoSrc: '/integrations/gdrive.avif'
       },
-      duration: 3000 // 3 seconds
+      duration: 500 // 3 seconds
     }
   },
   {
@@ -94,7 +94,7 @@ const pressureVesselNodes: CADNode[] = [
         type: 'Ansys',
         logoSrc: '/integrations/ansys.avif'
       },
-      duration: 4500 // 4.5 seconds
+      duration: 500 // 4.5 seconds
     }
   },
   {
@@ -126,7 +126,7 @@ const pressureVesselNodes: CADNode[] = [
         type: 'DS',
         logoSrc: '/integrations/DS.avif'
       },
-      duration: 5500 // 5.5 seconds
+      duration: 2000 // 5.5 seconds
     }
   },
   {
