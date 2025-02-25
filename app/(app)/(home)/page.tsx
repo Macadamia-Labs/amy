@@ -1,6 +1,5 @@
-import { ChangesList } from '@/components/changes'
+import { ActivityView } from '@/components/changes/activity-wrapper'
 import { exampleChanges } from '@/components/changes/example-changes'
-import { Button } from '@/components/ui/button'
 import {
     Card,
     CardContent,
@@ -28,8 +27,8 @@ export default function AppPage() {
               Industrial Storage Tank for Water
             </h1>
             <p className="text-muted-foreground">
-              Customer X - Detailed design of 96" diameter pressure vessel for
-              water storage
+              Customer X - Detailed design of 96&quot; diameter pressure vessel
+              for water storage
             </p>
           </div>
         </div>
@@ -67,13 +66,9 @@ export default function AppPage() {
             )
           })}
         </div>
-        <div className="flex items-center justify-between mt-8 mb-4">
-          <h2 className="text-xl font-semibold">Activity</h2>
-          <Button variant="ghost" asChild>
-            <Link href="/activity">View all</Link>
-          </Button>
+        <div className="mt-8 w-full">
+          <ActivityView changes={exampleChanges} />
         </div>
-        <ChangesList changes={exampleChanges} />
       </div>
     </div>
   )

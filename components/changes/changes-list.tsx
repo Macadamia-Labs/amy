@@ -1,9 +1,14 @@
+'use client'
+import { AnimatedList } from '@/components/magicui/animated-list'
 import { AlertIcon, MailIcon, UserIcon } from '@/lib/utils/icons'
+import { PlusIcon, Trash2 } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import Loader from '../lottie/loader'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Button } from '../ui/button'
+import { useActivity } from './activity-provider'
 import { Change } from './types'
-
 interface ChangesListProps {
   changes: Change[]
 }
@@ -11,7 +16,7 @@ interface ChangesListProps {
 // File reference component
 export const FileReference = ({ filename }: { filename: string }) => {
   return (
-    <span className="inline-flex items-center gap-1.5 font-medium font-mono">
+    <span className="inline-flex items-center gap-1.5 font-medium">
       <Image
         src="/integrations/gdrive.avif"
         alt="GDrive"
@@ -21,8 +26,28 @@ export const FileReference = ({ filename }: { filename: string }) => {
       />
       {filename}
     </span>
-  );
-};
+  )
+}
+
+export const ActionStatement = ({
+  person,
+  action,
+  resource
+}: {
+  person: { name: string; color: string }
+  action: string
+  resource: string
+}) => {
+  return (
+    <p className="text-sm flex items-center gap-2">
+      <p>
+        <span className={`font-bold ${person.color}`}>{person.name}</span>{' '}
+        {action}
+      </p>
+      <FileReference filename={resource} />
+    </p>
+  )
+}
 
 export const AnalyzingChangesExample = () => {
   return (
@@ -30,7 +55,11 @@ export const AnalyzingChangesExample = () => {
       <div className="gap-2 flex items-center">
         <Loader className="size-7" />
         <span className="ml-2">
-          <span className="font-bold">Cooper</span> is analyzing project files for potential errors...
+          <ActionStatement
+            person={{ name: 'Cooper', color: 'text-blue-600' }}
+            action="is analyzing project files for potential errors..."
+            resource=""
+          />
         </span>
       </div>
     </div>
@@ -48,10 +77,11 @@ export const ShellThicknessIssueExample = () => {
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
-          <p className="text-sm">
-            <span className="font-bold text-red-600">Cooper</span> identified critical issue in{' '}
-            <FileReference filename="Technical Drawing Rev C.pdf" />
-          </p>
+          <ActionStatement
+            person={{ name: 'Cooper', color: 'text-red-600' }}
+            action="identified critical issue in"
+            resource="Technical Drawing Rev C.pdf"
+          />
           <span className="text-xs text-muted-foreground">
             February 20th, 2025 at 2:45 PM
           </span>
@@ -61,7 +91,9 @@ export const ShellThicknessIssueExample = () => {
         </div>
       </div>
       <div className="ml-10 p-3 bg-red-50 rounded-md border border-red-200">
-        <p className="text-sm font-medium text-red-800">Shell Thickness Insufficient for 50 psig at 650 °F + Full Vacuum</p>
+        <p className="text-sm font-medium text-red-800">
+          Shell Thickness Insufficient for 50 psig at 650 °F + Full Vacuum
+        </p>
       </div>
     </div>
   )
@@ -78,10 +110,11 @@ export const UndersizedManwayIssueExample = () => {
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
-          <p className="text-sm">
-            <span className="font-bold text-orange-600">Cooper</span> identified issue in{' '}
-            <FileReference filename="Technical Drawing Rev C.pdf" />
-          </p>
+          <ActionStatement
+            person={{ name: 'Cooper', color: 'text-orange-600' }}
+            action="identified issue in"
+            resource="Technical Drawing Rev C.pdf"
+          />
           <span className="text-xs text-muted-foreground">
             February 20th, 2025 at 2:40 PM
           </span>
@@ -91,7 +124,9 @@ export const UndersizedManwayIssueExample = () => {
         </div>
       </div>
       <div className="ml-10 p-3 bg-orange-50 rounded-md border border-orange-200">
-        <p className="text-sm font-medium text-orange-800">Undersized Manway Reinforcement for 20" Opening</p>
+        <p className="text-sm font-medium text-orange-800">
+          Undersized Manway Reinforcement for 20&quot; Opening
+        </p>
       </div>
     </div>
   )
@@ -107,10 +142,11 @@ export const UploadedFileExample = () => {
         </AvatarFallback>
       </Avatar>
       <div className="ml-2 flex flex-col">
-        <p className="text-sm">
-          <span className="font-bold text-green-600">Brecht</span> generated revised pressure vessel drawing{' '}
-          <FileReference filename="Technical Drawing Rev C.pdf" />
-        </p>
+        <ActionStatement
+          person={{ name: 'Brecht', color: 'text-green-600' }}
+          action="generated revised pressure vessel drawing"
+          resource="Technical Drawing Rev C.pdf"
+        />
         <span className="text-xs text-muted-foreground">
           February 20th, 2025 at 12:12 PM
         </span>
@@ -133,10 +169,11 @@ export const FlowRateMismatchIssueExample = () => {
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
-          <p className="text-sm">
-            <span className="font-bold text-orange-600">Cooper</span> identified issue in{' '}
-            <FileReference filename="Project Requirements.pdf" />
-          </p>
+          <ActionStatement
+            person={{ name: 'Cooper', color: 'text-orange-600' }}
+            action="identified issue in"
+            resource="Project Requirements.pdf"
+          />
           <span className="text-xs text-muted-foreground">
             February 20th, 2025 at 2:35 PM
           </span>
@@ -146,7 +183,9 @@ export const FlowRateMismatchIssueExample = () => {
         </div>
       </div>
       <div className="ml-10 p-3 bg-orange-50 rounded-md border border-orange-200">
-        <p className="text-sm font-medium text-orange-800">Flow Rate Mismatch in Piping (ASME B31.3)</p>
+        <p className="text-sm font-medium text-orange-800">
+          Flow Rate Mismatch in Piping (ASME B31.3)
+        </p>
       </div>
     </div>
   )
@@ -163,10 +202,11 @@ export const InletNozzleIssueExample = () => {
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
-          <p className="text-sm">
-            <span className="font-bold text-red-600">Cooper</span> identified critical issue in{' '}
-            <FileReference filename="Component Specs.xlsx" />
-          </p>
+          <ActionStatement
+            person={{ name: 'Cooper', color: 'text-red-600' }}
+            action="identified critical issue in"
+            resource="Component Specs.xlsx"
+          />
           <span className="text-xs text-muted-foreground">
             February 20th, 2025 at 2:30 PM
           </span>
@@ -176,7 +216,9 @@ export const InletNozzleIssueExample = () => {
         </div>
       </div>
       <div className="ml-10 p-3 bg-red-50 rounded-md border border-red-200">
-        <p className="text-sm font-medium text-red-800">6" Inlet Nozzle (B) Missing Required Repad</p>
+        <p className="text-sm font-medium text-red-800">
+          6&quot; Inlet Nozzle (B) Missing Required Repad
+        </p>
       </div>
     </div>
   )
@@ -193,10 +235,11 @@ export const SupportSaddlesIssueExample = () => {
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
-          <p className="text-sm">
-            <span className="font-bold text-orange-600">Cooper</span> identified issue in{' '}
-            <FileReference filename="ASCE 7-22.pdf" />
-          </p>
+          <ActionStatement
+            person={{ name: 'Cooper', color: 'text-orange-600' }}
+            action="identified issue in"
+            resource="ASCE 7-22.pdf"
+          />
           <span className="text-xs text-muted-foreground">
             February 20th, 2025 at 2:25 PM
           </span>
@@ -206,7 +249,9 @@ export const SupportSaddlesIssueExample = () => {
         </div>
       </div>
       <div className="ml-10 p-3 bg-orange-50 rounded-md border border-orange-200">
-        <p className="text-sm font-medium text-orange-800">Support Saddles Underdesigned for Large Wind Uplift and Seismic</p>
+        <p className="text-sm font-medium text-orange-800">
+          Support Saddles Underdesigned for Large Wind Uplift and Seismic
+        </p>
       </div>
     </div>
   )
@@ -223,10 +268,11 @@ export const LiftingLugIssueExample = () => {
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
-          <p className="text-sm">
-            <span className="font-bold text-red-600">Cooper</span> identified critical issue in{' '}
-            <FileReference filename="Technical Drawing Rev C.pdf" />
-          </p>
+          <ActionStatement
+            person={{ name: 'Cooper', color: 'text-red-600' }}
+            action="identified critical issue in"
+            resource="Technical Drawing Rev C.pdf"
+          />
           <span className="text-xs text-muted-foreground">
             February 20th, 2025 at 2:20 PM
           </span>
@@ -236,7 +282,9 @@ export const LiftingLugIssueExample = () => {
         </div>
       </div>
       <div className="ml-10 p-3 bg-red-50 rounded-md border border-red-200">
-        <p className="text-sm font-medium text-red-800">Lifting Lug Fillet Weld Too Small for Vessel Weight</p>
+        <p className="text-sm font-medium text-red-800">
+          Lifting Lug Fillet Weld Too Small for Vessel Weight
+        </p>
       </div>
     </div>
   )
@@ -252,10 +300,11 @@ export const EmailForwardingExample = () => {
         </AvatarFallback>
       </Avatar>
       <div className="ml-2 flex flex-col">
-        <p className="text-sm">
-          <span className="font-bold text-purple-600">Abel</span> forwarded new spec sheet from supplier X for{' '}
-          <FileReference filename="Venting Valve Specs.pdf" />
-        </p>
+        <ActionStatement
+          person={{ name: 'Abel', color: 'text-purple-600' }}
+          action="forwarded new spec sheet from supplier X for"
+          resource="Venting Valve Specs.pdf"
+        />
         <span className="text-xs text-muted-foreground">
           February 20th, 2025 at 12:12 PM
         </span>
@@ -269,24 +318,60 @@ export const EmailForwardingExample = () => {
 }
 
 export function ChangesList({ changes }: ChangesListProps) {
+  const {
+    visibleChanges,
+    currentIndex,
+    totalChanges,
+    animationComplete,
+    addNextItem,
+    clearAll
+  } = useActivity()
+
   return (
-    <div className="space-y-2">
-      {/* <div className="w-full bg-muted p-4 rounded-lg flex items-center gap-2">
-        <BrainIcon className="size-4 mr-2" />
-        <Input placeholder="Give an instruction to Cooper..." variant="ghost" />
-      </div> */}
-      <AnalyzingChangesExample />
-      <ShellThicknessIssueExample />
-      <EmailForwardingExample />
-      <UploadedFileExample />
-      <UndersizedManwayIssueExample />
-      <FlowRateMismatchIssueExample />
-      <InletNozzleIssueExample />
-      <SupportSaddlesIssueExample />
-      <LiftingLugIssueExample />
-      {/* {changes.map(change => (
-        <ChangeItem key={change.id} change={change} />
-      ))} */}
+    <div className="space-y-4 relative">
+      {/* Activity header with controls */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Activity</h2>
+
+        {/* Controls */}
+        <div className="flex items-center gap-2">
+          {!animationComplete && currentIndex < totalChanges && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={addNextItem}
+              className="flex items-center gap-1"
+            >
+              <PlusIcon className="size-3" />
+            </Button>
+          )}
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={clearAll}
+            className="flex items-center gap-1"
+          >
+            <Trash2 className="size-3" />
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/activity">View all</Link>
+          </Button>
+        </div>
+      </div>
+
+      {/* Activity content with AnimatedList */}
+      <div className="relative">
+        {visibleChanges.length > 0 && (
+          <AnimatedList delay={0}>
+            {visibleChanges.map((component, index) => (
+              <div key={index} className="w-full">
+                {component}
+              </div>
+            ))}
+          </AnimatedList>
+        )}
+      </div>
     </div>
   )
 }
