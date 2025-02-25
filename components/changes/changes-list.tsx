@@ -4,11 +4,11 @@ import { AlertIcon, MailIcon, UserIcon } from '@/lib/utils/icons'
 import { PlusIcon, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Loader from '../lottie/loader'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { useActivity } from './activity-provider'
 import { Change } from './types'
+
 interface ChangesListProps {
   changes: Change[]
 }
@@ -39,29 +39,12 @@ export const ActionStatement = ({
   resource: string
 }) => {
   return (
-    <p className="text-sm flex items-center gap-2">
-      <p>
+    <div className="text-sm flex items-center gap-2">
+      <span>
         <span className={`font-bold ${person.color}`}>{person.name}</span>{' '}
         {action}
-      </p>
+      </span>
       <FileReference filename={resource} />
-    </p>
-  )
-}
-
-export const AnalyzingChangesExample = () => {
-  return (
-    <div className="rounded-lg w-full border p-4 flex flex-col">
-      <div className="gap-2 flex items-center">
-        <Loader className="size-7" />
-        <span className="ml-2">
-          <ActionStatement
-            person={{ name: 'Cooper', color: 'text-blue-600' }}
-            action="is analyzing project files for potential errors..."
-            resource=""
-          />
-        </span>
-      </div>
     </div>
   )
 }
