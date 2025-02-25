@@ -12,14 +12,11 @@ import { categoryIcons, resources, type ResourceItem } from '@/data/resources'
 import Link from 'next/link'
 
 export default function AppPage() {
-  // Sort resources by date (most recent first)
-  const sortedResources = [...resources].sort(
-    (a: ResourceItem, b: ResourceItem) =>
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
-
-  // Get the 5 most recent resources
-  const recentResources = sortedResources.slice(0, 3)
+  // Hardcoded selection of resources by ID
+  const selectedResourceIds = ['1', '4', '5'] // IDs for Project Kickoff, Equipment Maintenance, and ACE Guidelines
+  const recentResources = selectedResourceIds
+    .map(id => resources.find(resource => resource.id === id))
+    .filter(resource => resource !== undefined) as ResourceItem[]
 
   return (
     <div className="p-4 w-full overflow-auto">
@@ -31,7 +28,7 @@ export default function AppPage() {
               Industrial Storage Tank for Water
             </h1>
             <p className="text-muted-foreground">
-              Customer X - Detailed design of 96” diameter pressure vessel for
+              Customer X - Detailed design of 96" diameter pressure vessel for
               water storage
             </p>
           </div>

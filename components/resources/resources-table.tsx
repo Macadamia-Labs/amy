@@ -63,7 +63,12 @@ export function ResourcesTable() {
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())
   const [reprocessingIds, setReprocessingIds] = useState<Set<string>>(new Set())
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
+  
+  // Initialize expandedFolders with only the first two folders expanded by default
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(() => {
+    // Only expand pressure-vessel-folder and example-folder by default
+    return new Set(['pressure-vessel-folder', 'example-folder'])
+  })
 
   // Group resources by parent_id
   const resourcesByParent = resources.reduce((acc, resource) => {
@@ -230,6 +235,14 @@ export function ResourcesTable() {
                     <FolderOpenIcon className="size-6 text-muted-foreground" />
                   ) : (
                     <FolderIcon className="size-6 text-muted-foreground" />
+                  )
+                ) : resource.title.startsWith('ASME') ? (
+                  categoryIcons['Technical Document'] && 
+                  React.createElement(
+                    categoryIcons['Technical Document'],
+                    {
+                      className: 'size-6 text-muted-foreground'
+                    }
                   )
                 ) : (
                   categoryIcons[

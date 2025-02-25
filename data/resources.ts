@@ -28,7 +28,7 @@ export const resources: ResourceItem[] = [
     description: 'Detailed process flow diagram for the main plant operations',
     category: 'Engineering Drawings',
     link: '/resources/pfd-main-plant',
-    date: '2024-03-15'
+    date: '2024-02-15'
   },
   {
     id: '2',
@@ -61,6 +61,14 @@ export const resources: ResourceItem[] = [
     category: 'Email Chains',
     link: '/resources/project-kickoff',
     date: '2024-03-10'
+  },
+  {
+    id: '6',
+    title: 'ASME BPVC VIII Div 1',
+    description: 'Rules for Construction of Pressure Vessels',
+    category: 'ASME Standards',
+    link: '/resources/asme-bpvc-viii-div1',
+    date: '2024-03-15'
   }
 ]
 
@@ -158,7 +166,7 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'confluence'
+    origin: 'gdrive'
   },
   {
     id: 'example-file-3',
@@ -170,7 +178,7 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'gdrive'
+    origin: 'confluence'
   },
   {
     id: 'asme-b16-5',

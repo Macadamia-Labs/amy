@@ -25,7 +25,7 @@ export function VideoPlayerPanel({
   title = 'Animation'
 }: VideoPlayerPanelProps) {
   const [messages, setMessages] = useState<{text: string, isUser: boolean}[]>([
-    { text: "The FEA simulation in Ansys Mechanical has a maximum circumferential stress of 13.5 MPa occurring around the top nozzle of the pressure vessel. How can I assist you further?", isUser: false }
+    { text: "Hi, I'm Cooper. The FEA simulation in Ansys Mechanical has a maximum circumferential stress of 13.5 MPa occurring around the top nozzle of the pressure vessel. How can I assist you further?", isUser: false }
   ]);
   const [inputValue, setInputValue] = useState('');
 
@@ -80,9 +80,9 @@ export function VideoPlayerPanel({
         
         {/* Chat section - styled like the Copilot interface */}
         <div className="flex flex-col flex-1 overflow-hidden border-t">
-          {/* Cooper header */}
+          {/* AI Copilot header */}
           <div className="p-5 border-b">
-            <h3 className="text-xl font-semibold">Cooper</h3>
+            <h3 className="text-xl font-semibold">AI Copilot</h3>
           </div>
           
           {/* Messages area */}
