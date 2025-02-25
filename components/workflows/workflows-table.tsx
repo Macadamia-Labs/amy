@@ -164,7 +164,7 @@ export function WorkflowsTable() {
         <div>
           <h2 className="text-2xl font-bold">Workflows</h2>
           <p className="text-muted-foreground">
-            Create and manage engineering workflows
+            Create and manage custom engineering workflows
           </p>
         </div>
 
