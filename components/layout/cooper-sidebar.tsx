@@ -1,4 +1,3 @@
-import { NavSettings } from '@/components/layout/nav-settings'
 import { NavUser } from '@/components/layout/nav-user'
 import {
   Sidebar,
@@ -11,7 +10,6 @@ import {
 } from '@/components/ui/sidebar'
 import * as React from 'react'
 import { MacadamiaHead } from './macadamia-head'
-import { NavActivity } from './nav-activity'
 import { NavHome } from './nav-home'
 import { NavIntegrations } from './nav-integrations'
 import { NavIssues } from './nav-issues'
@@ -41,13 +39,13 @@ export default function CooperSidebar(
           <NavIssues />
           <NavResources />
           <NavIntegrations />
-          <NavActivity />
+          {/* <NavActivity /> */}
           <NavWorkflows />
           {/* <NavDocs /> */}
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavSettings />
+        {/* <NavSettings /> */}
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

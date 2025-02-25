@@ -4,6 +4,7 @@ import { Check, ChevronsUpDown } from 'lucide-react'
 
 import {
   BellIcon,
+  GearIcon,
   LaptopIcon,
   LogOutIcon,
   MoonIcon,
@@ -119,6 +120,10 @@ export function NavUser() {
               <DropdownMenuItem>
                 <BellIcon className="size-4 mr-2" />
                 Notifications
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <GearIcon className="size-4 mr-2" />
+                Settings
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
