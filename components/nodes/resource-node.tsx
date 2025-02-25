@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { VideoPlayerDialog } from '@/components/video-player-dialog'
 import {
   IntegrationNodeData,
   ResourceNodeData,
@@ -10,7 +11,7 @@ import {
 import { AlertIcon, CheckCircleIcon } from '@/lib/utils/icons'
 import { Handle, Position } from '@xyflow/react'
 import Image from 'next/image'
-import { ComponentType, ReactNode } from 'react'
+import { ComponentType, ReactNode, useState } from 'react'
 
 type NodeComponentProps<T> = {
   data: T
@@ -116,21 +117,45 @@ export const IntegrationNode: ComponentType<
   NodeComponentProps<IntegrationNodeData>
 > = ({ data }) => {
   if (data.type !== 'integration') return null
+  
+  const [videoDialogOpen, setVideoDialogOpen] = useState(false)
+  
+  // Check if this is the Animation node
+  const isAnimationNode = data.name === 'FEA Animation' && data.description === 'Circumferential stress'
+  
+  const handleNodeClick = () => {
+    if (isAnimationNode) {
+      setVideoDialogOpen(true)
+    }
+  }
 
   return (
-    <ResourceNodeContent
-      name={data.name}
-      description={data.description}
-      status={data.status}
-      progress={data.progress}
-      icon={
-        <Image
-          src={data.integration.logoSrc}
-          alt={data.integration.type}
-          width={36}
-          height={36}
+    <>
+      <div onClick={handleNodeClick} style={{ cursor: isAnimationNode ? 'pointer' : 'default' }}>
+        <ResourceNodeContent
+          name={data.name}
+          description={data.description}
+          status={data.status}
+          progress={data.progress}
+          icon={
+            <Image
+              src={data.integration.logoSrc}
+              alt={data.integration.type}
+              width={36}
+              height={36}
+            />
+          }
         />
-      }
-    />
+      </div>
+      
+      {isAnimationNode && (
+        <VideoPlayerDialog
+          isOpen={videoDialogOpen}
+          onOpenChange={setVideoDialogOpen}
+          videoPath="/demo/animation/tank.mp4"
+          title="Circumferential Stress Animation"
+        />
+      )}
+    </>
   )
 }

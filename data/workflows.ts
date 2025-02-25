@@ -82,6 +82,22 @@ const pressureVesselNodes: CADNode[] = [
     }
   },
   {
+    id: 'resource9',
+    type: 'integration',
+    position: { x: 1500, y: 50 },
+    data: {
+      type: 'integration',
+      label: 'Ansys',
+      name: 'FEA Animation',
+      description: 'Circumferential stress',
+      integration: {
+        type: 'Ansys',
+        logoSrc: '/integrations/ansys.avif'
+      },
+      duration: 4500 // 4.5 seconds
+    }
+  },
+  {
     id: 'resource4',
     type: 'integration',
     position: { x: 1200, y: 150 },
@@ -164,7 +180,13 @@ const pressureVesselEdges: Edge[] = [
     animated: true
   },
   {
-    id: 'e6-7',
+    id: 'e6-9',
+    source: 'resource4',
+    target: 'resource9',
+    animated: true
+  },
+  {
+    id: 'e4-7',
     source: 'resource4',
     target: 'resource7',
     animated: true
@@ -183,11 +205,11 @@ export const workflows: Workflow[] = [
     id: 'workflow-1',
     title: 'Pressure Vessel Design',
     description:
-      'Workflow for designing pressure vessels according to ASME standards',
+      'Pressure vessel design according to ASME standards',
     status: 'active',
     nodes: pressureVesselNodes,
     edges: pressureVesselEdges,
-    created_at: new Date().toISOString(),
+    created_at: new Date(Date.now() - 1728000000).toISOString(),
     updated_at: new Date().toISOString(),
     user_id: 'user-1',
     last_run: new Date(Date.now() - 86400000).toISOString()
@@ -199,18 +221,18 @@ export const workflows: Workflow[] = [
     status: 'draft',
     nodes: [],
     edges: [],
-    created_at: new Date().toISOString(),
+    created_at: new Date(Date.now() - 1728000000).toISOString(),
     updated_at: new Date().toISOString(),
     user_id: 'user-1'
   },
   {
     id: 'workflow-3',
-    title: 'Structural FEA Pipeline',
-    description: 'End-to-end workflow for structural finite element analysis',
+    title: 'Cooled Turbine Blade',
+    description: 'Thermal stress analysis in Ansys Mechanical',
     status: 'completed',
     nodes: [],
     edges: [],
-    created_at: new Date().toISOString(),
+    created_at: new Date(Date.now() - 1728000000).toISOString(),
     updated_at: new Date().toISOString(),
     user_id: 'user-1',
     last_run: new Date(Date.now() - 172800000).toISOString()
