@@ -7,7 +7,7 @@ import { IssueStatusBadge } from '@/components/issues/issue-status-badge'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { sampleIssues } from '@/data/issues'
-import { BulbIcon, FireIcon } from '@/lib/utils/icons'
+import { BulbIcon, FireIcon, WorkflowIcon } from '@/lib/utils/icons'
 import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import 'katex/dist/katex.min.css'
 import Link from 'next/link'
@@ -122,6 +122,36 @@ export default function IssuePage() {
               ))}
             </div>
           </div>
+
+          {/* Affected Workflows */}
+          {issue.affectedWorkflows && issue.affectedWorkflows.length > 0 && (
+            <div className="border rounded-xl p-4">
+              <h2 className="text-xl font-semibold mb-4">Affected Workflows</h2>
+              <div className="space-y-2">
+                {issue.affectedWorkflows.map(workflow => (
+                  <Link key={workflow.id} href={`/workflows/${workflow.id}`}>
+                    <div className="flex items-center justify-between p-2 hover:bg-muted rounded border bg-card">
+                      <div className="flex items-center">
+                        <WorkflowIcon className="w-4 h-4 mr-2 text-blue-600" />
+                        <span className="font-medium">{workflow.title}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          workflow.status === 'active' ? 'bg-blue-100 text-blue-800' : 
+                          workflow.status === 'completed' ? 'bg-green-100 text-green-800' : 
+                          workflow.status === 'failed' ? 'bg-red-100 text-red-800' : 
+                          workflow.status === 'running' ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {workflow.status.charAt(0).toUpperCase() + workflow.status.slice(1)}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           <Comments
             comments={

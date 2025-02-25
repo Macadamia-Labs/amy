@@ -28,6 +28,13 @@ export const sampleIssues: Issue[] = [
       'asme-bpvc-ii-d',
       'technical-drawing'
     ]),
+    affectedWorkflows: [
+      {
+        id: 'workflow-1',
+        title: 'Pressure Vessel Design',
+        status: 'active'
+      }
+    ],
     comments: [
       {
         id: 'comment-1',

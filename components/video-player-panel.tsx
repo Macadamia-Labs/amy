@@ -25,7 +25,7 @@ export function VideoPlayerPanel({
   title = 'Animation'
 }: VideoPlayerPanelProps) {
   const [messages, setMessages] = useState<{text: string, isUser: boolean}[]>([
-    { text: "Hi, I'm Cooper. The FEA simulation in Ansys Mechanical has a maximum circumferential stress of 13.5 MPa occurring around the top nozzle of the pressure vessel. How can I assist you further?", isUser: false }
+    { text: "Hi, I'm Cooper. The FEA simulation in Ansys Mechanical has a maximum circumferential stress of 13.5 MPa occurring around the top nozzle of the pressure vessel.\n\nHow can I assist you further?", isUser: false }
   ]);
   const [inputValue, setInputValue] = useState('');
 
@@ -58,21 +58,22 @@ export function VideoPlayerPanel({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[650px] md:max-w-[750px] p-0 overflow-hidden flex flex-col h-full">
+      <SheetContent className="sm:max-w-[550px] md:max-w-[600px] p-0 overflow-hidden flex flex-col h-full">
         <div className="bg-[#f8f9fa] border-b px-6 py-3">
           <SheetHeader className="p-0">
             <SheetTitle className="text-lg font-medium">{title}</SheetTitle>
           </SheetHeader>
         </div>
         
-        {/* Video section - larger height now that we removed the image */}
-        <div className="p-0 relative w-full h-[50vh] bg-black">
+        {/* Video section - adjusted to remove black areas */}
+        <div className="p-0 relative w-full h-[50vh] bg-white">
           <video
             src={videoPath}
             controls
             autoPlay
             loop
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain mx-auto"
+            style={{ maxWidth: '100%', backgroundColor: 'white' }}
           >
             Your browser does not support the video tag.
           </video>
@@ -81,7 +82,7 @@ export function VideoPlayerPanel({
         {/* Chat section - styled like the Copilot interface */}
         <div className="flex flex-col flex-1 overflow-hidden border-t">
           {/* AI Copilot header */}
-          <div className="p-5 border-b">
+          <div className="p-5 border-b text-center">
             <h3 className="text-xl font-semibold">AI Copilot</h3>
           </div>
           
@@ -90,11 +91,12 @@ export function VideoPlayerPanel({
             {messages.map((message, index) => (
               <div key={index} className={`${message.isUser ? 'text-right' : 'text-left'}`}>
                 <div 
-                  className={`inline-block max-w-[85%] px-4 py-2 rounded-lg ${
+                  className={`inline-block max-w-[98%] px-4 py-2 rounded-lg ${
                     message.isUser 
                       ? 'bg-gray-100 text-gray-800' 
                       : 'text-gray-800'
                   }`}
+                  style={{ marginRight: message.isUser ? '0' : '5%', marginLeft: message.isUser ? '5%' : '0', whiteSpace: 'pre-wrap' }}
                 >
                   {message.text}
                 </div>

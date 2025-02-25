@@ -11,6 +11,11 @@ export interface Issue {
     title: string
     description: string
   }>
+  affectedWorkflows?: Array<{
+    id: string
+    title: string
+    status: 'draft' | 'active' | 'completed' | 'failed' | 'running'
+  }>
   comments?: Array<{
     id: string
     content: string

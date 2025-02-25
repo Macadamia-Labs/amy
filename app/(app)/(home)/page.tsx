@@ -2,11 +2,11 @@ import { ChangesList } from '@/components/changes'
 import { exampleChanges } from '@/components/changes/example-changes'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
 } from '@/components/ui/card'
 import { categoryIcons, resources, type ResourceItem } from '@/data/resources'
 import Link from 'next/link'

@@ -165,6 +165,11 @@ export interface Issue {
   updatedAt: Date
   proposedSolution?: string
   resources: Resource[]
+  affectedWorkflows?: Array<{
+    id: string
+    title: string
+    status: 'draft' | 'active' | 'completed' | 'failed' | 'running'
+  }>
   comments?: Comment[]
 }
 
