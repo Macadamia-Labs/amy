@@ -4,6 +4,7 @@ import { Comments } from '@/components/comments'
 import { IssueCategoryBadge } from '@/components/issues/issue-category-badge'
 import { IssuePriorityBadge } from '@/components/issues/issue-priority-badge'
 import { IssueStatusBadge } from '@/components/issues/issue-status-badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { sampleIssues } from '@/data/issues'
@@ -37,9 +38,41 @@ export default function IssuePage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">{issue.title}</h1>
+      
+      {/* Status badges row - positioned above the grid */}
+      <div className="flex items-center mb-8 justify-between gap-10" style={{ maxWidth: 'calc(85% - 0.5rem)' }}>
+        <div className="flex items-center">
+          <span className="text-lg font-medium mr-4">Priority:</span>
+          <div className="scale-125 transform origin-left">
+            <IssuePriorityBadge priority={issue.priority} />
+          </div>
+        </div>
+        <div className="flex items-center">
+          <span className="text-lg font-medium mr-4">Status:</span>
+          <div className="scale-125 transform origin-left">
+            <IssueStatusBadge status={issue.status} />
+          </div>
+        </div>
+        <div className="flex items-center">
+          <span className="text-lg font-medium mr-4">Category:</span>
+          <div className="scale-125 transform origin-left">
+            <IssueCategoryBadge category={issue.category} />
+          </div>
+        </div>
+        <div className="flex items-center">
+          <span className="text-lg font-medium mr-4">Assignee:</span>
+          <div className="flex items-center">
+            <Avatar className="h-7 w-7 mr-2">
+              <AvatarImage src="/avatars/brecht.png" alt="Brecht Pierreux" />
+              <AvatarFallback>BP</AvatarFallback>
+            </Avatar>
+            <span className="text-base">Brecht Pierreux</span>
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2">
           <Tabs defaultValue="problem">
             <TabsList className="w-full rounded-xl">
               <TabsTrigger value="problem" className="w-full rounded-lg">
@@ -61,11 +94,11 @@ export default function IssuePage() {
             <TabsContent value="solution">
               {/* Proposed Solution */}
               {issue.proposedSolution ? (
-                <div className="bg-muted rounded-xl p-4">
-                  <h2 className="text-2xl font-semibold mb-4">
+                <div className="bg-muted rounded-xl p-6">
+                  <h2 className="text-xl font-semibold mb-2">
                     Proposed Solution
                   </h2>
-                  <div className="text-muted-foreground text-lg">
+                  <div className="text-muted-foreground">
                     <MemoizedReactMarkdown>
                       {preprocessLaTeX(issue.proposedSolution)}
                     </MemoizedReactMarkdown>
@@ -85,24 +118,6 @@ export default function IssuePage() {
         </div>
 
         <div className="space-y-4">
-          <div className="border rounded-xl p-4">
-            <h2 className="text-xl font-semibold mb-4">Status</h2>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className=" text-sm font-medium mr-auto">Priority</span>
-                <IssuePriorityBadge priority={issue.priority} />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className=" text-sm font-medium mr-auto">Status</span>
-                <IssueStatusBadge status={issue.status} />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className=" text-sm font-medium mr-auto">Category</span>
-                <IssueCategoryBadge category={issue.category} />
-              </div>
-            </div>
-          </div>
-
           {/* Resources */}
           <div className="border rounded-xl p-4">
             <h2 className="text-xl font-semibold mb-4">Resources</h2>
@@ -162,7 +177,7 @@ export default function IssuePage() {
                   name: comment.author.name
                 },
                 createdAt: new Date(comment.createdAt).toLocaleDateString()
-              })) || []
+              })).reverse() || []
             }
           />
         </div>

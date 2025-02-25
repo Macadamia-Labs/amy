@@ -214,15 +214,15 @@ export function Comments({ comments: initialComments }: CommentsProps) {
         </div>
       </div>
 
-      {/* Add Comment Input */}
-      <CommentInput onSubmit={handleSubmitComment} />
-
       {/* Comments List */}
-      <div className="space-y-6">
+      <div className="space-y-6 mb-6">
         {comments.map(comment => (
           <CommentItem key={comment.id} comment={comment} />
         ))}
       </div>
+
+      {/* Add Comment Input */}
+      <CommentInput onSubmit={handleSubmitComment} />
     </div>
   )
 }
