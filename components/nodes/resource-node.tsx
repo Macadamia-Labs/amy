@@ -2,7 +2,7 @@
 
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { VideoPlayerDialog } from '@/components/video-player-dialog'
+import { VideoPlayerPanel } from '@/components/video-player-panel'
 import {
   IntegrationNodeData,
   ResourceNodeData,
@@ -149,7 +149,7 @@ export const IntegrationNode: ComponentType<
       </div>
       
       {isAnimationNode && (
-        <VideoPlayerDialog
+        <VideoPlayerPanel
           isOpen={videoDialogOpen}
           onOpenChange={setVideoDialogOpen}
           videoPath="/demo/animation/tank.mp4"

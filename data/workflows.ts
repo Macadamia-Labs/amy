@@ -7,7 +7,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource1',
     type: 'standard',
-    position: { x: 500, y: 280 },
+    position: { x: 550, y: 380 },
     data: {
       type: 'standard',
       label: 'Design Standard',
@@ -36,7 +36,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource3',
     type: 'integration',
-    position: { x: 1200, y: 360 },
+    position: { x: 1250, y: 380 },
     data: {
       type: 'integration',
       label: 'Google Drive',
@@ -52,7 +52,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource8',
     type: 'integration',
-    position: { x: 1200, y: 480 },
+    position: { x: 1250, y: 680 },
     data: {
       type: 'integration',
       label: 'Google Drive',
@@ -68,7 +68,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource7',
     type: 'integration',
-    position: { x: 1500, y: 150 },
+    position: { x: 1600, y: 380 },
     data: {
       type: 'integration',
       label: 'Google Drive',
@@ -84,7 +84,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource9',
     type: 'integration',
-    position: { x: 1500, y: 50 },
+    position: { x: 1600, y: 120 },
     data: {
       type: 'integration',
       label: 'Ansys',
@@ -100,7 +100,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource4',
     type: 'integration',
-    position: { x: 1200, y: 150 },
+    position: { x: 1250, y: 200 },
     data: {
       type: 'integration',
       label: 'Ansys',
@@ -116,7 +116,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource5',
     type: 'integration',
-    position: { x: 900, y: 280 },
+    position: { x: 950, y: 380 },
     data: {
       type: 'integration',
       label: 'DS',
@@ -132,7 +132,7 @@ const pressureVesselNodes: CADNode[] = [
   {
     id: 'resource6',
     type: 'integration',
-    position: { x: 150, y: 360 },
+    position: { x: 150, y: 600 },
     data: {
       type: 'integration',
       label: 'Google Drive',
