@@ -150,7 +150,7 @@ export const defaultResources: Resource[] = [
   },
   {
     id: 'technical-drawing',
-    title: 'Technical Drawing.pdf',
+    title: 'Technical Drawing Rev C.pdf',
     description: 'High-level system architecture diagrams',
     category: 'Engineering Drawings',
     file_path: '/example/architecture.pdf',
@@ -340,5 +340,28 @@ export const defaultResources: Resource[] = [
     parent_id: 'example-folder',
     origin: 'gdrive'
   }, 
-
+  {
+    id: 'asce-7-22',
+    title: 'ASCE 7-22.pdf',
+    description: 'Minimum Design Loads and Associated Criteria for Buildings and Other Structures',
+    category: 'Standards',
+    file_path: '/demo/asce/ASCE 7-22.pdf',
+    user_id: '',
+    created_at: new Date().toISOString(),
+    status: 'completed',
+    parent_id: 'asce-folder',
+    origin: 'gdrive'
+  },
+  {
+    id: 'aci-318-19',
+    title: 'ACI 318-19.pdf',
+    description: 'Building Code Requirements for Structural Concrete',
+    category: 'Standards',
+    file_path: '/demo/aci/ACI 318-19.pdf',
+    user_id: '',
+    created_at: new Date().toISOString(),
+    status: 'completed',
+    parent_id: 'asce-folder',
+    origin: 'gdrive'
+  }
 ]

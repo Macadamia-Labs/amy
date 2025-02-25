@@ -4,6 +4,11 @@ import Link from 'next/link'
 import { MemoizedReactMarkdown } from '../ui/markdown'
 import { IssuePriorityPills } from './issue-priority-pills'
 
+// Function to strip bold markdown formatting
+const stripBoldFormatting = (text: string) => {
+  return text.replace(/\*\*(.*?)\*\*/g, '$1')
+}
+
 interface IssueCardProps {
   issue: Issue
   onClick?: () => void
@@ -11,6 +16,9 @@ interface IssueCardProps {
 }
 
 export function IssueCard({ issue, onClick, className = '' }: IssueCardProps) {
+  // Strip bold formatting from the description for the card view
+  const plainDescription = stripBoldFormatting(issue.description)
+  
   return (
     <div
       className={`h-full rounded-xl border shadow flex flex-col ${
@@ -36,7 +44,7 @@ export function IssueCard({ issue, onClick, className = '' }: IssueCardProps) {
         <h3 className="text-lg font-semibold">{issue.title}</h3>
 
         <MemoizedReactMarkdown className="text-sm line-clamp-3">
-          {issue.description}
+          {plainDescription}
         </MemoizedReactMarkdown>
       </div>
       <div className="border-t pt-4 p-6 bg-muted rounded-b-xl flex-1">
