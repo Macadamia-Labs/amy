@@ -32,7 +32,7 @@ export function IssueCard({ issue, onClick, className = '' }: IssueCardProps) {
         <div className="flex items-center gap-3 pb-2">
           {/* <IssueCategoryBadge category={issue.category} /> */}
           <span className="text-lg text-muted-foreground font-bold">
-            #{issue.id}
+            {issue.id}
           </span>
           {/* <IssueCategoryBadge category={issue.category} /> */}
           <div className="ml-auto">

@@ -1,14 +1,13 @@
 'use client'
 
 import { Comments } from '@/components/comments'
-import { IssueCategoryBadge } from '@/components/issues/issue-category-badge'
 import { IssuePriorityBadge } from '@/components/issues/issue-priority-badge'
 import { IssueStatusBadge } from '@/components/issues/issue-status-badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { sampleIssues } from '@/data/issues'
-import { BulbIcon, FireIcon, WorkflowIcon } from '@/lib/utils/icons'
+import { BulbIcon, FileCheckIcon, FireIcon, WorkflowIcon } from '@/lib/utils/icons'
 import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import 'katex/dist/katex.min.css'
 import Link from 'next/link'
@@ -54,9 +53,12 @@ export default function IssuePage() {
           </div>
         </div>
         <div className="flex items-center">
-          <span className="text-lg font-medium mr-4">Category:</span>
+          <span className="text-lg font-medium mr-4">ID:</span>
           <div className="scale-125 transform origin-left">
-            <IssueCategoryBadge category={issue.category} />
+            <span className="p-1 px-2 rounded-full text-xs font-medium flex items-center gap-2 w-fit bg-purple-100 text-purple-800">
+              <FileCheckIcon className="size-4" />
+              VES-I
+            </span>
           </div>
         </div>
         <div className="flex items-center">
@@ -75,16 +77,22 @@ export default function IssuePage() {
         <div className="lg:col-span-2">
           <Tabs defaultValue="problem">
             <TabsList className="w-full rounded-xl">
-              <TabsTrigger value="problem" className="w-full rounded-lg">
+              <TabsTrigger 
+                value="problem" 
+                className="w-full rounded-lg data-[state=active]:bg-red-50/50"
+              >
                 <FireIcon className="w-4 h-4 mr-2" /> Detected Problem
               </TabsTrigger>
-              <TabsTrigger value="solution" className="w-full rounded-lg">
+              <TabsTrigger 
+                value="solution" 
+                className="w-full rounded-lg data-[state=active]:bg-green-50/50"
+              >
                 <BulbIcon className="w-4 h-4 mr-2" /> Proposed Solution
               </TabsTrigger>
             </TabsList>
             <TabsContent value="problem">
               {/* Description */}
-              <div className="bg-muted rounded-xl p-6">
+              <div className="bg-red-50/50 rounded-xl p-6">
                 <h2 className="text-xl font-semibold mb-2">Detected Problem</h2>
                 <MemoizedReactMarkdown>
                   {preprocessLaTeX(issue.description)}
@@ -94,7 +102,7 @@ export default function IssuePage() {
             <TabsContent value="solution">
               {/* Proposed Solution */}
               {issue.proposedSolution ? (
-                <div className="bg-muted rounded-xl p-6">
+                <div className="bg-green-50/50 rounded-xl p-6">
                   <h2 className="text-xl font-semibold mb-2">
                     Proposed Solution
                   </h2>
@@ -105,7 +113,7 @@ export default function IssuePage() {
                   </div>
                 </div>
               ) : (
-                <div className="rounded-xl p-4  h-32 bg-muted flex items-center justify-center flex-col">
+                <div className="rounded-xl p-4 h-32 bg-green-50/50 flex items-center justify-center flex-col">
                   <h2 className="font-semibold">No Solution Proposed</h2>
                   <div className="text-muted-foreground text-sm">
                     No solution has been proposed yet. Check back later or

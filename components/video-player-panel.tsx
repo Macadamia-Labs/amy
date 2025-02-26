@@ -1,15 +1,18 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTitle
 } from '@/components/ui/sheet'
-import { Send } from 'lucide-react'
-import { useState } from 'react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
 
 interface VideoPlayerPanelProps {
   isOpen: boolean
@@ -24,103 +27,83 @@ export function VideoPlayerPanel({
   videoPath,
   title = 'Animation'
 }: VideoPlayerPanelProps) {
-  const [messages, setMessages] = useState<{text: string, isUser: boolean}[]>([
-    { text: "Hi, I'm Cooper. The FEA simulation in Ansys Mechanical has a maximum circumferential stress of 13.5 MPa occurring around the top nozzle of the pressure vessel.\n\nHow can I assist you further?", isUser: false }
-  ]);
-  const [inputValue, setInputValue] = useState('');
-
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      // Add user message
-      setMessages([...messages, { text: inputValue, isUser: true }]);
-      setInputValue('');
-      
-      // Simulate response after a short delay
-      setTimeout(() => {
-        let response = "Thank you for your question about the circumferential stress animation.";
-        if (inputValue.toLowerCase().includes("stress")) {
-          response = "The areas in red indicate the highest stress concentrations, typically around 1.5-2.0 MPa in this model.";
-        } else if (inputValue.toLowerCase().includes("safety") || inputValue.toLowerCase().includes("factor")) {
-          response = "The safety factor for this design is approximately 2.4, well within ASME requirements.";
-        } else if (inputValue.toLowerCase().includes("material")) {
-          response = "This simulation uses SA-516 Grade 70 carbon steel properties, commonly used for pressure vessels.";
-        }
-        setMessages(prev => [...prev, { text: response, isUser: false }]);
-      }, 1000);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
-  };
-
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[550px] md:max-w-[600px] p-0 overflow-hidden flex flex-col h-full">
-        <div className="bg-[#f8f9fa] border-b px-6 py-3">
-          <SheetHeader className="p-0">
-            <SheetTitle className="text-lg font-medium">{title}</SheetTitle>
-          </SheetHeader>
+      <SheetContent className="sm:max-w-[600px] md:max-w-[650px] lg:max-w-[700px] p-0 overflow-hidden flex flex-col h-full">
+        {/* Absolute positioned header to avoid taking up space */}
+        <div className="absolute top-0 left-0 right-0 z-10 bg-[#f8f9fa]/80 backdrop-blur-sm px-4 flex justify-between items-center h-14 pt-3">
+          <div className="w-8"></div> {/* Spacer to balance the close button */}
+          <SheetTitle className="text-2xl font-semibold m-0 p-0 flex-1 text-center">{title}</SheetTitle>
+          <button 
+            onClick={() => onOpenChange(false)}
+            className="rounded-full p-0.5 hover:bg-gray-200 w-8"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
         </div>
         
-        {/* Video section - adjusted to remove black areas */}
-        <div className="p-0 relative w-full h-[50vh] bg-white">
+        {/* Empty space to push video down - increased height */}
+        <div className="h-20"></div>
+        
+        {/* Video section */}
+        <div className="p-0 m-0 relative w-full h-[42vh] bg-white flex items-start justify-center">
           <video
             src={videoPath}
             controls
             autoPlay
             loop
-            className="w-full h-full object-contain mx-auto"
-            style={{ maxWidth: '100%', backgroundColor: 'white' }}
+            className="w-full h-full object-contain"
+            style={{ maxWidth: '100%', backgroundColor: 'white', display: 'block' }}
           >
             Your browser does not support the video tag.
           </video>
         </div>
         
-        {/* Chat section - styled like the Copilot interface */}
-        <div className="flex flex-col flex-1 overflow-hidden border-t">
-          {/* AI Copilot header */}
-          <div className="p-5 border-b text-center">
-            <h3 className="text-xl font-semibold">AI Copilot</h3>
+        {/* Results section - added top margin */}
+        <div className="flex flex-col flex-1 overflow-hidden border-t mt-4">
+          {/* Results header */}
+          <div className="p-2 border-b text-center">
+            <h3 className="text-lg font-semibold">Analysis Results</h3>
           </div>
           
-          {/* Messages area */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-6">
-            {messages.map((message, index) => (
-              <div key={index} className={`${message.isUser ? 'text-right' : 'text-left'}`}>
-                <div 
-                  className={`inline-block max-w-[98%] px-4 py-2 rounded-lg ${
-                    message.isUser 
-                      ? 'bg-gray-100 text-gray-800' 
-                      : 'text-gray-800'
-                  }`}
-                  style={{ marginRight: message.isUser ? '0' : '5%', marginLeft: message.isUser ? '5%' : '0', whiteSpace: 'pre-wrap' }}
-                >
-                  {message.text}
-                </div>
+          {/* Results content area */}
+          <div className="flex-1 overflow-y-auto p-4" style={{ minHeight: "35vh" }}>
+            <div className="space-y-4">
+              <div className="text-sm space-y-2">
+                <p className="text-muted-foreground">
+                  This finite element analysis was conducted in Ansys Mechanical 2025 R1 to evaluate a horizontal pressure vessel under a static internal pressure of 0.5 MPa. The cylindrical shell and its hemispherical heads are modeled with SA516 Grade 70 steel, using a linear, isotropic material model with a refined mesh around critical features. Saddle supports are assumed fully fixed, and no additional external loads or thermal effects are included. The table below summarizes the key stress and deformation results for design verification.
+                </p>
               </div>
-            ))}
-          </div>
-          
-          {/* Input area */}
-          <div className="p-4 border-t">
-            <div className="relative">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Send a message..."
-                className="pr-12 py-6 border rounded-full"
-              />
-              <Button 
-                onClick={handleSendMessage} 
-                size="icon" 
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full h-8 w-8 bg-gray-200 hover:bg-gray-300"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+              
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="font-bold text-base">Parameter</TableHead>
+                    <TableHead className="font-bold text-base">Maximum</TableHead>
+                    <TableHead className="font-bold text-base">Minimum</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">Circumferential stress</TableCell>
+                    <TableCell className="font-normal">13.5 MPa</TableCell>
+                    <TableCell className="font-normal">0.2 MPa</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Radial stress</TableCell>
+                    <TableCell className="font-normal">11.5 MPa</TableCell>
+                    <TableCell className="font-normal">-4.6 MPa</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Directional deformation</TableCell>
+                    <TableCell className="font-normal">3.0 × 10⁻⁵ m</TableCell>
+                    <TableCell className="font-normal">-1.4 × 10⁻⁹ m</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
           </div>
         </div>

@@ -1,18 +1,18 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
 } from '@/components/ui/table'
 import { Issue } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { UserIcon } from '@/lib/utils/icons'
 import {
-  getCategoryIcon,
-  getStatusColor,
-  getStatusIcon
+    getCategoryIcon,
+    getStatusColor,
+    getStatusIcon
 } from '@/lib/utils/issue-helpers'
 import { useRouter } from 'next/navigation'
 import { IssuePriorityBadge } from './issue-priority-badge'
@@ -31,7 +31,7 @@ export function IssueTable({ issues }: IssueTableProps) {
           <TableRow>
             <TableHead>Priority</TableHead>
             <TableHead>Issue</TableHead>
-            <TableHead>Category</TableHead>
+            <TableHead>ID</TableHead>
             <TableHead>Assigned To</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Last Updated</TableHead>
@@ -56,8 +56,7 @@ export function IssueTable({ issues }: IssueTableProps) {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <CategoryIcon className="h-4 w-4 text-muted-foreground" />
-                    {issue.category}
+                    <span className="text-sm font-medium">{issue.id}</span>
                   </div>
                 </TableCell>
                 <TableCell>

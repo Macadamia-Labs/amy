@@ -55,12 +55,12 @@ const pressureVesselNodes: CADNode[] = [
     position: { x: 1250, y: 680 },
     data: {
       type: 'integration',
-      label: 'Google Drive',
+      label: 'Confluence',
       name: 'Bill of Materials',
       description: 'Pressure Vessel Components',
       integration: {
-        type: 'Google Drive',
-        logoSrc: '/integrations/gdrive.avif'
+        type: 'Confluence',
+        logoSrc: '/integrations/confluence.avif'
       },
       duration: 1500 // 4.2 seconds
     }
@@ -135,12 +135,12 @@ const pressureVesselNodes: CADNode[] = [
     position: { x: 150, y: 600 },
     data: {
       type: 'integration',
-      label: 'Google Drive',
+      label: 'OneDrive',
       name: 'ASME standards',
       description: 'ASME standards',
       integration: {
-        type: 'Google Drive',
-        logoSrc: '/integrations/gdrive.avif'
+        type: 'OneDrive',
+        logoSrc: '/integrations/onedrive.avif'
       },
       duration: 3800 // 3.8 seconds
     }
