@@ -1,14 +1,6 @@
 import { ActivityView } from '@/components/changes/activity-wrapper'
 import { exampleChanges } from '@/components/changes/example-changes'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { categoryIcons, resources, type ResourceItem } from '@/data/resources'
-import Link from 'next/link'
+import { resources, type ResourceItem } from '@/data/resources'
 
 export default function AppPage() {
   // Hardcoded selection of resources by ID
@@ -34,7 +26,7 @@ export default function AppPage() {
         </div>
       </div>
       {/* Recent Resources Section */}
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Recent Resources</h2>
         <div className="flex overflow-x-auto gap-4 pb-4">
           {recentResources.map((item: ResourceItem) => {
@@ -65,11 +57,11 @@ export default function AppPage() {
               </Card>
             )
           })}
-        </div>
-        <div className="mt-8 w-full">
-          <ActivityView changes={exampleChanges} />
-        </div>
+        </div> */}
+      <div className="mt-4 w-full">
+        <ActivityView changes={exampleChanges} />
       </div>
+      {/* </div> */}
     </div>
   )
 }

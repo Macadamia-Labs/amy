@@ -14,9 +14,9 @@ export function NavIssues({ number }: NavIssuesProps) {
 
   return (
     <Link href="/issues">
-      <SidebarMenuButton tooltip="Defects" isActive={isActive}>
+      <SidebarMenuButton tooltip="Issues" isActive={isActive}>
         <FireIcon className="size-6" />
-        Defects
+        Issues
         {typeof number === 'number' && (
           <SidebarMenuBadge>{number}</SidebarMenuBadge>
         )}

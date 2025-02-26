@@ -8,16 +8,7 @@ import React, {
   useState
 } from 'react'
 import { AnalyzingChangesExample } from './analyzing-changes'
-import {
-  EmailForwardingExample,
-  FlowRateMismatchIssueExample,
-  InletNozzleIssueExample,
-  LiftingLugIssueExample,
-  ShellThicknessIssueExample,
-  SupportSaddlesIssueExample,
-  UndersizedManwayIssueExample,
-  UploadedFileExample
-} from './changes-list'
+import { EmailForwardingExample, UploadedFileExample } from './changes-list'
 
 type ActivityContextType = {
   visibleChanges: React.ReactNode[]
@@ -47,14 +38,14 @@ type ActivityProviderProps = {
 export function ActivityProvider({ children }: ActivityProviderProps) {
   // Sequence of components to be displayed (in correct order - first to appear at top)
   const changeComponents = [
-    <ShellThicknessIssueExample key="shell" />,
+    // <ShellThicknessIssueExample key="shell" />,
     <EmailForwardingExample key="email" />,
     <UploadedFileExample key="uploaded" />,
-    <UndersizedManwayIssueExample key="manway" />,
-    <FlowRateMismatchIssueExample key="flow" />,
-    <InletNozzleIssueExample key="inlet" />,
-    <SupportSaddlesIssueExample key="support" />,
-    <LiftingLugIssueExample key="lifting" />,
+    // <UndersizedManwayIssueExample key="manway" />,
+    // <FlowRateMismatchIssueExample key="flow" />,
+    // <InletNozzleIssueExample key="inlet" />,
+    // <SupportSaddlesIssueExample key="support" />,
+    // <LiftingLugIssueExample key="lifting" />,
     <AnalyzingChangesExample key="analyzing" />
   ]
 

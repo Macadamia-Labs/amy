@@ -1,10 +1,10 @@
 'use client'
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbSeparator
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -23,7 +23,7 @@ export default function IssueHeader({ issue }: { issue: Issue }) {
       <Breadcrumb className="mr-auto">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/issues">Defects</BreadcrumbLink>
+            <BreadcrumbLink href="/issues">Issues</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem className="text-primary">

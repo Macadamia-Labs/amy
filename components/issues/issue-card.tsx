@@ -18,12 +18,12 @@ interface IssueCardProps {
 export function IssueCard({ issue, onClick, className = '' }: IssueCardProps) {
   // Strip bold formatting from the description for the card view
   const plainDescription = stripBoldFormatting(issue.description)
-  
+
   return (
     <div
-      className={`h-full rounded-xl border shadow flex flex-col ${
+      className={`h-full rounded-xl border flex flex-col transition-all duration-200 ${
         onClick
-          ? 'cursor-pointer hover:border-primary/50 transition-colors'
+          ? 'cursor-pointer hover:ring-2 hover:ring-muted-foreground/20'
           : ''
       } ${className}`}
       onClick={onClick}

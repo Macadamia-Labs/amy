@@ -38,7 +38,8 @@ export const sampleIssues: Issue[] = [
     comments: [
       {
         id: 'comment-1',
-        content: 'We can\'t reduce the pressure to 40 psig given our process needs, so we must go with a thicker shell. I\'ll check nozzle reinforcements per UG‐37. Let\'s finalize calculations and update the fabrication drawings.',
+        content:
+          "We can't reduce the pressure to 40 psig given our process needs, so we must go with a thicker shell. I'll check nozzle reinforcements per UG‐37. Let's finalize calculations and update the fabrication drawings.",
         author: {
           id: 'eng-3',
           name: 'Brecht Pierreux',
@@ -55,9 +56,9 @@ export const sampleIssues: Issue[] = [
     id: 'VES-2',
     title: 'Undersized Manway Reinforcement for 20″ Opening',
     description:
-      "The manway (A) is 20″ nominal with only a 1/4″ × 2″ doubler plate shown. This doubler area is insufficient to replace the shell material removed by the large nozzle hole. Per UG‑37, reinforcement around large openings must at least match the area $A_{required} = t_{req} \\times d_{hole} \\times F$. Given the 3/8″ nominal shell (plus corrosion allowance) and the wide diameter of the manway cut, the repad or doubler ring needs more cross-sectional area than 1/4″ × 2″ provides.",
+      'The manway (A) is 20″ nominal with only a 1/4″ × 2″ doubler plate shown. This doubler area is insufficient to replace the shell material removed by the large nozzle hole. Per UG‑37, reinforcement around large openings must at least match the area $A_{required} = t_{req} \\times d_{hole} \\times F$. Given the 3/8″ nominal shell (plus corrosion allowance) and the wide diameter of the manway cut, the repad or doubler ring needs more cross-sectional area than 1/4″ × 2″ provides.',
     status: 'in_progress',
-    priority: 'high',
+    priority: 'medium',
     category: 'Calculation',
     location: 'Tower 2 - Floor 15 - Grid B-4',
     assignedEngineer: {
@@ -69,7 +70,11 @@ export const sampleIssues: Issue[] = [
     },
     createdAt: new Date('2024-03-11'),
     updatedAt: new Date('2024-03-11'),
-    resources: mapResourceIds(['example-file-2', 'asme-bpvc-viii-div-1', 'technical-drawing'])
+    resources: mapResourceIds([
+      'example-file-2',
+      'asme-bpvc-viii-div-1',
+      'technical-drawing'
+    ])
   },
   {
     id: 'PIP-1',
@@ -89,7 +94,11 @@ export const sampleIssues: Issue[] = [
     },
     createdAt: new Date('2024-03-09'),
     updatedAt: new Date('2024-03-10'),
-    resources: mapResourceIds(['asme-b31-3', 'example-file-1', 'technical-drawing'])
+    resources: mapResourceIds([
+      'asme-b31-3',
+      'example-file-1',
+      'technical-drawing'
+    ])
   },
   {
     id: 'NOZ-1',
@@ -119,7 +128,7 @@ export const sampleIssues: Issue[] = [
     description:
       'Wind speed is 160 mph (ASCE 7‑22), Risk Category III, and seismic conditions are also noted. Yet the saddle drawings do not show adequate anchor bolt quantity or size to handle the high overturning moment and shear. The welds between saddle and shell appear minimal for a 96″ diameter vessel subject to both wind and vacuum loads. Standard "Zick\'s Analysis" or a recognized method would show that these saddles and welds are too small.',
     status: 'open',
-    priority: 'high',
+    priority: 'low',
     category: 'Construction',
     location: 'Building A - Floor 4 - Electrical Room',
     assignedEngineer: {
@@ -133,13 +142,13 @@ export const sampleIssues: Issue[] = [
     updatedAt: new Date('2024-03-13'),
     resources: mapResourceIds(['asce-7-22', 'asme-bpvc-viii-div-1']),
     proposedSolution:
-      'The saddle design needs to be revised to account for the high wind loads (160 mph per ASCE 7-22) and seismic conditions. The following improvements are required:\n\n1. **Increase Anchor Bolt Quantity and Size**:\n   - Calculate the overturning moment based on the 160 mph wind speed and Risk Category III\n   - Determine appropriate anchor bolt size and quantity to resist both tension and shear\n   - Ensure proper embedment depth and edge distance for concrete foundation\n\n2. **Strengthen Saddle-to-Shell Welds**:\n   - Perform a detailed stress analysis of the saddle-to-shell connection\n   - Increase weld size to handle the combined stresses from wind, seismic, and vacuum loads\n   - Consider adding reinforcement plates at high-stress areas\n\n3. **Perform Zick\'s Analysis**:\n   - Conduct a comprehensive Zick\'s Analysis to verify saddle design adequacy\n   - Ensure the design accounts for both longitudinal and circumferential stresses\n   - Verify that the saddle design meets ASME BPVC Section VIII requirements'
+      "The saddle design needs to be revised to account for the high wind loads (160 mph per ASCE 7-22) and seismic conditions. The following improvements are required:\n\n1. **Increase Anchor Bolt Quantity and Size**:\n   - Calculate the overturning moment based on the 160 mph wind speed and Risk Category III\n   - Determine appropriate anchor bolt size and quantity to resist both tension and shear\n   - Ensure proper embedment depth and edge distance for concrete foundation\n\n2. **Strengthen Saddle-to-Shell Welds**:\n   - Perform a detailed stress analysis of the saddle-to-shell connection\n   - Increase weld size to handle the combined stresses from wind, seismic, and vacuum loads\n   - Consider adding reinforcement plates at high-stress areas\n\n3. **Perform Zick's Analysis**:\n   - Conduct a comprehensive Zick's Analysis to verify saddle design adequacy\n   - Ensure the design accounts for both longitudinal and circumferential stresses\n   - Verify that the saddle design meets ASME BPVC Section VIII requirements"
   },
   {
     id: 'LUG-1',
     title: 'Lifting Lug Fillet Weld Too Small for Vessel Weight',
     description:
-      'The lifting lug detail (3/8″ and 1/2″ plates) shows a fillet weld size that is insufficient for the vessel\'s dry weight (~11,426 lbs) plus dynamic load factors. When lifted, the lug and the lug-to-shell weld experience combined shear and tension. The drawn weld thickness (e.g., ~1/4″ fillet) does not satisfy the stress requirements in UG‑22 or typical lug design rules (Appendix L or custom calcs).',
+      "The lifting lug detail (3/8″ and 1/2″ plates) shows a fillet weld size that is insufficient for the vessel's dry weight (~11,426 lbs) plus dynamic load factors. When lifted, the lug and the lug-to-shell weld experience combined shear and tension. The drawn weld thickness (e.g., ~1/4″ fillet) does not satisfy the stress requirements in UG‑22 or typical lug design rules (Appendix L or custom calcs).",
     status: 'in_progress',
     priority: 'critical',
     category: 'Maintenance',

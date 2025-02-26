@@ -15,8 +15,10 @@ export default function Page() {
   // Calculate dashboard metrics
   const openIssuesCount = sampleIssues.filter(i => i.status === 'open').length
   const resolvedIssuesCount = 5
-  const inProgressIssuesCount = sampleIssues.filter(i => i.status === 'in_progress').length
-  
+  const inProgressIssuesCount = sampleIssues.filter(
+    i => i.status === 'in_progress'
+  ).length
+
   // Count unique affected workflows across all issues
   const allAffectedWorkflows = new Set()
   sampleIssues.forEach(issue => {
@@ -37,7 +39,7 @@ export default function Page() {
       >
         <div className="flex justify-between items-end">
           <div>
-            <h1 className="text-2xl font-bold">Defects</h1>
+            <h1 className="text-2xl font-bold">Issues</h1>
             <p className="text-muted-foreground">
               Monitor design conflicts, specification mismatches, and technical
               compliance
@@ -59,21 +61,37 @@ export default function Page() {
 
         {/* Dashboard metrics */}
         <div className="grid grid-cols-4 gap-4 mt-6 mb-6">
-          <div className="bg-blue-50/70 rounded-xl p-4 flex flex-col items-center justify-center shadow-sm">
-            <span className="text-3xl font-bold text-blue-600/90">{openIssuesCount}</span>
-            <span className="text-sm text-blue-800/90 font-medium">Open Defects</span>
+          <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center justify-center border border-blue-200">
+            <span className="text-3xl font-bold text-blue-600/90">
+              {openIssuesCount}
+            </span>
+            <span className="text-sm text-blue-800/90 font-medium">
+              Open Issues
+            </span>
           </div>
-          <div className="bg-amber-50/70 rounded-xl p-4 flex flex-col items-center justify-center shadow-sm">
-            <span className="text-3xl font-bold text-amber-600/90">{inProgressIssuesCount}</span>
-            <span className="text-sm text-amber-800/90 font-medium">In Progress</span>
+          <div className="bg-amber-50 rounded-xl p-4 flex flex-col items-center justify-center border border-amber-200">
+            <span className="text-3xl font-bold text-amber-600/90">
+              {inProgressIssuesCount}
+            </span>
+            <span className="text-sm text-amber-800/90 font-medium">
+              In Progress
+            </span>
           </div>
-          <div className="bg-green-50/70 rounded-xl p-4 flex flex-col items-center justify-center shadow-sm">
-            <span className="text-3xl font-bold text-green-600/90">{resolvedIssuesCount}</span>
-            <span className="text-sm text-green-800/90 font-medium">Resolved Defects</span>
+          <div className="bg-green-50 rounded-xl p-4 flex flex-col items-center justify-center border border-green-200">
+            <span className="text-3xl font-bold text-green-600/90">
+              {resolvedIssuesCount}
+            </span>
+            <span className="text-sm text-green-800/90 font-medium">
+              Resolved Issues
+            </span>
           </div>
-          <div className="bg-purple-50/70 rounded-xl p-4 flex flex-col items-center justify-center shadow-sm">
-            <span className="text-3xl font-bold text-purple-600/90">{totalAffectedWorkflows}</span>
-            <span className="text-sm text-purple-800/90 font-medium">Affected Workflows</span>
+          <div className="bg-purple-50 rounded-xl p-4 flex flex-col items-center justify-center border border-purple-200">
+            <span className="text-3xl font-bold text-purple-600/90">
+              {totalAffectedWorkflows}
+            </span>
+            <span className="text-sm text-purple-800/90 font-medium">
+              Affected Workflows
+            </span>
           </div>
         </div>
 

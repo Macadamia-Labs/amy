@@ -89,7 +89,9 @@ function CommentItem({ comment }: CommentItemProps) {
 
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium">{comment.author.name}</span>
+            <span className="font-medium text-primary">
+              {comment.author.name}
+            </span>
             <span className="text-sm text-muted-foreground">
               {formatTimestamp(comment.createdAt)}
             </span>
@@ -202,10 +204,10 @@ export function Comments({ comments: initialComments }: CommentsProps) {
   return (
     <div className="w-full p-4 pt-2 rounded-lg text-muted-foreground border">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 pb-2 border-b">
+      <div className="flex items-center justify-between mb-4 pb-2 border-b text-primary">
         <div className="flex items-center gap-2">
           <h2 className="text-base font-medium">Open comments</h2>
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          <ChevronDown className="h-4 w-4" />
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">

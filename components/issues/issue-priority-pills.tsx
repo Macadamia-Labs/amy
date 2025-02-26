@@ -23,10 +23,10 @@ export function IssuePriorityPills({ priority }: IssuePriorityPillsProps) {
         ]
       case 'medium':
         return [
-          'bg-blue-500',
-          'bg-blue-500', // 2 blue
           'bg-yellow-500',
-          'bg-yellow-500' // 2 yellow
+          'bg-yellow-500', // 2 blue
+          'bg-muted',
+          'bg-muted' // 2 yellow
         ]
       case 'high':
         return [
@@ -57,7 +57,7 @@ export function IssuePriorityPills({ priority }: IssuePriorityPillsProps) {
             {pillColors.map((color, index) => (
               <div
                 key={index}
-                className={`h-1 w-8 rounded-full ${color}`}
+                className={`h-[6px] w-8 rounded-full ${color}`}
                 aria-hidden="true"
               />
             ))}
