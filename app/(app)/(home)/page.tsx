@@ -24,10 +24,10 @@ export default function AppPage() {
           <div className="h-12 w-1 bg-purple-500 rounded-full"></div>
           <div>
             <h1 className="text-2xl font-bold">
-              Industrial Storage Tank for Water
+              Pressure Vessel
             </h1>
             <p className="text-muted-foreground">
-              Customer X - Detailed design of 96&quot; diameter pressure vessel
+              Detailed design of 96&quot; diameter pressure vessel
               for water storage
             </p>
           </div>
