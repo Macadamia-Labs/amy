@@ -34,6 +34,13 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     isConnected: false
   },
   {
+    name: 'Autodesk Construction Cloud',
+    code: 'autodesk_cc',
+    description: 'Connect to your Autodesk Construction Cloud projects and documents',
+    logoSrc: '/integrations/autodesk.avif',
+    isConnected: false
+  },
+  {
     name: 'Abaqus FEA',
     code: 'abaqus',
     description: 'Connect with your Abaqus finite element analysis simulations',
@@ -45,6 +52,13 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     code: 'codeware',
     description: 'Integrate with COMPRESS pressure vessel design software',
     logoSrc: '/integrations/codeware.avif',
+    isConnected: false
+  },
+  {
+    name: 'COMSOL',
+    code: 'comsol',
+    description: 'Connect with your COMSOL Multiphysics simulations',
+    logoSrc: '/integrations/Comsol.png',
     isConnected: false
   },
   {
@@ -66,6 +80,20 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     code: 'gmail',
     description: 'Connect and manage your Gmail account',
     logoSrc: '/integrations/gmail.jpg',
+    isConnected: false
+  },
+  {
+    name: 'GitHub',
+    code: 'github',
+    description: 'Connect with your GitHub repositories and projects',
+    logoSrc: '/integrations/github.avif',
+    isConnected: false
+  },
+  {
+    name: 'Jira',
+    code: 'jira',
+    description: 'Connect with your Jira projects and issues',
+    logoSrc: '/integrations/Jira.png',
     isConnected: false
   },
   {
@@ -101,6 +129,20 @@ export const DEFAULT_INTEGRATIONS: Integration[] = [
     code: 'outlook',
     description: 'Connect and manage your Outlook email and calendar',
     logoSrc: '/integrations/outlook.avif',
+    isConnected: false
+  },
+  {
+    name: 'Procore',
+    code: 'procore',
+    description: 'Connect to your Procore construction management projects',
+    logoSrc: '/integrations/procore.png',
+    isConnected: false
+  },
+  {
+    name: 'Revit',
+    code: 'revit',
+    description: 'Connect with your Revit building information models',
+    logoSrc: '/integrations/revit.png',
     isConnected: false
   },
   {
