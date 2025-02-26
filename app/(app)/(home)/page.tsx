@@ -1,11 +1,11 @@
 import { ActivityView } from '@/components/changes/activity-wrapper'
 import { exampleChanges } from '@/components/changes/example-changes'
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from '@/components/ui/card'
 import { categoryIcons, resources, type ResourceItem } from '@/data/resources'
 import Link from 'next/link'

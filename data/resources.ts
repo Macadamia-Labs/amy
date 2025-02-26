@@ -19,6 +19,7 @@ export interface ResourceItem {
     | 'Email Chains'
   link: string
   date: string
+  origin?: 'gdrive' | 'confluence' | 'slack' | 'system' | 'email'
 }
 
 export const resources: ResourceItem[] = [
@@ -28,7 +29,8 @@ export const resources: ResourceItem[] = [
     description: 'Detailed process flow diagram for the main plant operations',
     category: 'Engineering Drawings',
     link: '/resources/pfd-main-plant',
-    date: '2024-02-15'
+    date: '2024-02-15',
+    origin: 'gdrive'
   },
   {
     id: '2',
@@ -36,7 +38,8 @@ export const resources: ResourceItem[] = [
     description: 'Standards for process piping design and construction',
     category: 'ASME Standards',
     link: '/resources/asme-b31-3',
-    date: '2024-01-10'
+    date: '2024-01-10',
+    origin: 'system'
   },
   {
     id: '3',
@@ -44,7 +47,8 @@ export const resources: ResourceItem[] = [
     description: 'Construction guidelines for steel structures',
     category: 'ACE Standards',
     link: '/resources/ace-steel-construction',
-    date: '2024-02-20'
+    date: '2024-02-20',
+    origin: 'system'
   },
   {
     id: '4',
@@ -52,7 +56,8 @@ export const resources: ResourceItem[] = [
     description: 'Maintenance tracking and scheduling spreadsheet',
     category: 'Excel Sheets',
     link: '/resources/maintenance-schedule',
-    date: '2024-03-01'
+    date: '2024-03-01',
+    origin: 'confluence'
   },
   {
     id: '5',
@@ -60,7 +65,8 @@ export const resources: ResourceItem[] = [
     description: 'Email thread regarding project initiation and requirements',
     category: 'Email Chains',
     link: '/resources/project-kickoff',
-    date: '2024-03-10'
+    date: '2024-03-10',
+    origin: 'slack'
   },
   {
     id: '6',
@@ -68,7 +74,8 @@ export const resources: ResourceItem[] = [
     description: 'Rules for Construction of Pressure Vessels',
     category: 'ASME Standards',
     link: '/resources/asme-bpvc-viii-div1',
-    date: '2024-03-15'
+    date: '2024-03-15',
+    origin: 'system'
   }
 ]
 
@@ -79,7 +86,7 @@ export const categoryIcons = {
   'Excel Sheets': ChartColumnIcon,
   'Email Chains': ConvoIcon,
   'Geometry Files': BoxIcon,
-  'Specification': TextFileIcon,
+  Specification: TextFileIcon,
   'Technical Document': TextFileIcon,
   folder: BoxIcon,
   uncategorized: TextFileIcon
@@ -347,11 +354,12 @@ export const defaultResources: Resource[] = [
     status: 'completed',
     parent_id: 'example-folder',
     origin: 'gdrive'
-  }, 
+  },
   {
     id: 'asce-7-22',
     title: 'ASCE 7-22.pdf',
-    description: 'Minimum Design Loads and Associated Criteria for Buildings and Other Structures',
+    description:
+      'Minimum Design Loads and Associated Criteria for Buildings and Other Structures',
     category: 'Standards',
     file_path: '/demo/asce/ASCE 7-22.pdf',
     user_id: '',
@@ -663,7 +671,8 @@ export const defaultResources: Resource[] = [
   {
     id: 'aisc-358-16',
     title: 'AISC 358-16.pdf',
-    description: 'Prequalified Connections for Special and Intermediate Steel Moment Frames',
+    description:
+      'Prequalified Connections for Special and Intermediate Steel Moment Frames',
     category: 'Standards',
     file_path: '/demo/aisc/AISC 358-16.pdf',
     user_id: '',
@@ -699,7 +708,8 @@ export const defaultResources: Resource[] = [
   {
     id: 'aisc-ansi-n690-18',
     title: 'AISC ANSI N690-18.pdf',
-    description: 'Specification for Safety-Related Steel Structures for Nuclear Facilities',
+    description:
+      'Specification for Safety-Related Steel Structures for Nuclear Facilities',
     category: 'Standards',
     file_path: '/demo/aisc/AISC ANSI N690-18.pdf',
     user_id: '',
@@ -723,7 +733,8 @@ export const defaultResources: Resource[] = [
   {
     id: 'asce-11-22',
     title: 'ASCE 11-22.pdf',
-    description: 'Guideline for Structural Condition Assessment of Existing Buildings',
+    description:
+      'Guideline for Structural Condition Assessment of Existing Buildings',
     category: 'Standards',
     file_path: '/demo/asce/ASCE 11-22.pdf',
     user_id: '',
@@ -735,7 +746,8 @@ export const defaultResources: Resource[] = [
   {
     id: 'asce-20-20',
     title: 'ASCE 20-20.pdf',
-    description: 'Standard for Structural Design of Telecommunication Towers and Poles',
+    description:
+      'Standard for Structural Design of Telecommunication Towers and Poles',
     category: 'Standards',
     file_path: '/demo/asce/ASCE 20-20.pdf',
     user_id: '',

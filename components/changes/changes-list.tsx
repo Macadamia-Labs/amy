@@ -1,7 +1,6 @@
 'use client'
 import { AnimatedList } from '@/components/magicui/animated-list'
 import { AlertIcon, MailIcon, UserIcon } from '@/lib/utils/icons'
-import { PlusIcon, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
@@ -318,25 +317,6 @@ export function ChangesList({ changes }: ChangesListProps) {
 
         {/* Controls */}
         <div className="flex items-center gap-2">
-          {!animationComplete && currentIndex < totalChanges && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={addNextItem}
-              className="flex items-center gap-1"
-            >
-              <PlusIcon className="size-3" />
-            </Button>
-          )}
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={clearAll}
-            className="flex items-center gap-1"
-          >
-            <Trash2 className="size-3" />
-          </Button>
           <Button variant="ghost" asChild>
             <Link href="/activity">View all</Link>
           </Button>

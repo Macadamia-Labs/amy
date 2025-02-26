@@ -8,6 +8,16 @@ import React, {
   useState
 } from 'react'
 import { AnalyzingChangesExample } from './analyzing-changes'
+import {
+  EmailForwardingExample,
+  FlowRateMismatchIssueExample,
+  InletNozzleIssueExample,
+  LiftingLugIssueExample,
+  ShellThicknessIssueExample,
+  SupportSaddlesIssueExample,
+  UndersizedManwayIssueExample,
+  UploadedFileExample
+} from './changes-list'
 
 type ActivityContextType = {
   visibleChanges: React.ReactNode[]
@@ -37,14 +47,14 @@ type ActivityProviderProps = {
 export function ActivityProvider({ children }: ActivityProviderProps) {
   // Sequence of components to be displayed (in correct order - first to appear at top)
   const changeComponents = [
-    // <ShellThicknessIssueExample key="shell" />,
-    // <EmailForwardingExample key="email" />,
-    // <UploadedFileExample key="uploaded" />,
-    // <UndersizedManwayIssueExample key="manway" />,
-    // <FlowRateMismatchIssueExample key="flow" />,
-    // <InletNozzleIssueExample key="inlet" />,
-    // <SupportSaddlesIssueExample key="support" />,
-    // <LiftingLugIssueExample key="lifting" />,
+    <ShellThicknessIssueExample key="shell" />,
+    <EmailForwardingExample key="email" />,
+    <UploadedFileExample key="uploaded" />,
+    <UndersizedManwayIssueExample key="manway" />,
+    <FlowRateMismatchIssueExample key="flow" />,
+    <InletNozzleIssueExample key="inlet" />,
+    <SupportSaddlesIssueExample key="support" />,
+    <LiftingLugIssueExample key="lifting" />,
     <AnalyzingChangesExample key="analyzing" />
   ]
 
@@ -82,6 +92,28 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
       setCurrentIndex(1)
     }
   }, [])
+
+  // Add space bar event listener to add next item
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.code === 'Space' &&
+        !animationComplete &&
+        currentIndex < changeComponents.length
+      ) {
+        event.preventDefault() // Prevent default spacebar behavior (scrolling)
+        addNextItem()
+      }
+    }
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyDown)
+
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [currentIndex, animationComplete, changeComponents.length])
 
   const value = {
     visibleChanges,
