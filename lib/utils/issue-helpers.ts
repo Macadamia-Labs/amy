@@ -1,16 +1,16 @@
 import { Issue } from '@/lib/types'
 import {
-  ActivityIcon,
-  BellIcon,
-  BoxIcon,
-  CheckSquareIcon,
-  ClockIcon,
-  HardDriveIcon,
-  NotesIcon,
-  PencilIcon,
-  StopIcon,
-  TextFileIcon,
-  WrenchIcon
+    ActivityIcon,
+    BellIcon,
+    BoxIcon,
+    CheckSquareIcon,
+    ClockIcon,
+    HardDriveIcon,
+    NotesIcon,
+    PencilIcon,
+    StopIcon,
+    TextFileIcon,
+    WrenchIcon
 } from '@/lib/utils/icons'
 import { VariableIcon } from 'lucide-react'
 

@@ -94,7 +94,7 @@ const AnalysisComplete = ({ steps }: AnalysisCompleteProps) => {
         </p>
         <p className="text-muted-foreground">
           {issuesFound
-            ? 'Found potential design issues that need attention.'
+            ? 'Found 2 critical design issues that need immediate attention.'
             : 'All specifications meet required standards.'}
         </p>
       </div>
@@ -109,30 +109,30 @@ export const AnalyzingChangesExample = () => {
   const [steps, setSteps] = useState<AnalysisStep[]>([
     {
       id: 'spec_sheet',
-      description: 'Analyzing new version of specification sheet',
+      description: 'Analyzing updated version of Project Requirements',
       isLoading: true,
-      result: 'Specification sheet review complete',
+      result: 'Project Requirements review complete',
       duration: 1200,
       status: 'waiting',
       result_type: 'looks_fine'
     },
     {
       id: 'retrieve',
-      description: 'Retrieving related documents',
+      description: 'Retrieving related documents and structural codes',
       isLoading: true,
-      result: 'Retrieved 8 related documents',
+      result: 'Retrieved 8 related documents and structural codes',
       duration: 1500,
       status: 'waiting',
       result_type: 'looks_fine'
     },
     {
       id: 'compliance',
-      description: 'Checking compliance with ASME BPVC section',
+      description: 'Checking compliance with ASME BPVC VII DIV 1 and ASME BPVC II-D',
       isLoading: true,
-      result: 'General compliance verified with ASME BPVC Section VIII Div. 1',
+      result: 'Design mistakes detected for ASME BPVC Section VIII DIV 1',
       duration: 1700,
       status: 'waiting',
-      result_type: 'looks_fine'
+      result_type: 'requires_more_info'
     },
     {
       id: 'thickness_calc',
@@ -145,7 +145,7 @@ export const AnalyzingChangesExample = () => {
     },
     {
       id: 'thickness_issue',
-      description: 'Detected potential issue with shell thickness',
+      description: 'Detected critical issue with shell thickness',
       isLoading: true,
       result:
         'Shell thickness of 3/8" (0.375") is insufficient for 50 psig at 650 °F + Full Vacuum',
@@ -154,23 +154,32 @@ export const AnalyzingChangesExample = () => {
       result_type: 'issue_detected'
     },
     {
-      id: 'related_designs',
-      description: 'Finding related designs to check current designs',
+      id: 'thickness_issue2',
+      description: 'Identifying solution for insufficient shell thickness',
       isLoading: true,
-      result: 'Found 3 related pressure vessel designs for reference',
-      duration: 1800,
+      result:
+        'Proposed new solution for insufficient shell thickness',
+      duration: 1600,
       status: 'waiting',
       result_type: 'looks_fine'
     },
     {
-      id: 'nozzle_check',
-      description: 'Checking nozzle placement is compliant with ASME',
+      id: 'related_designs',
+      description: 'Checking inlet nozzle reinforcements',
       isLoading: true,
-      result:
-        'Manway reinforcement pad (1/4" × 2") undersized for 20" opening per UG-37',
-      duration: 1500,
+      result: '6" Inlet Nozzle (B) missing required repad per ASME BPVC VIII Div. 1 UG-37',
+      duration: 1800,
       status: 'waiting',
       result_type: 'issue_detected'
+    },
+    {
+      id: 'related_designs2',
+      description: 'Identifying solution for nozzle reinforcement',
+      isLoading: true,
+      result: 'Proposed new solution to reinforce 6" Inlet Nozzle (B)',
+      duration: 1800,
+      status: 'waiting',
+      result_type: 'looks_fine'
     }
   ])
 
@@ -266,10 +275,10 @@ export const AnalyzingChangesExample = () => {
             {isComplete ? (
               <>
                 <span>
-                  <span className="font-bold">Cooper</span> found 2 potential
+                  <span className="font-bold">Cooper</span> found 2 critical
                   design issues in the{' '}
                 </span>
-                <FileReference filename="Pressure Vessel Design.pdf" />
+                <FileReference filename="Technical Drawing Rev C.pdf" />
               </>
             ) : (
               <>

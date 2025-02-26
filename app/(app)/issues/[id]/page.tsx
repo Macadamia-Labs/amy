@@ -79,21 +79,21 @@ export default function IssuePage() {
             <TabsList className="w-full rounded-xl">
               <TabsTrigger 
                 value="problem" 
-                className="w-full rounded-lg data-[state=active]:bg-red-50/50"
+                className="w-full rounded-lg border-2 data-[state=active]:border-red-500 data-[state=active]:text-red-700 data-[state=active]:bg-white"
               >
                 <FireIcon className="w-4 h-4 mr-2" /> Detected Problem
               </TabsTrigger>
               <TabsTrigger 
                 value="solution" 
-                className="w-full rounded-lg data-[state=active]:bg-green-50/50"
+                className="w-full rounded-lg border-2 data-[state=active]:border-green-500 data-[state=active]:text-green-700 data-[state=active]:bg-white"
               >
                 <BulbIcon className="w-4 h-4 mr-2" /> Proposed Solution
               </TabsTrigger>
             </TabsList>
             <TabsContent value="problem">
               {/* Description */}
-              <div className="bg-red-50/50 rounded-xl p-6">
-                <h2 className="text-xl font-semibold mb-2">Detected Problem</h2>
+              <div className="border-2 border-red-500 rounded-xl p-6 bg-white">
+                <h2 className="text-xl font-semibold mb-2 text-red-700">Detected Problem</h2>
                 <MemoizedReactMarkdown>
                   {preprocessLaTeX(issue.description)}
                 </MemoizedReactMarkdown>
@@ -102,8 +102,8 @@ export default function IssuePage() {
             <TabsContent value="solution">
               {/* Proposed Solution */}
               {issue.proposedSolution ? (
-                <div className="bg-green-50/50 rounded-xl p-6">
-                  <h2 className="text-xl font-semibold mb-2">
+                <div className="border-2 border-green-500 rounded-xl p-6 bg-white">
+                  <h2 className="text-xl font-semibold mb-2 text-green-700">
                     Proposed Solution
                   </h2>
                   <div className="text-muted-foreground">
@@ -113,8 +113,8 @@ export default function IssuePage() {
                   </div>
                 </div>
               ) : (
-                <div className="rounded-xl p-4 h-32 bg-green-50/50 flex items-center justify-center flex-col">
-                  <h2 className="font-semibold">No Solution Proposed</h2>
+                <div className="rounded-xl p-4 h-32 border-2 border-green-500 bg-white flex items-center justify-center flex-col">
+                  <h2 className="font-semibold text-green-700">No Solution Proposed</h2>
                   <div className="text-muted-foreground text-sm">
                     No solution has been proposed yet. Check back later or
                     suggest a solution in the comments.

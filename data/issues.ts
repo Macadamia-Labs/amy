@@ -38,7 +38,7 @@ export const sampleIssues: Issue[] = [
     comments: [
       {
         id: 'comment-1',
-        content: 'We can\’t reduce the pressure to 40 psig given our process needs, so we must go with a thicker shell. I\’ll check nozzle reinforcements per UG‐37. Let\’s finalize calculations and update the fabrication drawings.',
+        content: 'We can\'t reduce the pressure to 40 psig given our process needs, so we must go with a thicker shell. I\'ll check nozzle reinforcements per UG‐37. Let\'s finalize calculations and update the fabrication drawings.',
         author: {
           id: 'eng-3',
           name: 'Brecht Pierreux',
@@ -46,8 +46,8 @@ export const sampleIssues: Issue[] = [
           specialty: 'Process Piping',
           email: 'm.chang@example.com'
         },
-        createdAt: new Date('2024-03-11T14:15:00'),
-        updatedAt: new Date('2024-03-11T14:15:00')
+        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000)
       }
     ]
   },
