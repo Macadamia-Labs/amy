@@ -7,8 +7,15 @@ import React, {
   useEffect,
   useState
 } from 'react'
-import { AnalyzingChangesExample } from './analyzing-changes'
-import { EmailForwardingExample, UploadedFileExample } from './changes-list'
+import {
+  PropagatedChangeExample,
+  SupplierAExample,
+  SupplierAExample1,
+  SupplierAExample2,
+  SupplierAExample3,
+  SupplierAExample4,
+  SupplierAExample5
+} from './changes-list'
 
 type ActivityContextType = {
   visibleChanges: React.ReactNode[]
@@ -39,14 +46,24 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
   // Sequence of components to be displayed (in correct order - first to appear at top)
   const changeComponents = [
     // <ShellThicknessIssueExample key="shell" />,
-    <EmailForwardingExample key="email" />,
-    <UploadedFileExample key="uploaded" />,
+    <PropagatedChangeExample key="propagated" />,
+    <SupplierAExample key="supplierA" />,
+    <SupplierAExample1 key="supplierA1" />,
+    <SupplierAExample2 key="supplierA2" />,
+    <SupplierAExample3 key="supplierA3" />,
+    <SupplierAExample4 key="supplierA4" />,
+    <SupplierAExample5 key="supplierA5" />,
+    // <MaterialSpecificationChangeExample key="material" />,
+    // <ValueChangeExample key="value" />,
+    // <StatusChangeExample key="status" />, 
+    // <EmailForwardingExample key="email" />,
+    // <UploadedFileExample key="uploaded" />,
     // <UndersizedManwayIssueExample key="manway" />,
     // <FlowRateMismatchIssueExample key="flow" />,
     // <InletNozzleIssueExample key="inlet" />,
     // <SupportSaddlesIssueExample key="support" />,
     // <LiftingLugIssueExample key="lifting" />,
-    <AnalyzingChangesExample key="analyzing" />
+    // <AnalyzingChangesExample key="analyzing" />
   ]
 
   // State to track which items should be visible

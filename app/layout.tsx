@@ -7,7 +7,7 @@ import '@/styles/globals.css'
 import 'katex/dist/katex.min.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
-import { Inter as FontSans } from 'next/font/google'
+import { Manrope as FontSans } from 'next/font/google'
 import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {

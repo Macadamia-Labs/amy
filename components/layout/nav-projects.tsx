@@ -33,7 +33,7 @@ import { useRouter } from 'next/navigation'
 const exampleProjects: (Project & { color: string })[] = [
   {
     id: '1',
-    name: 'Industrial Storage Tank for Water',
+    name: 'Starlink Silicon Packaging',
     description: 'CFD simulation of wind turbine performance',
     user_id: 'user1',
     app: 'simulation',
