@@ -1,65 +1,162 @@
 'use client'
 
+import { AnimatePresence, motion } from "motion/react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Card, CardContent } from '../ui/card'
 
-interface ReasoningStep {
-  id: string
-  description: string
-  status: 'in-progress' | 'completed'
+// Animation for individual list items
+function AnimatedListItem({ children }: { children: React.ReactNode }) {
+  const animations = {
+    initial: { scale: 0.95, opacity: 0 },
+    animate: { scale: 1, opacity: 1, originY: 0 },
+    exit: { scale: 0.95, opacity: 0 },
+    transition: { type: "spring", stiffness: 350, damping: 40 },
+  }
+
+  return (
+    <motion.div {...animations} layout className="mx-auto w-full">
+      {children}
+    </motion.div>
+  )
+}
+
+// Status item component
+function StatusItem({ text }: { text: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="h-3 w-3 rounded-full bg-green-300 animate-pulse"></div>
+      <p className="text-base text-gray-500">{text}</p>
+    </div>
+  )
 }
 
 export function ReasoningStepsPanel() {
-  // Example reasoning steps - newest steps should be added at the beginning for top-down display
-  const reasoningSteps: ReasoningStep[] = [
+  // Animation states
+  const [currentSection, setCurrentSection] = useState(1) // Start with Outlook emails section (index 1)
+  const [sectionComplete, setSectionComplete] = useState(false)
+  const [showingAnimation, setShowingAnimation] = useState(true)
+  const [animationIndex, setAnimationIndex] = useState(0)
+  
+  // Define all sections with their titles and items
+  const animationSections = [
     {
-      id: '1',
-      description: 'Analyzing pressure vessel design against ASME BPVC Section VIII Division 1',
-      status: 'completed'
+      title: "Cooper screening Slack channels",
+      items: [
+        "checking slack channel Brecht",
+        "checking slack channel Abel",
+        "checking slack channel Project team"
+      ]
     },
     {
-      id: '2',
-      description: 'Checking shell thickness calculations using UG-27 formula',
-      status: 'completed'
+      title: "Cooper scanning Outlook emails",
+      items: [
+        "scanning emails from Silicon Packaging group members"
+      ]
     },
     {
-      id: '3',
-      description: 'Verifying nozzle reinforcement requirements per UG-37',
-      status: 'in-progress'
+      title: "Cooper searching Google Drive folders",
+      items: [
+        "searching shared project folders",
+        "scanning technical documentation",
+        "indexing meeting notes"
+      ]
+    },
+    {
+      title: "Cooper analyzing ANSYS files",
+      items: [
+        "processing simulation results",
+        "extracting key parameters",
+        "comparing with design specifications"
+      ]
     }
   ]
 
-  // Calculate a meaningful status text based on the steps
-  const completedSteps = reasoningSteps.filter(step => step.status === 'completed').length
-  const totalSteps = reasoningSteps.length
-  const progressText = `${completedSteps}/${totalSteps} tasks complete`
-  const currentTask = reasoningSteps.find(step => step.status === 'in-progress')?.description || 'Analysis complete'
+  // Current section to display
+  const currentAnimationSection = animationSections[currentSection]
+  
+  // Create array of StatusItem components from the items array
+  const statusItems = useMemo(() => 
+    currentAnimationSection.items.map((item, i) => (
+      <StatusItem key={`${currentAnimationSection.title}-${i}`} text={item} />
+    )),
+    [currentAnimationSection]
+  )
+
+  // Increment index to show next item
+  useEffect(() => {
+    if (showingAnimation && animationIndex < statusItems.length) {
+      const timeout = setTimeout(() => {
+        setAnimationIndex(prev => prev + 1)
+      }, 1200)
+      
+      return () => clearTimeout(timeout)
+    } else if (showingAnimation && animationIndex >= statusItems.length) {
+      setSectionComplete(true)
+    }
+  }, [animationIndex, statusItems.length, showingAnimation])
+
+  // Move to next section when current section is complete
+  useEffect(() => {
+    if (sectionComplete && currentSection < animationSections.length - 1) {
+      const timeout = setTimeout(() => {
+        setCurrentSection(prev => prev + 1)
+        setAnimationIndex(0)
+        setSectionComplete(false)
+      }, 2000) // Wait 2 seconds before showing next section
+      
+      return () => clearTimeout(timeout)
+    }
+  }, [sectionComplete, currentSection, animationSections.length])
+
+  // Toggle animation display
+  useEffect(() => {
+    // Reset animation after it completes all sections
+    const resetTimeout = setTimeout(() => {
+      if (currentSection === animationSections.length - 1 && sectionComplete) {
+        setShowingAnimation(false)
+        setCurrentSection(0)
+        setAnimationIndex(0)
+        setSectionComplete(false)
+        
+        // Restart animation after a pause
+        const restartTimeout = setTimeout(() => {
+          setShowingAnimation(true)
+        }, 5000) // Wait 5 seconds before restarting
+        
+        return () => clearTimeout(restartTimeout)
+      }
+    }, 3000)
+    
+    return () => clearTimeout(resetTimeout)
+  }, [currentSection, sectionComplete, animationSections.length])
+
+  // Get items to show based on current index
+  // Limit to maximum 3 items to maintain fixed height
+  const itemsToShow = useMemo(() => {
+    const items = statusItems.slice(0, animationIndex)
+    // If more than 3 items, only show the latest 3
+    return items.length > 3 ? items.slice(-3) : items
+  }, [statusItems, animationIndex])
 
   return (
     <div className="mb-8">
-      <Card className="border rounded-lg p-4 h-full">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <h2 className="text-xl font-semibold">Status:</h2>
-            <span className="ml-2">{progressText}</span>
-          </div>
+      <Card className="border rounded-lg p-6 h-[160px]">
+        <div className="flex items-center mb-5">
+          <h2 className="text-2xl font-semibold">Status:</h2>
+          <h3 className="text-2xl ml-2 font-normal">{currentAnimationSection.title}</h3>
         </div>
-        <CardContent className="p-0">
-          <div className="space-y-3">
-            {reasoningSteps.map((step) => (
-              <div key={step.id} className="flex items-start gap-2">
-                <div className={`size-2.5 rounded-full mt-1 ${
-                  step.status === 'completed' ? 'bg-green-500' : 'bg-blue-500 animate-pulse'
-                }`} />
-                <div className="flex-1">
-                  <p className="text-sm">
-                    {step.description}
-                    {step.status === 'in-progress' && (
-                      <span className="text-blue-500 ml-2 animate-pulse">in progress...</span>
-                    )}
-                  </p>
-                </div>
-              </div>
-            ))}
+        <CardContent className="p-0 overflow-hidden">
+          {/* Animated status section */}
+          <div>
+            <div className="pl-4 space-y-4">
+              <AnimatePresence>
+                {itemsToShow.map((item) => (
+                  <AnimatedListItem key={(item as React.ReactElement).key}>
+                    {item}
+                  </AnimatedListItem>
+                ))}
+              </AnimatePresence>
+            </div>
           </div>
         </CardContent>
       </Card>

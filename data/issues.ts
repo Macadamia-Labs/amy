@@ -11,23 +11,26 @@ const mapResourceIds = (ids: string[]) =>
 
 export const sampleIssues: Issue[] = [
   {
-    id: 'VES-1',
-    title: 'Shell Thickness Insufficient for 50 psig at 650 °F + Full Vacuum',
+    id: 'PIP-1',
+    title: 'Mismatch in required UPW flow rate for micro saw E-007',
     description:
-      'The vessel drawing specifies a **3/8"** (0.375") nominal shell for a horizontal pressure vessel intended to operate at **50 psig** and **650 °F**, while also being designed for full vacuum.\n\n1. Internal-Pressure Check (**UG-27**): Using ASME BPVC Section II-D for SA-516 Gr.70 at 650 °F, the allowable stress is approximately **S = 17,000 psi** (exact value to be confirmed). Applying the internal-pressure formula from **UG-27(c)(1)**:\n\n    \\[t_{\\text{internal}} = \\frac{PR}{SE - 0.6P}\\]\n\n    Where:\n    - P = 50 psig (design pressure)\n    - R = 48" (half of 96" OD)\n    - E = joint efficiency\n    - S = allowable stress at 650 °F\n\n    The calculated required thickness (plus **0.0625" corrosion allowance**) slightly exceeds **0.375"** once a realistic joint efficiency (<1.0) is used.\n\n2. External-Pressure (Vacuum) Check (**UG-28**): Under full vacuum, the vessel must also resist external pressure. Preliminary checks using UG-28 or external-pressure charts indicate that **0.375"** could be borderline or insufficient, especially at elevated temperature where creep effects or reduced modulus may also be considerations.\n\nAs a result, the current **3/8"** shell **does not meet** the combined internal and external design thickness required by the code at 650 °F.',
+      '- Micro-saw E-007 from supplier A requires an Ultra-Pure-Water (UPW) supply for processing of the semiconductor chips.\n - The equipment manual from supplier A in South Korea specifies 3.9 L/min of UPW supply required. \n - However, I found an email exchange between Supplier A and Sr. Process Engineer Thomas on 11/1/2024 that mentions that SpaceX micro saw requires 12.5 L/min.',
     status: 'open',
     priority: 'critical',
     category: 'Design',
     location: 'Building A - Mechanical Room 2',
+    assignedEngineer: {
+      id: 'eng-3',
+      name: 'Thomas Wilson',
+      title: 'Sr. Process Engineer',
+      specialty: 'Semiconductor Processing',
+      email: 't.wilson@example.com'
+    },
     createdAt: new Date('2024-03-10'),
     updatedAt: new Date('2024-03-11'),
     proposedSolution:
-      '1. **Re-verify Shell and Head Thickness**\n\n    • Recalculate the required shell and head thickness for **50 psig at 650 °F** in strict accordance with **UG-27** (internal pressure) and **UG-28** (external pressure).\n\n    • Confirm the allowable stresses from Section II-D at the specified temperature and ensure that the chosen joint efficiency (E) is correct for your weld examination level.\n\n    • If the calculations confirm that 3/8" is insufficient, then (a) **Increase the Shell and Head Thickness** to meet both internal- and external-pressure requirements, or (b) **Reduce the Design Pressure** (if operationally feasible) back to 40 psig. \n\n2. **Nozzle Reinforcement** (**UG-37**)\n\n    • For each nozzle opening, verify the required reinforcement area:\n    \\[A_{\\text{required}} = t_{\\text{req}} \\times d_{\\text{opening}}\\]\n    where \\(t_{\\text{req}}\\) is the required shell thickness from the internal-pressure calculations (UG-27), and\n    \\(d_{\\text{opening}}\\) is the finished diameter of the nozzle bore.\n\n    • Confirm that the total area available (from shell, nozzle neck, repad, etc.) is ≥ \\(A_{\\text{required}}\\). If not, design a larger repad, use a thicker nozzle neck, or apply another reinforcement method.\n\n3. **Stiffening for Vacuum**\n\n    • If the required thickness to resist vacuum is excessively large, consider **external stiffening rings** or other bracing to handle external pressure, especially for longer cylindrical sections or large diameters.',
-    resources: mapResourceIds([
-      'asme-bpvc-viii-div-1',
-      'asme-bpvc-ii-d',
-      'technical-drawing'
-    ]),
+      'Sr. Process Engineer Thomas has left the company on Jan 1, 2025. I could not retrieve any further documentation clarifying the required flow rate. Therefore, required UPW flow rate should be confirmed with Mr. Chung from micro saw supplier A in South Korea (chung@supplier.com).',
+    resources: mapResourceIds(['manual-micro-saw', 'email-micro-saw']),
     affectedWorkflows: [
       {
         id: 'workflow-1',
@@ -39,7 +42,77 @@ export const sampleIssues: Issue[] = [
       {
         id: 'comment-1',
         content:
-          "We can't reduce the pressure to 40 psig given our process needs, so we must go with a thicker shell. I'll check nozzle reinforcements per UG‐37. Let's finalize calculations and update the fabrication drawings.",
+          "I have contacted Mr. Chung to double check ASAP the required flow rate. Will update the team once I received his response. ",
+        author: {
+          id: 'eng-3',
+          name: 'Brecht Pierreux',
+          title: 'Starlink Engineer',
+          specialty: 'Process Piping',
+          email: 'm.chang@example.com'
+        },
+        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000)
+      }
+    ]
+  }, 
+  {
+    id: 'PIP-2',
+    title: 'Critical flow velocity issue in UPW piping construction drawing',
+    description:
+      'Based on the updated flow rate, I have identified a critical issue in the construction drawing from Contractor B. The drawing specifies a ½" diameter pipe, which was originally sized for 4.1 GPM. However, the revised flow rate of 13 GPM through a ½" pipe results in an excessively high flow velocity of 13.73 ft/s, which exceeds recommended design limits.\n\n' +
+      'The velocity ($V$) in a pipe is given by:\n\n' +
+      '$V = \\frac{Q}{A}$\n\n' +
+      'where:\n\n' +
+      '• $Q$ = Flow rate (ft³/s)\n' +
+      '  $13 \\text{ GPM} \\times 0.002228 = 0.02896 \\text{ ft}^3/\\text{s}$\n\n' +
+      '• $A$ = Cross-sectional area (ft²)\n' +
+      '  $A = \\pi \\times (\\frac{\\text{ID}}{2})^2$\n\n' +
+      'For a ½" Schedule 40 PVC pipe, the inside diameter (ID) is 0.622 inches or 0.05183 feet, so:\n\n' +
+      '$A = \\pi \\times (0.05183/2)^2 = \\pi \\times (0.025915)^2 = 0.00211 \\text{ ft}^2$\n\n' +
+      'Thus, the velocity:\n\n' +
+      '$V = \\frac{0.02896}{0.00211} \\approx 13.73 \\text{ ft/s}$\n\n' +
+      'According to ASME B31.3 - Process Piping Code and the technical Datasheet from the pipe supplier, flow velocity should be carefully managed to avoid excessive pressure drop and surge effects, particularly in PVC piping systems, where high velocities can induce cavitation, turbulence, and potential structural fatigue. The recommended flow velocity should be less than 5 ft/s to avoid surge pressure issues (water hammer), which could lead to pipe failure.',
+    status: 'open',
+    priority: 'critical',
+    category: 'Design',
+    location: 'Building A - Mechanical Room 2',
+    assignedEngineer: {
+      id: 'eng-3',
+      name: 'Thomas Wilson',
+      title: 'Sr. Process Engineer',
+      specialty: 'Semiconductor Processing',
+      email: 't.wilson@example.com'
+    },
+    createdAt: new Date('2024-03-10'),
+    updatedAt: new Date('2024-03-11'),
+    proposedSolution:
+      'To ensure system reliability and compliance with structural guidelines, a 1" pipe is required as a replacement. This will reduce the flow velocity to a safe level below 5 ft/s.\n\n' +
+      '**New Pipe Size (1" Pipe)**\n\n' +
+      '• Inside Diameter: 1.049 inches = 0.08742 ft\n\n' +
+      '• Cross-sectional Area:\n' +
+      '  $A = \\pi \\times \\left(\\frac{0.08742}{2}\\right)^2 = 0.006 \\text{ ft}^2$\n\n' +
+      '• Velocity Calculation:\n' +
+      '  $V = \\frac{0.02896}{0.006} = 4.83 \\text{ ft/s} \\quad \\text{(Acceptable)}$\n\n' +
+      'By switching to a 1" pipe, the system will:\n' +
+      '- Maintain flow velocity within safe operating limits (<5 ft/s)\n' +
+      '- Reduce pressure losses and prevent excessive turbulence\n' +
+      '- Improve system longevity and reliability\n\n' +
+      'Action Plan\n\n' +
+      '- 1️⃣ Contact Contractor B to revise the construction drawings\n' +
+      '- 2️⃣ Notify Constructor C to order new pipe size and adjust cost estimates accordingly\n',
+    resources: mapResourceIds(['technical-drawing', 'datasheet-upw', 'asme-b31-3']),
+    affectedWorkflows: [
+      {
+        id: 'workflow-1',
+        title: 'Pressure Vessel Design',
+        status: 'active'
+      }
+    ],
+    comments: [
+      {
+        id: 'comment-1',
+        content:
+          "I sent a note to Contractor B. Once they confirm the new pipe size, I will update the construction guys to order the new pipe materia. Lead time is 1 week.",
         author: {
           id: 'eng-3',
           name: 'Brecht Pierreux',
@@ -51,117 +124,5 @@ export const sampleIssues: Issue[] = [
         updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000)
       }
     ]
-  },
-  {
-    id: 'VES-2',
-    title: 'Undersized Manway Reinforcement for 20″ Opening',
-    description:
-      'The manway (A) is 20″ nominal with only a 1/4″ × 2″ doubler plate shown. This doubler area is insufficient to replace the shell material removed by the large nozzle hole. Per UG‑37, reinforcement around large openings must at least match the area $A_{required} = t_{req} \\times d_{hole} \\times F$. Given the 3/8″ nominal shell (plus corrosion allowance) and the wide diameter of the manway cut, the repad or doubler ring needs more cross-sectional area than 1/4″ × 2″ provides.',
-    status: 'in_progress',
-    priority: 'medium',
-    category: 'Calculation',
-    location: 'Tower 2 - Floor 15 - Grid B-4',
-    assignedEngineer: {
-      id: 'eng-2',
-      name: 'James Rodriguez',
-      title: 'Lead Process Engineer',
-      specialty: 'Process Equipment',
-      email: 'j.rodriguez@example.com'
-    },
-    createdAt: new Date('2024-03-11'),
-    updatedAt: new Date('2024-03-11'),
-    resources: mapResourceIds([
-      'example-file-2',
-      'asme-bpvc-viii-div-1',
-      'technical-drawing'
-    ])
-  },
-  {
-    id: 'PIP-1',
-    title: 'Flow Rate Mismatch in Piping (ASME B31.3)',
-    description:
-      'A secondary cooling loop is specified to flow at **180 L/min** (exceeding the original design of **150 L/min**), causing the piping velocity and internal pressure to exceed what the line was originally designed to handle under **ASME B31.3**. This can lead to **excessive pressure drop**, possible **water hammer**, or **insufficient pipe wall thickness**.',
-    status: 'in_progress',
-    priority: 'high',
-    category: 'Specification',
-    location: 'Building B - Floor 3 - Ceiling Plenum',
-    assignedEngineer: {
-      id: 'eng-3',
-      name: 'Michael Chang',
-      title: 'Senior Piping Engineer',
-      specialty: 'Process Piping',
-      email: 'm.chang@example.com'
-    },
-    createdAt: new Date('2024-03-09'),
-    updatedAt: new Date('2024-03-10'),
-    resources: mapResourceIds([
-      'asme-b31-3',
-      'example-file-1',
-      'technical-drawing'
-    ])
-  },
-  {
-    id: 'NOZ-1',
-    title: '6″ Inlet Nozzle (B) Missing Required Repad',
-    description:
-      'The 6″ inlet nozzle (B) on the pressure vessel is shown without a reinforcement pad (repad). Per ASME BPVC Section VIII Div. 1 UG-37, this large opening requires reinforcement to compensate for the material removed from the shell. Calculations show that the current design without a repad results in excessive stress concentrations around the nozzle-to-shell junction. The nozzle wall thickness alone is insufficient to provide the required area replacement. This violates code requirements and creates a potential failure point under design pressure conditions.',
-    status: 'open',
-    priority: 'critical',
-    category: 'Safety',
-    location: 'Building C - Foundation Grid F-23',
-    assignedEngineer: {
-      id: 'eng-4',
-      name: 'Dr. Robert Miller',
-      title: 'Senior Structural Engineer',
-      specialty: 'Foundations',
-      email: 'r.miller@example.com'
-    },
-    createdAt: new Date('2024-03-12'),
-    updatedAt: new Date('2024-03-12'),
-    resources: mapResourceIds(['example-file-3', 'asme-bpvc-viii-div-1']),
-    proposedSolution:
-      'To address the missing reinforcement pad for the 6″ inlet nozzle (B), the following actions are recommended:\n\n1. **Add Reinforcement Pad**:\n   - Design a properly sized reinforcement pad according to ASME BPVC Section VIII Div. 1 UG-37\n   - Calculate the required reinforcement area based on the formula: A_required = d × t_r × F\n   - Ensure the repad extends sufficiently beyond the nozzle opening (minimum 2.5√(D×t) or 2.5t, whichever is greater)\n\n2. **Verify Weld Design**:\n   - Specify appropriate weld sizes for both the nozzle-to-shell and repad-to-shell connections\n   - Ensure full penetration welds where required by code\n   - Include proper weld details on the fabrication drawings\n\n3. **Update Calculations**:\n   - Document the area replacement calculations per UG-37\n   - Verify that the combined reinforcement from the nozzle wall, repad, and shell meets or exceeds the required area\n   - Include the calculations in the vessel documentation package\n\n4. **Revise Drawings**:\n   - Update the vessel fabrication drawings to show the added reinforcement pad\n   - Include material specifications, dimensions, and weld details\n   - Ensure the drawing revisions are properly documented and controlled'
-  },
-  {
-    id: 'VES-3',
-    title: 'Support Saddles Underdesigned for Large Wind Uplift and Seismic',
-    description:
-      'Wind speed is 160 mph (ASCE 7‑22), Risk Category III, and seismic conditions are also noted. Yet the saddle drawings do not show adequate anchor bolt quantity or size to handle the high overturning moment and shear. The welds between saddle and shell appear minimal for a 96″ diameter vessel subject to both wind and vacuum loads. Standard "Zick\'s Analysis" or a recognized method would show that these saddles and welds are too small.',
-    status: 'open',
-    priority: 'low',
-    category: 'Construction',
-    location: 'Building A - Floor 4 - Electrical Room',
-    assignedEngineer: {
-      id: 'eng-5',
-      name: 'Emily Martinez',
-      title: 'Senior Electrical Engineer',
-      specialty: 'Power Distribution',
-      email: 'e.martinez@example.com'
-    },
-    createdAt: new Date('2024-03-13'),
-    updatedAt: new Date('2024-03-13'),
-    resources: mapResourceIds(['asce-7-22', 'asme-bpvc-viii-div-1']),
-    proposedSolution:
-      "The saddle design needs to be revised to account for the high wind loads (160 mph per ASCE 7-22) and seismic conditions. The following improvements are required:\n\n1. **Increase Anchor Bolt Quantity and Size**:\n   - Calculate the overturning moment based on the 160 mph wind speed and Risk Category III\n   - Determine appropriate anchor bolt size and quantity to resist both tension and shear\n   - Ensure proper embedment depth and edge distance for concrete foundation\n\n2. **Strengthen Saddle-to-Shell Welds**:\n   - Perform a detailed stress analysis of the saddle-to-shell connection\n   - Increase weld size to handle the combined stresses from wind, seismic, and vacuum loads\n   - Consider adding reinforcement plates at high-stress areas\n\n3. **Perform Zick's Analysis**:\n   - Conduct a comprehensive Zick's Analysis to verify saddle design adequacy\n   - Ensure the design accounts for both longitudinal and circumferential stresses\n   - Verify that the saddle design meets ASME BPVC Section VIII requirements"
-  },
-  {
-    id: 'LUG-1',
-    title: 'Lifting Lug Fillet Weld Too Small for Vessel Weight',
-    description:
-      "The lifting lug detail (3/8″ and 1/2″ plates) shows a fillet weld size that is insufficient for the vessel's dry weight (~11,426 lbs) plus dynamic load factors. When lifted, the lug and the lug-to-shell weld experience combined shear and tension. The drawn weld thickness (e.g., ~1/4″ fillet) does not satisfy the stress requirements in UG‑22 or typical lug design rules (Appendix L or custom calcs).",
-    status: 'in_progress',
-    priority: 'critical',
-    category: 'Maintenance',
-    location: 'Building B - Floor 4 - Room 415',
-    assignedEngineer: {
-      id: 'eng-6',
-      name: 'Thomas Wilson',
-      title: 'Fire Protection Engineer',
-      specialty: 'Sprinkler Systems',
-      email: 't.wilson@example.com'
-    },
-    createdAt: new Date('2024-03-14'),
-    updatedAt: new Date('2024-03-14'),
-    resources: mapResourceIds(['asme-bpvc-viii-div-1', 'technical-drawing'])
   }
 ]

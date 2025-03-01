@@ -12,7 +12,6 @@ import {
   SupplierAExample,
   SupplierAExample1,
   SupplierAExample2,
-  SupplierAExample3,
   SupplierAExample4,
   SupplierAExample5
 } from './changes-list'
@@ -50,7 +49,6 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     <SupplierAExample key="supplierA" />,
     <SupplierAExample1 key="supplierA1" />,
     <SupplierAExample2 key="supplierA2" />,
-    <SupplierAExample3 key="supplierA3" />,
     <SupplierAExample4 key="supplierA4" />,
     <SupplierAExample5 key="supplierA5" />,
     // <MaterialSpecificationChangeExample key="material" />,
@@ -93,12 +91,11 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     setCurrentIndex(0)
   }
 
-  // Initialize with the first item
+  // Initialize with empty list (no items shown by default)
   useEffect(() => {
-    if (changeComponents.length > 0) {
-      setVisibleChanges([changeComponents[0]])
-      setCurrentIndex(1)
-    }
+    // Start with no visible changes
+    setVisibleChanges([])
+    setCurrentIndex(0)
   }, [])
 
   // Add space bar event listener to add next item

@@ -165,8 +165,8 @@ export const defaultResources: Resource[] = [
   },
   {
     id: 'technical-drawing',
-    title: 'Technical Drawing Rev C.pdf',
-    description: 'High-level system architecture diagrams',
+    title: 'Construction Drawing Rev C.pdf',
+    description: 'UPW piping layout for clean room A',
     category: 'Engineering Drawings',
     file_path: '/example/architecture.pdf',
     user_id: '',
@@ -174,6 +174,42 @@ export const defaultResources: Resource[] = [
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
     origin: 'gdrive'
+  },
+  {
+    id: 'datasheet-upw',
+    title: 'Datasheet-UPW.pdf',
+    description: 'Technical datasheet from UPW supplier',
+    category: 'Technical Document',
+    file_path: '/example/architecture.pdf',
+    user_id: '',
+    created_at: new Date().toISOString(),
+    status: 'completed',
+    parent_id: 'pressure-vessel-folder',
+    origin: 'gdrive'
+  },
+  {
+    id: 'manual-micro-saw',
+    title: 'Manual-Micro-Saw.pdf',
+    description: 'Supplier manual for micro saw',
+    category: 'Technical Document',
+    file_path: '/example/architecture.pdf',
+    user_id: '',
+    created_at: new Date().toISOString(),
+    status: 'completed',
+    parent_id: 'pressure-vessel-folder',
+    origin: 'gdrive'
+  },
+  {
+    id: 'email-micro-saw',
+    title: 'Email-micro-saw.html',
+    description: 'Email exchange between SpaceX - Supplier A',
+    category: 'Email Chains',
+    file_path: '/example/architecture.pdf',
+    user_id: '',
+    created_at: new Date().toISOString(),
+    status: 'completed',
+    parent_id: 'pressure-vessel-folder',
+    origin: 'outlook'
   },
   {
     id: 'example-file-3',
@@ -214,7 +250,7 @@ export const defaultResources: Resource[] = [
   {
     id: 'asme-b31-3',
     title: 'ASME B31.3.pdf',
-    description: 'Process Piping',
+    description: 'ASME standard for Process Piping Code',
     category: 'Standards',
     file_path: '/demo/asme/ASME B31.3.pdf',
     user_id: '',

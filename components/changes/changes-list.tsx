@@ -10,6 +10,22 @@ import { Button } from '../ui/button'
 import { useActivity } from './activity-provider'
 import { Change } from './types'
 
+// Static version of the loader with fixed dots
+const StaticLoader = ({ className }: { className?: string }) => {
+  return (
+    <div className={`relative ${className || ''}`}>
+      <div className="absolute size-1.5 bg-black rounded-full top-0 left-1/2 -translate-x-1/2"></div>
+      <div className="absolute size-1.5 bg-black rounded-full top-1 right-1 transform rotate-45"></div>
+      <div className="absolute size-1.5 bg-black rounded-full right-0 top-1/2 -translate-y-1/2"></div>
+      <div className="absolute size-1.5 bg-black rounded-full bottom-1 right-1 transform rotate-45"></div>
+      <div className="absolute size-1.5 bg-black rounded-full bottom-0 left-1/2 -translate-x-1/2"></div>
+      <div className="absolute size-1.5 bg-black rounded-full bottom-1 left-1 transform rotate-45"></div>
+      <div className="absolute size-1.5 bg-black rounded-full left-0 top-1/2 -translate-y-1/2"></div>
+      <div className="absolute size-1.5 bg-black rounded-full top-1 left-1 transform rotate-45"></div>
+    </div>
+  )
+}
+
 interface ChangesListProps {
   changes: Change[]
 }
@@ -66,14 +82,16 @@ export const ShellThicknessIssueExample = () => {
     <div className="rounded-lg w-full border p-4 flex flex-col gap-2">
       <div className="flex items-center">
         <Avatar className="size-8">
-          <AvatarImage src="/avatars/cooper.png" />
+          <div className="flex items-center justify-center w-full h-full">
+            <StaticLoader className="size-6" />
+          </div>
           <AvatarFallback className="bg-red-100 text-red-600">
             <UserIcon className="size-4" />
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
           <ActionStatement
-            person={{ name: 'Cooper', color: 'text-red-600' }}
+            person={{ name: 'Cooper', color: 'text-black' }}
             action="identified critical issue in"
             resource="Technical Drawing Rev C.pdf"
           />
@@ -121,14 +139,16 @@ export const UndersizedManwayIssueExample = () => {
     <div className="rounded-lg w-full border p-4 flex flex-col gap-2">
       <div className="flex items-center">
         <Avatar className="size-8">
-          <AvatarImage src="/avatars/cooper.png" />
+          <div className="flex items-center justify-center w-full h-full">
+            <StaticLoader className="size-6" />
+          </div>
           <AvatarFallback className="bg-orange-100 text-orange-600">
             <UserIcon className="size-4" />
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
           <ActionStatement
-            person={{ name: 'Cooper', color: 'text-orange-600' }}
+            person={{ name: 'Cooper', color: 'text-black' }}
             action="identified issue in"
             resource="Technical Drawing Rev C.pdf"
           />
@@ -204,14 +224,16 @@ export const FlowRateMismatchIssueExample = () => {
     <div className="rounded-lg w-full border p-4 flex flex-col gap-2">
       <div className="flex items-center">
         <Avatar className="size-8">
-          <AvatarImage src="/avatars/cooper.png" />
+          <div className="flex items-center justify-center w-full h-full">
+            <StaticLoader className="size-6" />
+          </div>
           <AvatarFallback className="bg-orange-100 text-orange-600">
             <UserIcon className="size-4" />
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
           <ActionStatement
-            person={{ name: 'Cooper', color: 'text-orange-600' }}
+            person={{ name: 'Cooper', color: 'text-black' }}
             action="identified issue in"
             resource="Project Requirements.pdf"
           />
@@ -259,14 +281,16 @@ export const InletNozzleIssueExample = () => {
     <div className="rounded-lg w-full border p-4 flex flex-col gap-2">
       <div className="flex items-center">
         <Avatar className="size-8">
-          <AvatarImage src="/avatars/cooper.png" />
+          <div className="flex items-center justify-center w-full h-full">
+            <StaticLoader className="size-6" />
+          </div>
           <AvatarFallback className="bg-red-100 text-red-600">
             <UserIcon className="size-4" />
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
           <ActionStatement
-            person={{ name: 'Cooper', color: 'text-red-600' }}
+            person={{ name: 'Cooper', color: 'text-black' }}
             action="identified critical issue in"
             resource="Component Specs.xlsx"
           />
@@ -314,14 +338,16 @@ export const SupportSaddlesIssueExample = () => {
     <div className="rounded-lg w-full border p-4 flex flex-col gap-2">
       <div className="flex items-center">
         <Avatar className="size-8">
-          <AvatarImage src="/avatars/cooper.png" />
+          <div className="flex items-center justify-center w-full h-full">
+            <StaticLoader className="size-6" />
+          </div>
           <AvatarFallback className="bg-orange-100 text-orange-600">
             <UserIcon className="size-4" />
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
           <ActionStatement
-            person={{ name: 'Cooper', color: 'text-orange-600' }}
+            person={{ name: 'Cooper', color: 'text-black' }}
             action="identified issue in"
             resource="ASCE 7-22.pdf"
           />
@@ -369,14 +395,16 @@ export const LiftingLugIssueExample = () => {
     <div className="rounded-lg w-full border p-4 flex flex-col gap-2">
       <div className="flex items-center">
         <Avatar className="size-8">
-          <AvatarImage src="/avatars/cooper.png" />
+          <div className="flex items-center justify-center w-full h-full">
+            <StaticLoader className="size-6" />
+          </div>
           <AvatarFallback className="bg-red-100 text-red-600">
             <UserIcon className="size-4" />
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
           <ActionStatement
-            person={{ name: 'Cooper', color: 'text-red-600' }}
+            person={{ name: 'Cooper', color: 'text-black' }}
             action="identified critical issue in"
             resource="Technical Drawing Rev C.pdf"
           />
@@ -538,10 +566,46 @@ export const ChangeLogItem = ({
     <div className="rounded-lg w-full border p-4">
       <div className="flex items-center">
         <Avatar className="size-10">
-          <AvatarImage src={userName === "Cooper" ? "/avatars/cooper.png" : "https://github.com/.png"} />
-          <AvatarFallback className="bg-pink-100 text-pink-600">
-            <UserIcon className="size-4" />
-          </AvatarFallback>
+          {userName === "Cooper" ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <StaticLoader className="size-8" />
+            </div>
+          ) : userName === "Supplier A" ? (
+            <>
+              <AvatarImage src="/images/SupplierA.jpg" alt="Supplier A" />
+              <AvatarFallback className="bg-green-100 text-green-600">
+                <UserIcon className="size-4" />
+              </AvatarFallback>
+            </>
+          ) : userName === "Constructor C" ? (
+            <>
+              <AvatarImage src="/images/Contractor C.png" alt="Constructor C" />
+              <AvatarFallback className="bg-red-100 text-red-600">
+                <UserIcon className="size-4" />
+              </AvatarFallback>
+            </>
+          ) : userName === "Contractor B" ? (
+            <>
+              <AvatarImage src="/images/Contractor B.jpg" alt="Contractor B" />
+              <AvatarFallback className="bg-red-100 text-red-600">
+                <UserIcon className="size-4" />
+              </AvatarFallback>
+            </>
+          ) : userName === "SpaceX" ? (
+            <>
+              <AvatarImage src="/images/SpaceX.png" alt="SpaceX" />
+              <AvatarFallback className="bg-red-100 text-red-600">
+                <UserIcon className="size-4" />
+              </AvatarFallback>
+            </>
+          ) : (
+            <>
+              <AvatarImage src={userName === "Cooper" ? "/avatars/cooper.png" : "https://github.com/.png"} />
+              <AvatarFallback className="bg-pink-100 text-pink-600">
+                <UserIcon className="size-4" />
+              </AvatarFallback>
+            </>
+          )}
         </Avatar>
         <div className="ml-3 flex flex-col">
           <div className="text-sm flex items-center gap-1 flex-wrap">
@@ -604,7 +668,16 @@ export const ChangeLogItem = ({
                     )}
                     
                     {!change.oldValue && !change.newValue && (
-                      <span className="font-medium">{change.description}</span>
+                      <span className="font-medium">
+                        {change.description && change.description.includes('Critical issue:') ? (
+                          <>
+                            <span className="font-bold">Critical issue:</span>
+                            {change.description.split('Critical issue:')[1]}
+                          </>
+                        ) : (
+                          change.description
+                        )}
+                      </span>
                     )}
                     
                     {change.resource && (
@@ -639,15 +712,17 @@ export const UPWFlowRateMismatchExample = () => {
     <div className="rounded-lg w-full border p-4 flex flex-col gap-2">
       <div className="flex items-center">
         <Avatar className="size-8">
-          <AvatarImage src="/avatars/cooper.png" />
+          <div className="flex items-center justify-center w-full h-full">
+            <StaticLoader className="size-6" />
+          </div>
           <AvatarFallback className="bg-red-100 text-red-600">
             <UserIcon className="size-4" />
           </AvatarFallback>
         </Avatar>
         <div className="ml-2 flex flex-col">
           <ActionStatement
-            person={{ name: 'Cooper', color: 'text-red-600' }}
-            action="detected a mismatch in the required UPW flow rate for"
+            person={{ name: 'Cooper', color: 'text-black' }}
+            action="detected a mismatch in the required Ultra Pure Water (UPW) flow rate for"
             resource="semiconductor dicing machine E-007"
           />
           <span className="text-xs text-muted-foreground">
@@ -693,7 +768,7 @@ export const UPWFlowRateMismatchDetailedExample = () => {
   return (
     <ChangeLogItem 
       userName="Cooper"
-      userColor="text-red-600"
+      userColor="text-black"
       action="detected a mismatch in the required UPW flow rate for"
       resource="semiconductor dicing machine E-007"
       timestamp="February 14, 2025 at 9:23 PM"
@@ -720,8 +795,8 @@ export const PropagatedChangeExample = () => {
   return (
     <ChangeLogItem 
       userName="Cooper"
-      userColor="text-red-600"
-      action="detected a mismatch in the required UPW flow rate for micro saw E-007"
+      userColor="text-black"
+      action="detected a mismatch in the required Ultra Pure Water (UPW) flow rate for micro saw E-007"
       resource=""
       timestamp="February 14, 2025 at 9:23 PM"
       initialExpanded={true}
@@ -733,11 +808,11 @@ export const PropagatedChangeExample = () => {
         },
         {
           type: 'note',
-          description: 'Email chain with Sr. Process Engineer Thomas on 1/27/2025 mentions that SpaceX semiconductor equipment requires 12.5 L/min of UPW supply during high-volume production'
+          description: 'Email chain with Sr. Process Engineer Thomas on 1/27/2025 mentions that SpaceX semiconductor equipment requires 12.5 L/min of UPW supply'
         },
         {
           type: 'note',
-          description: 'Required UPW flow rate should be confirmed with micro saw supplier'
+          description: 'Critical issue: Required UPW flow rate should be confirmed with micro saw supplier'
         }
       ]}
     />
@@ -748,8 +823,8 @@ export const SupplierAExample = () => {
   return (
     <ChangeLogItem 
       userName="Supplier A"
-      userColor="text-red-600"
-      action="states 12.5 L/min of UPW supply required for micro saw E-007"
+      userColor="text-green-700"
+      action="confirms that 12.5 L/min is the required flow rate for micro saw E-007"
       resource=""
       timestamp="February 14, 2025 at 9:23 PM"
       initialExpanded={true}
@@ -757,7 +832,7 @@ export const SupplierAExample = () => {
       changes={[
         {
           type: 'note',
-          description: 'Equipment manual provided to SpaceX contained outdated flow rate value from different customer'
+          description: 'Equipment manual contained old value 3.9 L/min from different customer'
         },
         {
           type: 'note',
@@ -772,7 +847,7 @@ export const SupplierAExample1 = () => {
   return (
     <ChangeLogItem 
       userName="Cooper"
-      userColor="text-red-600"
+      userColor="text-black"
       action="detects critical issue in technical drawing from contractor B"
       resource=""
       timestamp="February 14, 2025 at 9:23 PM"
@@ -781,11 +856,11 @@ export const SupplierAExample1 = () => {
       changes={[
         {
           type: 'note',
-          description: 'UPW piping was sized 1/2" diameter for 3.9 L/min flow rate'
+          description: 'Construction drawing has 1/2" diameter pip sized for 3.9 L/min flow rate'
         },
         {
           type: 'note',
-          description: 'Supplying 12.5 L/min of UPW through 1/2" will cause pipe to rupture'
+          description: 'Critical issue: Supplying 12.5 L/min through 1/2" pipe will cause pipe rupture'
         },
         {
           type: 'note',
@@ -801,7 +876,7 @@ export const SupplierAExample2 = () => {
     <ChangeLogItem 
       userName="Contractor B"
       userColor="text-red-600"
-      action="revised technical drawing to include 2-1/2 in pipe"
+      action='revised technical drawing to include 2" pipe'
       resource=""
       timestamp="February 14, 2025 at 9:23 PM"
       initialExpanded={true}
@@ -809,11 +884,11 @@ export const SupplierAExample2 = () => {
       changes={[
         {
           type: 'note',
-          description: 'Contractor B acknowledges 1/2 in  pit would have caused pipe ruptute'
+          description: 'Acknowledged 1/2" pipe for 12.5  L/min would have caused pipe ruptute'
         },
         {
           type: 'note',
-          description: '1/2 in pipe increase to 2-1/2 in to meet 12.5 L/min flow rate for micro saw E-007'
+          description: 'Pipe size increased to 2" to meet 12.5 L/min flow rate for micro saw E-007'
         }
       ]}
     />
@@ -824,7 +899,7 @@ export const SupplierAExample3 = () => {
   return (
     <ChangeLogItem 
       userName="Cooper"
-      userColor="text-red-600"
+      userColor="text-black-600"
       action="highlighted infrastructure contractor needs to purchase new pipe material and be ready for installation"
       resource=""
       timestamp="February 14, 2025 at 9:23 PM"
@@ -847,8 +922,8 @@ export const SupplierAExample3 = () => {
 export const SupplierAExample4 = () => {
   return (
     <ChangeLogItem 
-      userName="Contractor B"
-      userColor="text-red-600"
+      userName="Constructor C"
+      userColor="text-blue-700"
       action="acknowledges revised technical drawing and ordered new pipe material."
       resource=""
       timestamp="February 14, 2025 at 9:23 PM"
@@ -857,11 +932,11 @@ export const SupplierAExample4 = () => {
       changes={[
         {
           type: 'note',
-          description: 'Pipe material ordered from supplier C in Houston, TX and will arrive in 1 week'
+          description: '2" pipe for UPW applications ordered from supplier in Houston, TX'
         },
         {
           type: 'note',
-          description: 'No delay for material supply'
+          description: 'Modifications installed by end of next week'
         }
       ]}
     />
@@ -872,8 +947,8 @@ export const SupplierAExample5 = () => {
   return (
     <ChangeLogItem 
       userName="SpaceX"
-      userColor="text-red-600"
-      action="on track again for successful clean room installation in 2 weeks"
+      userColor="text-black-600"
+      action="on track again for equipment installation in clean room in 2 weeks"
       resource=""
       timestamp="February 14, 2025 at 9:23 PM"
       initialExpanded={true}
@@ -881,11 +956,7 @@ export const SupplierAExample5 = () => {
       changes={[
         {
           type: 'note',
-          description: 'No delays as materials arrive on time'
-        },
-        {
-          type: 'note',
-          description: 'No delay for material supply'
+          description: 'Facility construction of clean room ready by end of next week for equipment move-in'
         }
       ]}
     />
