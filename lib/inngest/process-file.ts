@@ -18,10 +18,12 @@ export const processFile = inngest.createFunction(
       // Update the resource
       await handleResourceSuccess(resource.id, result)
 
-      console.log('Successfully created resource and related entries')
+      console.log(
+        '[process-file] Successfully created resource and related entries'
+      )
       return { success: true, result }
     } catch (error: any) {
-      console.error('Error processing file:', error)
+      console.error('[process-file] Error processing file:', error)
 
       // Update the resource with error status
       await handleResourceError(resource.id, error)

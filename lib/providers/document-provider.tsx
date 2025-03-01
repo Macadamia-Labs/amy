@@ -1,7 +1,15 @@
 'use client'
 
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState
+} from 'react'
 import { Resource } from '../types/database'
+
 export interface Section {
   level: number
   title: string
@@ -45,6 +53,7 @@ export function DocumentProvider({
   initialContent = '',
   resource
 }: DocumentProviderProps) {
+  const [currentResource, setCurrentResource] = useState(resource)
   const [content, setContent] = useState(
     resource?.embeddings?.map(embedding => embedding.content).join('\n') ||
       initialContent
@@ -60,6 +69,64 @@ export function DocumentProvider({
         sourceUrl: embedding.source_url
       })) || []
   )
+
+  // Subscribe to real-time updates for this specific resource
+  useEffect(() => {
+    if (!resource?.id) return
+
+    const supabase = createClient()
+
+    // Set up real-time subscription for this resource
+    const subscription = supabase
+      .channel(`resource-${resource.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'resources',
+          filter: `id=eq.${resource.id}`
+        },
+        async payload => {
+          console.log('Resource updated:', payload.new)
+          const updatedResource = payload.new as Resource
+
+          setCurrentResource(updatedResource)
+
+          // If resource has embeddings, update the content and sections
+          if (updatedResource.embeddings) {
+            const newContent = updatedResource.embeddings
+              .map(embedding => embedding.content)
+              .join('\n')
+
+            setContent(newContent)
+
+            // Update sections based on new embeddings
+            const newSections = updatedResource.embeddings.map(embedding => ({
+              level: 1,
+              title: embedding.content,
+              content: embedding.content,
+              imageUrl: embedding.image_url,
+              sourceUrl: embedding.source_url
+            }))
+
+            setSections(newSections)
+          } else if (
+            updatedResource.content &&
+            updatedResource.content !== content
+          ) {
+            // If resource has content directly, update it
+            setContent(updatedResource.content)
+            setSections(parseMarkdownSections(updatedResource.content))
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [resource?.id])
 
   function parseMarkdownSections(markdown: string): Section[] {
     const lines = markdown.split('\n')
@@ -154,7 +221,7 @@ export function DocumentProvider({
     setActiveSection,
     setContent: handleSetContent,
     getCurrentContext,
-    resource
+    resource: currentResource
   }
 
   return (

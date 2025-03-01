@@ -3,6 +3,8 @@ import { defaultResources } from '@/data/resources'
 import { ChatsProvider } from '@/lib/providers/chats-provider'
 import { DocumentProvider } from '@/lib/providers/document-provider'
 import { getResourceEnriched } from '@/lib/queries/server'
+import { Resource } from '@/lib/types'
+import { Resource as DatabaseResource } from '@/lib/types/database'
 import { notFound } from 'next/navigation'
 
 export function isUUID(str: string): boolean {
@@ -21,7 +23,8 @@ export default async function ResourceLayout({
   }>
 }) {
   const { id } = await params
-  let resource
+  let resource: (Resource | DatabaseResource) | null = null
+
   if (!isUUID(id)) {
     resource = defaultResources.find(r => r.id === id) || null
   } else {
@@ -32,13 +35,20 @@ export default async function ResourceLayout({
     notFound()
   }
 
-  const content = resource.content || 'No Content in Resource'
+  // For database resources, content comes from embeddings or the content field
+  // For local resources, content might be directly available
+  const content =
+    'content' in resource && resource.content
+      ? resource.content
+      : 'embeddings' in resource && resource.embeddings
+      ? resource.embeddings.map(embedding => embedding.content).join('\n')
+      : 'No Content in Resource'
 
   return (
-    <DocumentProvider initialContent={content} resource={resource}>
+    <DocumentProvider initialContent={content} resource={resource as any}>
       <ChatsProvider>
         <div className="flex flex-col h-full">
-          <ResourceHeader resource={resource} />
+          <ResourceHeader resource={resource as any} />
           <div className="flex-1 overflow-auto">{children}</div>
         </div>
       </ChatsProvider>
