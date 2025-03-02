@@ -7,8 +7,14 @@ import React, {
   useEffect,
   useState
 } from 'react'
-import { AnalyzingChangesExample } from './analyzing-changes'
-import { EmailForwardingExample, UploadedFileExample } from './changes-list'
+import {
+  PropagatedChangeExample,
+  SupplierAExample,
+  SupplierAExample1,
+  SupplierAExample2,
+  SupplierAExample4,
+  SupplierAExample5
+} from './changes-list'
 
 type ActivityContextType = {
   visibleChanges: React.ReactNode[]
@@ -17,6 +23,17 @@ type ActivityContextType = {
   animationComplete: boolean
   addNextItem: () => void
   clearAll: () => void
+  // Add issue counts to the context
+  issueCounts: {
+    openIssues: number
+    inProgress: number
+    resolved: number
+  }
+  updateIssueCounts: (counts: {
+    openIssues: number
+    inProgress: number
+    resolved: number
+  }) => void
 }
 
 const ActivityContext = createContext<ActivityContextType | undefined>(
@@ -39,14 +56,23 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
   // Sequence of components to be displayed (in correct order - first to appear at top)
   const changeComponents = [
     // <ShellThicknessIssueExample key="shell" />,
-    <EmailForwardingExample key="email" />,
-    <UploadedFileExample key="uploaded" />,
+    <PropagatedChangeExample key="propagated" />,
+    <SupplierAExample key="supplierA" />,
+    <SupplierAExample1 key="supplierA1" />,
+    <SupplierAExample2 key="supplierA2" />,
+    <SupplierAExample4 key="supplierA4" />,
+    <SupplierAExample5 key="supplierA5" />
+    // <MaterialSpecificationChangeExample key="material" />,
+    // <ValueChangeExample key="value" />,
+    // <StatusChangeExample key="status" />,
+    // <EmailForwardingExample key="email" />,
+    // <UploadedFileExample key="uploaded" />,
     // <UndersizedManwayIssueExample key="manway" />,
     // <FlowRateMismatchIssueExample key="flow" />,
     // <InletNozzleIssueExample key="inlet" />,
     // <SupportSaddlesIssueExample key="support" />,
     // <LiftingLugIssueExample key="lifting" />,
-    <AnalyzingChangesExample key="analyzing" />
+    // <AnalyzingChangesExample key="analyzing" />
   ]
 
   // State to track which items should be visible
@@ -55,12 +81,68 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   // State to track if animation is complete
   const [animationComplete, setAnimationComplete] = useState(false)
+  // State to track issue counts
+  const [issueCounts, setIssueCounts] = useState({
+    openIssues: 0,
+    inProgress: 0,
+    resolved: 0
+  })
+
+  // Function to update issue counts
+  const updateIssueCounts = (counts: {
+    openIssues: number
+    inProgress: number
+    resolved: number
+  }) => {
+    setIssueCounts(counts)
+  }
 
   // Add next item one by one
   const addNextItem = () => {
     if (currentIndex < changeComponents.length) {
       setVisibleChanges(prev => [...prev, changeComponents[currentIndex]])
       setCurrentIndex(prev => prev + 1)
+
+      // Update issue counts based on the current step
+      // These values will be provided by the user on each space press
+      // For now, we'll use some example values that change with each step
+      if (currentIndex === 0) {
+        setIssueCounts({
+          openIssues: 1,
+          inProgress: 0,
+          resolved: 0
+        })
+      } else if (currentIndex === 1) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 1,
+          resolved: 0
+        })
+      } else if (currentIndex === 2) {
+        setIssueCounts({
+          openIssues: 1,
+          inProgress: 0,
+          resolved: 1
+        })
+      } else if (currentIndex === 3) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 1,
+          resolved: 1
+        })
+      } else if (currentIndex === 4) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 1,
+          resolved: 1
+        })
+      } else if (currentIndex === 5) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 0,
+          resolved: 2
+        })
+      }
 
       // Set animation complete when all items are added
       if (currentIndex === changeComponents.length - 1) {
@@ -74,14 +156,18 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     setVisibleChanges([])
     setAnimationComplete(true)
     setCurrentIndex(0)
+    setIssueCounts({
+      openIssues: 0,
+      inProgress: 0,
+      resolved: 0
+    })
   }
 
-  // Initialize with the first item
+  // Initialize with empty list (no items shown by default)
   useEffect(() => {
-    if (changeComponents.length > 0) {
-      setVisibleChanges([changeComponents[0]])
-      setCurrentIndex(1)
-    }
+    // Start with no visible changes
+    setVisibleChanges([])
+    setCurrentIndex(0)
   }, [])
 
   // Add space bar event listener to add next item
@@ -112,7 +198,9 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     totalChanges: changeComponents.length,
     animationComplete,
     addNextItem,
-    clearAll
+    clearAll,
+    issueCounts,
+    updateIssueCounts
   }
 
   return (

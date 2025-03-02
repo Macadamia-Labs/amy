@@ -58,6 +58,8 @@ export function ResourcesProvider({
   >(new Map())
 
   useEffect(() => {
+    if (!user?.id) return
+
     const supabase = createClient()
 
     // Subscribe to resource updates
@@ -74,7 +76,7 @@ export function ResourcesProvider({
         payload => {
           const updatedResource = payload.new as Resource
 
-          console.log('updatedResource', updatedResource)
+          console.log('Resource updated:', updatedResource)
 
           // Update the resource in state
           setResources(prev =>
@@ -100,12 +102,44 @@ export function ResourcesProvider({
           }
         }
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'resources',
+          filter: `user_id=eq.${user?.id}`
+        },
+        payload => {
+          const newResource = payload.new as Resource
+          console.log('New resource added:', newResource)
+
+          // Add the new resource to state
+          setResources(prev => [...prev, newResource])
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'resources',
+          filter: `user_id=eq.${user?.id}`
+        },
+        payload => {
+          const deletedResourceId = payload.old.id
+          console.log('Resource deleted:', deletedResourceId)
+
+          // Remove the resource from state
+          setResources(prev => prev.filter(r => r.id !== deletedResourceId))
+        }
+      )
       .subscribe()
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, [user?.id])
 
   const setProcessingResource = (id: string) => {
     setProcessingResources(prev => new Set([...prev, id]))

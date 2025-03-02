@@ -116,9 +116,9 @@ export const StandardNode: ComponentType<
 export const IntegrationNode: ComponentType<
   NodeComponentProps<IntegrationNodeData>
 > = ({ data }) => {
-  if (data.type !== 'integration') return null
-  
   const [videoDialogOpen, setVideoDialogOpen] = useState(false)
+  
+  if (data.type !== 'integration') return null
   
   // Check if this is the Animation node
   const isAnimationNode = data.name === 'FEA Animation' && data.description === 'Circumferential stress'

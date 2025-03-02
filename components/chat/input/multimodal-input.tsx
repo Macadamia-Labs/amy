@@ -158,7 +158,7 @@ function PureMultimodalInput({
         )
       }
     },
-    [chatId, setAttachments, setUploadQueue]
+    [chatId, setAttachments, setUploadQueue, input, setInput]
   )
 
   return (

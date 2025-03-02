@@ -75,7 +75,7 @@ export async function processResource(
 
     return result
   } catch (error) {
-    console.error('Error processing file:', error)
+    console.error('[process-resource] Error processing resource:', error)
     throw error
   }
 }

@@ -1,35 +1,39 @@
-"use client";
+'use client'
 
-import { Loader2 } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
-import { getToolLoadingMessage } from "@/lib/tools";
-import { ExtendedToolCallPart } from "@/types/tool-types";
-import { Message } from "ai";
-import { generateUUID } from "@/lib/utils";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
+  ContextMenuTrigger
+} from '@/components/ui/context-menu'
+import { getToolLoadingMessage } from '@/lib/tools'
+import { ExtendedToolCallPart } from '@/lib/types/tool-types'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Loader2 } from 'lucide-react'
 
 interface LoadingToolProps {
-  tool: ExtendedToolCallPart;
-  addToolResult: ({ toolCallId, result }: { toolCallId: string; result: any }) => void;
+  tool: ExtendedToolCallPart
+  addToolResult: ({
+    toolCallId,
+    result
+  }: {
+    toolCallId: string
+    result: any
+  }) => void
 }
 
 export function LoadingTool({ tool, addToolResult }: LoadingToolProps) {
   const handleCancel = () => {
-    console.log("User cancelled operation");
+    console.log('User cancelled operation')
     addToolResult({
       toolCallId: tool.toolCallId,
       result: {
-        error: "User cancelled operation"
+        error: 'User cancelled operation'
       }
-    });
-  };
+    })
+  }
 
   return (
     <AnimatePresence>
@@ -49,25 +53,27 @@ export function LoadingTool({ tool, addToolResult }: LoadingToolProps) {
               <div className="h-8 w-8 flex items-center justify-center">
                 <Loader2 className="size-4 animate-spin" />
               </div>
-              {tool.args.loading_message || getToolLoadingMessage(tool.toolName)}
+              {tool.args.loading_message ||
+                getToolLoadingMessage(tool.toolName)}
             </motion.div>
           </ContextMenuTrigger>
           <ContextMenuContent>
             <ContextMenuLabel>Tool Details</ContextMenuLabel>
             <ContextMenuSeparator />
-            <ContextMenuItem disabled>
-              Tool: {tool.toolName}
-            </ContextMenuItem>
+            <ContextMenuItem disabled>Tool: {tool.toolName}</ContextMenuItem>
             <ContextMenuItem disabled className="w-full max-w-xl">
               Args: {JSON.stringify(tool.args)}
             </ContextMenuItem>
             <ContextMenuSeparator />
-            <ContextMenuItem onClick={handleCancel} className="text-red-500 focus:text-red-500 focus:bg-red-50">
+            <ContextMenuItem
+              onClick={handleCancel}
+              className="text-red-500 focus:text-red-500 focus:bg-red-50"
+            >
               Cancel Operation
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       </motion.div>
     </AnimatePresence>
-  );
+  )
 }

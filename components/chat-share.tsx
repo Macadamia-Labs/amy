@@ -1,7 +1,7 @@
 'use client'
 
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
 import { shareChat } from '@/lib/actions/chat'
-import { useCopyToClipboard } from '@/lib/hooks/use-copy-to-clipboard'
 import { cn } from '@/lib/utils'
 import { Share } from 'lucide-react'
 import { useState, useTransition } from 'react'

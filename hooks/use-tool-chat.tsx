@@ -44,13 +44,14 @@ export function useToolChat({ id, initialMessages }: UseToolChatProps) {
     setData,
     ...chatHelpers
   } = useChat({
-    // api: process.env.NEXT_PUBLIC_CHAT_API_URL,
+    api: process.env.NEXT_PUBLIC_CHAT_API_URL,
     headers: {
       Authorization: `Bearer ${token}`
     },
     initialMessages: (initialMessages as Message[]) || [],
     id,
     body: {
+      app: 'cooper',
       id
     },
     onResponse(response) {

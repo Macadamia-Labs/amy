@@ -1,5 +1,6 @@
 'use client'
 
+import { useActivity } from '@/components/changes/activity-provider'
 import { IssueCard } from '@/components/issues/issue-card'
 import { IssueTable } from '@/components/issues/issue-table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -11,13 +12,7 @@ import { useState } from 'react'
 export default function Page() {
   const [view, setView] = useState<'grid' | 'table'>('grid')
   const router = useRouter()
-
-  // Calculate dashboard metrics
-  const openIssuesCount = sampleIssues.filter(i => i.status === 'open').length
-  const resolvedIssuesCount = 5
-  const inProgressIssuesCount = sampleIssues.filter(
-    i => i.status === 'in_progress'
-  ).length
+  const { issueCounts } = useActivity()
 
   // Count unique affected workflows across all issues
   const allAffectedWorkflows = new Set()
@@ -63,7 +58,7 @@ export default function Page() {
         <div className="grid grid-cols-4 gap-4 mt-6 mb-6">
           <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center justify-center border border-blue-200">
             <span className="text-3xl font-bold text-blue-600/90">
-              {openIssuesCount}
+              {issueCounts.openIssues}
             </span>
             <span className="text-sm text-blue-800/90 font-medium">
               Open Issues
@@ -71,7 +66,7 @@ export default function Page() {
           </div>
           <div className="bg-amber-50 rounded-xl p-4 flex flex-col items-center justify-center border border-amber-200">
             <span className="text-3xl font-bold text-amber-600/90">
-              {inProgressIssuesCount}
+              {issueCounts.inProgress}
             </span>
             <span className="text-sm text-amber-800/90 font-medium">
               In Progress
@@ -79,7 +74,7 @@ export default function Page() {
           </div>
           <div className="bg-green-50 rounded-xl p-4 flex flex-col items-center justify-center border border-green-200">
             <span className="text-3xl font-bold text-green-600/90">
-              {resolvedIssuesCount}
+              {issueCounts.resolved}
             </span>
             <span className="text-sm text-green-800/90 font-medium">
               Resolved Issues

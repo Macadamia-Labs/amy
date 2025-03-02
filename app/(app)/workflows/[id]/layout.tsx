@@ -8,9 +8,10 @@ export default async function WorkflowLayout({
   params
 }: {
   children: React.ReactNode
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const workflow = await getWorkflow(params.id)
+  const { id } = await params
+  const workflow = await getWorkflow(id)
 
   if (!workflow) {
     notFound()

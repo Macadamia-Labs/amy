@@ -58,10 +58,26 @@ export default function AuthProvider({
 
   // Sign Out
   const signOut = async () => {
-    await supabase.auth.signOut()
-    setUser(null)
-    setSession(null)
-    router.push('/login')
+    try {
+      console.log('signing out...')
+      const { error } = await supabase.auth.signOut()
+      console.log('signed out')
+      if (error) {
+        console.error('Error signing out:', error)
+        toast.error('Error signing out')
+        return
+      }
+
+      // Clear local state
+      setUser(null)
+      setSession(null)
+
+      // Force refresh to ensure all auth state is cleared
+      window.location.href = '/login'
+    } catch (error) {
+      console.error('Error signing out:', error)
+      toast.error('Error signing out')
+    }
   }
 
   // Sign-In with Google

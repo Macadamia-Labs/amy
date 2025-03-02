@@ -16,11 +16,10 @@ export default function AppPage() {
           <div className="h-12 w-1 bg-purple-500 rounded-full"></div>
           <div>
             <h1 className="text-2xl font-bold">
-              Pressure Vessel
+              Starlink Silicon Packaging
             </h1>
             <p className="text-muted-foreground">
-              Detailed design of 96&quot; diameter pressure vessel
-              for water storage
+              Flagship in-house chip manufacturing line for Starlink satellites
             </p>
           </div>
         </div>
