@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { createUserProfile, getUserProfile } from './lib/queries/server'
 
 export async function middleware(request: NextRequest) {
   console.log('updateSession', request.nextUrl.pathname)
@@ -48,6 +49,41 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
+  }
+
+  // Check user approval status if logged in
+  if (
+    user &&
+    !request.nextUrl.pathname.startsWith('/waitlist') &&
+    !request.nextUrl.pathname.startsWith('/login') &&
+    !request.nextUrl.pathname.startsWith('/auth')
+  ) {
+    const profile = await getUserProfile(user.id)
+
+    console.log('profile', profile)
+    console.log('is_approved', profile?.is_approved)
+
+    if (!profile) {
+      await createUserProfile(user.id)
+      console.log(
+        'redirecting to waitlists, pathname:',
+        request.nextUrl.pathname
+      )
+      const url = request.nextUrl.clone()
+      url.pathname = '/waitlist'
+      return NextResponse.redirect(url)
+    }
+
+    // If profile exists and is_approved is false, redirect to waiting-approval
+    if (!profile?.is_approved) {
+      console.log(
+        'redirecting to waitlists, pathname:',
+        request.nextUrl.pathname
+      )
+      const url = request.nextUrl.clone()
+      url.pathname = '/waitlist'
+      return NextResponse.redirect(url)
+    }
   }
 
   // Redirect /cooper to /cooper/chat

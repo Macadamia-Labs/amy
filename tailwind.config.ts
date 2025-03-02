@@ -12,6 +12,11 @@ const config = {
   ],
   prefix: '',
   theme: {
+    fontFamily: {
+      heading: ['var(--font-heading)', ...fontFamily.sans],
+      sans: ['var(--font-sans)', ...fontFamily.sans],
+      serif: ['var(--font-serif)', ...fontFamily.serif]
+    },
     container: {
       center: true,
       padding: '2rem',

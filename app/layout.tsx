@@ -2,12 +2,14 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import AuthProvider from '@/lib/providers/auth-provider'
 import { createClient } from '@/lib/supabase/server'
 
+import { fontHeading, fontMono, fontSerif } from '@/lib/fonts'
 import { cn } from '@/lib/utils/helpers'
 import '@/styles/globals.css'
 import 'katex/dist/katex.min.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import { Manrope as FontSans } from 'next/font/google'
+
 import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
@@ -33,7 +35,13 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn('font-sans h-screen flex flex-col', fontSans.variable)}
+        className={cn(
+          'font-sans h-screen flex flex-col',
+          fontSans.variable,
+          fontHeading.variable,
+          fontSerif.variable,
+          fontMono.variable
+        )}
       >
         <AuthProvider serverSession={session}>
           <ThemeProvider
