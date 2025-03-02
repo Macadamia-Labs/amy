@@ -35,44 +35,32 @@ const exampleProjects: (Project & { color: string })[] = [
     id: '1',
     name: 'Starlink Silicon Packaging',
     description: 'CFD simulation of wind turbine performance',
-    user_id: 'user1',
-    app: 'simulation',
     created_at: new Date(2024, 2, 15).toISOString(),
     updated_at: new Date(2024, 2, 15).toISOString(),
-    simulations: [],
     color: 'bg-purple-500'
   },
   {
     id: '2',
     name: 'Solar Panel Optimization',
     description: 'Thermal analysis of solar panel configurations',
-    user_id: 'user1',
-    app: 'simulation',
     created_at: new Date(2024, 2, 10).toISOString(),
     updated_at: new Date(2024, 2, 10).toISOString(),
-    simulations: [],
     color: 'bg-amber-500'
   },
   {
     id: '3',
     name: 'Battery Cooling System',
     description: 'Heat transfer simulation for EV batteries',
-    user_id: 'user1',
-    app: 'simulation',
     created_at: new Date(2024, 2, 5).toISOString(),
     updated_at: new Date(2024, 2, 5).toISOString(),
-    simulations: [],
     color: 'bg-blue-500'
   },
   {
     id: '4',
     name: 'Bridge Structure Analysis',
     description: 'Structural simulation of bridge design',
-    user_id: 'user1',
-    app: 'simulation',
     created_at: new Date(2024, 2, 1).toISOString(),
     updated_at: new Date(2024, 2, 1).toISOString(),
-    simulations: [],
     color: 'bg-purple-500'
   }
 ]

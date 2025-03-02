@@ -29,7 +29,11 @@ type ActivityContextType = {
     inProgress: number
     resolved: number
   }
-  updateIssueCounts: (counts: { openIssues: number, inProgress: number, resolved: number }) => void
+  updateIssueCounts: (counts: {
+    openIssues: number
+    inProgress: number
+    resolved: number
+  }) => void
 }
 
 const ActivityContext = createContext<ActivityContextType | undefined>(
@@ -57,10 +61,10 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     <SupplierAExample1 key="supplierA1" />,
     <SupplierAExample2 key="supplierA2" />,
     <SupplierAExample4 key="supplierA4" />,
-    <SupplierAExample5 key="supplierA5" />,
+    <SupplierAExample5 key="supplierA5" />
     // <MaterialSpecificationChangeExample key="material" />,
     // <ValueChangeExample key="value" />,
-    // <StatusChangeExample key="status" />, 
+    // <StatusChangeExample key="status" />,
     // <EmailForwardingExample key="email" />,
     // <UploadedFileExample key="uploaded" />,
     // <UndersizedManwayIssueExample key="manway" />,
@@ -85,7 +89,11 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
   })
 
   // Function to update issue counts
-  const updateIssueCounts = (counts: { openIssues: number, inProgress: number, resolved: number }) => {
+  const updateIssueCounts = (counts: {
+    openIssues: number
+    inProgress: number
+    resolved: number
+  }) => {
     setIssueCounts(counts)
   }
 
@@ -102,9 +110,7 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
         setIssueCounts({
           openIssues: 1,
           inProgress: 0,
-          resolved: 0, 
-          PIP1: 0,
-          PIP2: 0
+          resolved: 0
         })
       } else if (currentIndex === 1) {
         setIssueCounts({

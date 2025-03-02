@@ -7,7 +7,6 @@ import type {
 } from 'ai'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { DBDocument, DBMessage } from './types/database'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -110,9 +109,7 @@ function addToolMessageToChat({
   })
 }
 
-export function convertToUIMessages(
-  messages: Array<DBMessage>
-): Array<Message> {
+export function convertToUIMessages(messages: Array<any>): Array<Message> {
   return messages.reduce((chatMessages: Array<Message>, message) => {
     if (message.role === 'tool') {
       return addToolMessageToChat({
@@ -230,7 +227,7 @@ export function getMostRecentUserMessage(messages: Array<CoreMessage>) {
 }
 
 export function getDocumentTimestampByIndex(
-  documents: Array<DBDocument>,
+  documents: Array<any>,
   index: number
 ) {
   if (!documents) return new Date()

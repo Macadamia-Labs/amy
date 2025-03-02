@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+/**
+ * Process a document from a URL and extract its pages
+ * @param docUrl The URL of the document to process
+ * @returns An array of pages extracted from the document
+ */
+async function processDocument(docUrl: string): Promise<any[]> {
+  // This is a stub implementation
+  console.log(`Processing document from URL: ${docUrl}`)
+
+  // In a real implementation, this would process the document and extract pages
+  // For now, return an empty array
+  return []
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { docUrl, userId } = await request.json()

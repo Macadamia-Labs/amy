@@ -1,6 +1,5 @@
 'use client'
 
-import { getFileIcon } from '@/lib/utils/file-icons'
 import React from 'react'
 
 interface InlineCodeFileProps {
@@ -30,7 +29,7 @@ const InlineCodeFile: React.FC<InlineCodeFileProps> = ({
       }`}
       onClick={handleClick}
     >
-      {getFileIcon(content, { className: 'h-3 w-3' })}
+      {/* {getFileIcon(content, { className: 'h-3 w-3' })} */}
       {content}
     </span>
   )

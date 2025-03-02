@@ -1,5 +1,5 @@
-import { DEFAULT_INTEGRATIONS } from '@/app/(app)/integrations/page'
 import Loader from '@/components/lottie/loader'
+import { DEFAULT_INTEGRATIONS } from '@/data/integrations'
 import { categoryIcons } from '@/data/resources'
 import { Resource } from '@/lib/types'
 import {

@@ -5,29 +5,23 @@ import { useToolChat } from '@/hooks/use-tool-chat'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { useChats } from '@/lib/providers/chats-provider'
 import { generateUUID } from '@/lib/utils/helpers'
-import { ChatRequestOptions, Message } from 'ai'
+import { ChatRequestOptions, CoreMessage, Message } from 'ai'
+import { useMemo } from 'react'
 import { toast } from 'sonner'
-
-export default function ChatPage({
-  id,
-  initialMessages
-}: {
-  id?: string
-  initialMessages?: Message[]
-}) {
+export default function ChatPage() {
   const { createNewChat, chats } = useChats()
   const { user } = useAuth()
 
-  const chat = id ? chats.find(c => c.id === id) : null
-  const chatMessages = chat
-    ? chat.messages
-    : initialMessages || [
-        {
-          id: generateUUID(),
-          role: 'assistant',
-          content: "Hi, I'm Cooper. How can I help?"
-        }
-      ]
+  const id = useMemo(() => {
+    return generateUUID()
+  }, [])
+  const chatMessages = [
+    {
+      id: generateUUID(),
+      role: 'assistant',
+      content: "Hi, I'm Cooper. How can I help?"
+    }
+  ]
 
   const {
     data,
@@ -43,7 +37,7 @@ export default function ChatPage({
     addToolResult
   } = useToolChat({
     id,
-    initialMessages: chatMessages
+    initialMessages: chatMessages as CoreMessage[]
   })
 
   const isNewChat = !id || messages?.length === 1

@@ -98,7 +98,7 @@ export const BuildGrid = ({ workflowId = 'workflow-1' }: BuildGridProps) => {
       initialized.current = true
       setLastStatusUpdate(Date.now())
     }
-  }, [workflow, nodeStatus, nodeProgress])
+  }, [workflow, nodeStatus, nodeProgress, setNodes, setEdges])
 
   // Separate effect to handle node status and progress updates
   useEffect(() => {
@@ -121,7 +121,7 @@ export const BuildGrid = ({ workflowId = 'workflow-1' }: BuildGridProps) => {
 
     // Record this update timestamp
     setLastStatusUpdate(Date.now())
-  }, [nodeStatus, nodeProgress, workflow])
+  }, [nodeStatus, nodeProgress, workflow, setNodes, setEdges])
 
   // Handle edge updates separately for better performance
   useEffect(() => {
@@ -169,7 +169,7 @@ export const BuildGrid = ({ workflowId = 'workflow-1' }: BuildGridProps) => {
     }, 10) // Small timeout for debouncing
 
     return () => clearTimeout(timer)
-  }, [lastStatusUpdate, workflow])
+  }, [lastStatusUpdate, workflow, setNodes, setEdges, nodeStatus])
 
   // Handle new connections
   const onConnect = useCallback(

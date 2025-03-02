@@ -1,31 +1,29 @@
-import type { Message } from "ai";
-import { toast } from "sonner";
-import { useCopyToClipboard } from "usehooks-ts";
-import { CopyIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { memo } from "react";
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import type { Message } from 'ai'
+import { CopyIcon } from 'lucide-react'
+import { memo } from 'react'
+import { toast } from 'sonner'
+import { useCopyToClipboard } from 'usehooks-ts'
 
 export function PureMessageActions({
   message,
-  isLoading,
+  isLoading
 }: {
-  chatId: string;
-  message: Message;
-  isLoading: boolean;
+  chatId: string
+  message: Message
+  isLoading: boolean
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [copiedText, copyToClipboard] = useCopyToClipboard();
+  const [_, copyToClipboard] = useCopyToClipboard()
 
-  if (isLoading) return null;
-  if (message.role === "user") return null;
-  if (message.toolInvocations && message.toolInvocations.length > 0)
-    return null;
+  if (isLoading) return null
+  if (message.role === 'user') return null
+  if (message.toolInvocations && message.toolInvocations.length > 0) return null
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -36,8 +34,8 @@ export function PureMessageActions({
               className="py-1 px-2 h-fit text-muted-foreground"
               variant="outline"
               onClick={async () => {
-                await copyToClipboard(message.content as string);
-                toast.success("Copied to clipboard!");
+                await copyToClipboard(message.content as string)
+                toast.success('Copied to clipboard!')
               }}
             >
               <CopyIcon />
@@ -47,14 +45,14 @@ export function PureMessageActions({
         </Tooltip>
       </div>
     </TooltipProvider>
-  );
+  )
 }
 
 export const MessageActions = memo(
   PureMessageActions,
   (prevProps, nextProps) => {
-    if (prevProps.isLoading !== nextProps.isLoading) return false;
+    if (prevProps.isLoading !== nextProps.isLoading) return false
 
-    return true;
+    return true
   }
-);
+)

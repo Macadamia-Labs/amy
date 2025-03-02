@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { RefreshCcwDot } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 
 interface IntegrationCardProps {
@@ -81,11 +82,13 @@ export function IntegrationCard({
           </>
         )}
 
-        <img
+        <Image
           src={logoSrc}
           alt={name}
+          width={64}
+          height={64}
           className={cn(
-            'w-16 h-16 mb-4 transition-all duration-200',
+            'mb-4 transition-all duration-200',
             name === 'Gmail' && 'w-20',
             !isConnected &&
               'filter grayscale opacity-70 group-hover:filter-none group-hover:opacity-100'
@@ -107,13 +110,12 @@ export function IntegrationCard({
           </DialogHeader>
 
           <div className="flex flex-col items-center gap-4 py-4">
-            <img 
-              src={logoSrc} 
-              alt={name} 
-              className={cn(
-                "w-20 h-20",
-                name === 'Gmail' && 'w-28'
-              )} 
+            <Image
+              src={logoSrc}
+              alt={name}
+              width={80}
+              height={80}
+              className={cn('', name === 'Gmail' && 'w-28')}
             />
             <p className="text-center text-sm text-muted-foreground">
               {description}

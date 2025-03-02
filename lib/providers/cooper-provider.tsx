@@ -7,6 +7,9 @@ interface CooperContextType {
   setShowTabs: (show: boolean) => void
   hasContent: boolean
   setHasContent: (hasContent: boolean) => void
+  sources: Array<{ id: string; [key: string]: any }>
+  setActiveSource: (source: { id: string; [key: string]: any }) => void
+  setActiveTab: (tab: string) => void
 }
 
 const CooperContext = createContext<CooperContextType | undefined>(undefined)
@@ -14,6 +17,14 @@ const CooperContext = createContext<CooperContextType | undefined>(undefined)
 export function CooperProvider({ children }: { children: ReactNode }) {
   const [showTabs, setShowTabs] = useState(true)
   const [hasContent, setHasContent] = useState(false)
+  const [sources, setSources] = useState<
+    Array<{ id: string; [key: string]: any }>
+  >([])
+  const [activeSource, setActiveSource] = useState<{
+    id: string
+    [key: string]: any
+  } | null>(null)
+  const [activeTab, setActiveTab] = useState<string>('chat')
 
   return (
     <CooperContext.Provider
@@ -21,7 +32,10 @@ export function CooperProvider({ children }: { children: ReactNode }) {
         showTabs,
         setShowTabs,
         hasContent,
-        setHasContent
+        setHasContent,
+        sources,
+        setActiveSource,
+        setActiveTab
       }}
     >
       {children}

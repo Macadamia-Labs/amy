@@ -18,8 +18,8 @@ interface Section {
   level: number
   title: string
   content: string
-  start: number
-  end: number
+  start?: number
+  end?: number
   children?: Section[]
 }
 
