@@ -1,6 +1,7 @@
 'use client'
 
 import Loader from '../lottie/loader'
+import { useActivity } from './activity-provider'
 
 interface IssueCategory {
   count: number
@@ -13,26 +14,29 @@ interface NavItem {
 }
 
 export function CooperReasoningSection() {
+  // Get issue counts from the ActivityProvider
+  const { issueCounts } = useActivity()
+  
   // Navigation items
   const navItems: NavItem[] = [
     { label: 'Resources' },
     { label: 'Workflows' }
   ]
 
-  // Example issue categories
+  // Create issue categories using the counts from ActivityProvider
   const issueCategories: IssueCategory[] = [
     {
-      count: 3,
+      count: issueCounts.openIssues,
       label: 'Open Issues',
       color: 'bg-red-100'
     },
     {
-      count: 3,
+      count: issueCounts.inProgress,
       label: 'In Progress',
       color: 'bg-amber-100'
     },
     {
-      count: 5,
+      count: issueCounts.resolved,
       label: 'Resolved',
       color: 'bg-green-100'
     }

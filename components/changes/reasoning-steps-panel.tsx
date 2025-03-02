@@ -1,6 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from "motion/react"
+import Image from "next/image"
 import React, { useEffect, useMemo, useState } from "react"
 import { Card, CardContent } from '../ui/card'
 
@@ -8,13 +9,13 @@ import { Card, CardContent } from '../ui/card'
 function AnimatedListItem({ children }: { children: React.ReactNode }) {
   const animations = {
     initial: { scale: 0.95, opacity: 0 },
-    animate: { scale: 1, opacity: 1, originY: 0 },
+    animate: { scale: 1, opacity: 1 },
     exit: { scale: 0.95, opacity: 0 },
     transition: { type: "spring", stiffness: 350, damping: 40 },
   }
 
   return (
-    <motion.div {...animations} layout className="mx-auto w-full">
+    <motion.div {...animations} className="mx-auto w-full">
       {children}
     </motion.div>
   )
@@ -37,36 +38,60 @@ export function ReasoningStepsPanel() {
   const [showingAnimation, setShowingAnimation] = useState(true)
   const [animationIndex, setAnimationIndex] = useState(0)
   
-  // Define all sections with their titles and items
+  // Define all sections with their titles, items, and logos
   const animationSections = [
     {
-      title: "Cooper screening Slack channels",
+      title: "Screening Slack channels",
+      logo: "/integrations/slack.avif",
       items: [
-        "checking slack channel Brecht",
+        "Monitoring Slack channel Brecht",
+        "checking slack channel Abel", 
+        "checking slack channel Project team",
         "checking slack channel Abel",
         "checking slack channel Project team"
       ]
     },
     {
-      title: "Cooper scanning Outlook emails",
+      title: "Monitoring Outlook emails",
+      logo: "/integrations/outlook.avif",
       items: [
-        "scanning emails from Silicon Packaging group members"
+        "scanning emails from Silicon Packaging group members",
+        "scanning emails from Silicon Packaging group members",
+        "scanning emails from Silicon Packaging group members",
+        "scanning emails from Silicon Packaging group members",
+        "scanning emails from Silicon Packaging group members",
+        "scanning emails from Silicon Packaging group members",
+        "scanning emails from Silicon Packagin g group members",
       ]
     },
     {
-      title: "Cooper searching Google Drive folders",
+      title: "Screening Google Drive folders",
+      logo: "/integrations/gdrive.avif",
       items: [
-        "searching shared project folders",
-        "scanning technical documentation",
-        "indexing meeting notes"
+          "searching shared project folders",
+          "scanning technical documentation",
+          "indexing meeting notes",
+          "indexing meeting notes",
+          "indexing meeting notes",
+          "indexing meeting notes",
+          "indexing meeting notes",
+          "indexing meeting notes",
+          "indexing meeting notes",
       ]
     },
     {
-      title: "Cooper analyzing ANSYS files",
+      title: "Analyzing ANSYS results files",
+      logo: "/integrations/ansys.avif",
       items: [
         "processing simulation results",
         "extracting key parameters",
-        "comparing with design specifications"
+        "comparing with design specifications",
+        "comparing with design specifications",
+        "comparing with design specifications",
+        "comparing with design specifications",
+        "comparing with design specifications",
+        "comparing with design specifications",
+        "comparing with design specifications",
       ]
     }
   ]
@@ -131,26 +156,46 @@ export function ReasoningStepsPanel() {
   }, [currentSection, sectionComplete, animationSections.length])
 
   // Get items to show based on current index
-  // Limit to maximum 3 items to maintain fixed height
+  // Always show maximum 3 items, removing oldest when new ones are added
   const itemsToShow = useMemo(() => {
-    const items = statusItems.slice(0, animationIndex)
-    // If more than 3 items, only show the latest 3
-    return items.length > 3 ? items.slice(-3) : items
-  }, [statusItems, animationIndex])
+    // Only take the most recent 3 items (or fewer if not enough yet)
+    const maxItems = 3;
+    const startIdx = Math.max(0, animationIndex - maxItems);
+    const endIdx = animationIndex;
+    
+    // Get only the items we want to show (up to 3 most recent)
+    const items = statusItems.slice(startIdx, endIdx);
+    
+    // Reverse so newest is at the top
+    return items.reverse();
+  }, [statusItems, animationIndex]);
 
   return (
     <div className="mb-8">
       <Card className="border rounded-lg p-6 h-[160px]">
         <div className="flex items-center mb-5">
           <h2 className="text-2xl font-semibold">Status:</h2>
-          <h3 className="text-2xl ml-2 font-normal">{currentAnimationSection.title}</h3>
+          <div className="flex items-center ml-2">
+            <h3 className="text-xl font-normal">{currentAnimationSection.title}</h3>
+            {currentAnimationSection.logo && (
+              <div className="ml-1.5 flex-shrink-0">
+                <Image 
+                  src={currentAnimationSection.logo} 
+                  alt={`${currentAnimationSection.title} logo`}
+                  width={24}
+                  height={24}
+                  className="rounded-sm"
+                />
+              </div>
+            )}
+          </div>
         </div>
         <CardContent className="p-0 overflow-hidden">
           {/* Animated status section */}
           <div>
             <div className="pl-4 space-y-4">
-              <AnimatePresence>
-                {itemsToShow.map((item) => (
+              <AnimatePresence initial={false} mode="popLayout">
+                {itemsToShow.map((item, index) => (
                   <AnimatedListItem key={(item as React.ReactElement).key}>
                     {item}
                   </AnimatedListItem>

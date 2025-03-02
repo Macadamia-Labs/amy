@@ -7,10 +7,10 @@ import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { sampleIssues } from '@/data/issues'
 import {
-  BulbIcon,
-  CheckCircleIcon,
-  FireIcon,
-  WorkflowIcon
+    BulbIcon,
+    CheckCircleIcon,
+    FireIcon,
+    WorkflowIcon
 } from '@/lib/utils/icons'
 import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
 import 'katex/dist/katex.min.css'

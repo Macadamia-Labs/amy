@@ -4,15 +4,15 @@ import { IssueChat } from '@/components/chat/issue-chat'
 import IssueHeader from '@/components/layout/issue-header'
 import { Button } from '@/components/ui/button'
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup
 } from '@/components/ui/resizable'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { sampleIssues } from '@/data/issues'
 import {
-  ChatVisibilityProvider,
-  useChatVisibility
+    ChatVisibilityProvider,
+    useChatVisibility
 } from '@/lib/providers/chat-visibility-provider'
 import { ChatsProvider } from '@/lib/providers/chats-provider'
 import { IssueProvider } from '@/lib/providers/issue-provider'

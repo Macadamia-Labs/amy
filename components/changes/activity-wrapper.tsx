@@ -1,6 +1,5 @@
 'use client'
 
-import { ActivityProvider } from './activity-provider'
 import { ChangesList } from './changes-list'
 import { CooperReasoningSection } from './cooper-reasoning'
 import { ReasoningStepsPanel } from './reasoning-steps-panel'
@@ -17,9 +16,7 @@ export function ActivityView({ changes = [] }: ActivityWrapperProps) {
         <CooperReasoningSection />
         <ReasoningStepsPanel />
       </div>
-      <ActivityProvider>
-        <ChangesList changes={changes} />
-      </ActivityProvider>
+      <ChangesList changes={changes} />
     </>
   )
 }

@@ -23,6 +23,13 @@ type ActivityContextType = {
   animationComplete: boolean
   addNextItem: () => void
   clearAll: () => void
+  // Add issue counts to the context
+  issueCounts: {
+    openIssues: number
+    inProgress: number
+    resolved: number
+  }
+  updateIssueCounts: (counts: { openIssues: number, inProgress: number, resolved: number }) => void
 }
 
 const ActivityContext = createContext<ActivityContextType | undefined>(
@@ -70,12 +77,66 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   // State to track if animation is complete
   const [animationComplete, setAnimationComplete] = useState(false)
+  // State to track issue counts
+  const [issueCounts, setIssueCounts] = useState({
+    openIssues: 0,
+    inProgress: 0,
+    resolved: 0
+  })
+
+  // Function to update issue counts
+  const updateIssueCounts = (counts: { openIssues: number, inProgress: number, resolved: number }) => {
+    setIssueCounts(counts)
+  }
 
   // Add next item one by one
   const addNextItem = () => {
     if (currentIndex < changeComponents.length) {
       setVisibleChanges(prev => [...prev, changeComponents[currentIndex]])
       setCurrentIndex(prev => prev + 1)
+
+      // Update issue counts based on the current step
+      // These values will be provided by the user on each space press
+      // For now, we'll use some example values that change with each step
+      if (currentIndex === 0) {
+        setIssueCounts({
+          openIssues: 1,
+          inProgress: 0,
+          resolved: 0, 
+          PIP1: 0,
+          PIP2: 0
+        })
+      } else if (currentIndex === 1) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 1,
+          resolved: 0
+        })
+      } else if (currentIndex === 2) {
+        setIssueCounts({
+          openIssues: 1,
+          inProgress: 0,
+          resolved: 1
+        })
+      } else if (currentIndex === 3) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 1,
+          resolved: 1
+        })
+      } else if (currentIndex === 4) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 1,
+          resolved: 1
+        })
+      } else if (currentIndex === 5) {
+        setIssueCounts({
+          openIssues: 0,
+          inProgress: 0,
+          resolved: 2
+        })
+      }
 
       // Set animation complete when all items are added
       if (currentIndex === changeComponents.length - 1) {
@@ -89,6 +150,11 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     setVisibleChanges([])
     setAnimationComplete(true)
     setCurrentIndex(0)
+    setIssueCounts({
+      openIssues: 0,
+      inProgress: 0,
+      resolved: 0
+    })
   }
 
   // Initialize with empty list (no items shown by default)
@@ -126,7 +192,9 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     totalChanges: changeComponents.length,
     animationComplete,
     addNextItem,
-    clearAll
+    clearAll,
+    issueCounts,
+    updateIssueCounts
   }
 
   return (

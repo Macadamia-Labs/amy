@@ -21,9 +21,9 @@ export const sampleIssues: Issue[] = [
     location: 'Building A - Mechanical Room 2',
     assignedEngineer: {
       id: 'eng-3',
-      name: 'Thomas Wilson',
+      name: 'Brecht Pierreux',
       title: 'Sr. Process Engineer',
-      specialty: 'Semiconductor Processing',
+      specialty: 'Starlink Silicon Packaging',
       email: 't.wilson@example.com'
     },
     createdAt: new Date('2024-03-10'),
@@ -31,13 +31,6 @@ export const sampleIssues: Issue[] = [
     proposedSolution:
       'Sr. Process Engineer Thomas has left the company on Jan 1, 2025. I could not retrieve any further documentation clarifying the required flow rate. Therefore, required UPW flow rate should be confirmed with Mr. Chung from micro saw supplier A in South Korea (chung@supplier.com).',
     resources: mapResourceIds(['manual-micro-saw', 'email-micro-saw']),
-    affectedWorkflows: [
-      {
-        id: 'workflow-1',
-        title: 'Pressure Vessel Design',
-        status: 'active'
-      }
-    ],
     comments: [
       {
         id: 'comment-1',
@@ -78,9 +71,9 @@ export const sampleIssues: Issue[] = [
     location: 'Building A - Mechanical Room 2',
     assignedEngineer: {
       id: 'eng-3',
-      name: 'Thomas Wilson',
+      name: 'Brecht Pierreux',
       title: 'Sr. Process Engineer',
-      specialty: 'Semiconductor Processing',
+      specialty: 'Starlink Silicon Packaging',
       email: 't.wilson@example.com'
     },
     createdAt: new Date('2024-03-10'),
@@ -101,13 +94,6 @@ export const sampleIssues: Issue[] = [
       '- 1️⃣ Contact Contractor B to revise the construction drawings\n' +
       '- 2️⃣ Notify Constructor C to order new pipe size and adjust cost estimates accordingly\n',
     resources: mapResourceIds(['technical-drawing', 'datasheet-upw', 'asme-b31-3']),
-    affectedWorkflows: [
-      {
-        id: 'workflow-1',
-        title: 'Pressure Vessel Design',
-        status: 'active'
-      }
-    ],
     comments: [
       {
         id: 'comment-1',

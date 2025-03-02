@@ -1,12 +1,12 @@
 'use client'
 
-import { ChatList } from '@/components/chat/chat-list'
-import { ChatScrollAnchor } from '@/components/chat/chat-scroll-anchor'
-import { cn } from '@/lib/utils'
-import { ChatRequestOptions, Message } from 'ai'
-import { Dispatch, SetStateAction, useState } from 'react'
-import { MultimodalInput } from './input/multimodal-input'
-import { MessagesDialog } from './messages-dialog'
+import { ChatList } from '@/components/chat/chat-list';
+import { ChatScrollAnchor } from '@/components/chat/chat-scroll-anchor';
+import { cn } from '@/lib/utils';
+import { ChatRequestOptions, Message } from 'ai';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { MultimodalInput } from './input/multimodal-input';
+import { MessagesDialog } from './messages-dialog';
 
 interface UploadQueueItem {
   name: string

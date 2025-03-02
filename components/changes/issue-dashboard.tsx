@@ -1,6 +1,7 @@
 'use client'
 
 import { Card, CardContent } from '../ui/card'
+import { useActivity } from './activity-provider'
 
 interface StatCardProps {
   count: number
@@ -20,6 +21,9 @@ function StatCard({ count, label, color }: StatCardProps) {
 }
 
 export function IssueDashboard() {
+  // Get issue counts from the ActivityProvider
+  const { issueCounts } = useActivity()
+  
   return (
     <div className="mb-8">
       <Card className="border rounded-lg shadow-sm">
@@ -27,19 +31,19 @@ export function IssueDashboard() {
         <div className="p-6">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <StatCard 
-              count={3} 
+              count={issueCounts.openIssues} 
               label="Open Issues" 
               color="bg-blue-50"
             />
             <StatCard 
-              count={3} 
+              count={issueCounts.inProgress} 
               label="In Progress" 
               color="bg-amber-50"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <StatCard 
-              count={5} 
+              count={issueCounts.resolved} 
               label="Resolved Issues" 
               color="bg-green-50"
             />
