@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/resizable'
 import '@/lib/pdf-setup'
 import { useDocument } from '@/lib/providers/document-provider'
+import { generateUUID } from '@/lib/utils/helpers'
 import { SearchIcon, TextOutlineIcon, ThumbnailIcon } from '@/lib/utils/icons'
 import {
   CanvasLayer,
@@ -24,19 +25,17 @@ import {
   Thumbnails
 } from '@unriddle-ai/lector'
 import { XIcon } from 'lucide-react'
-import { nanoid } from 'nanoid'
 import { useRef, useState } from 'react'
 import { SearchUI } from '../custom-search'
 import PageNavigationButtons from '../page-navigation-buttons'
 import { Button } from '../ui/button'
 import { ScrollArea } from '../ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-
 const fileUrl = '/pdf/large.pdf'
 
 export function DocsLayout() {
   const { sections, activeSection, setActiveSection, resource } = useDocument()
-  const chatId = useRef(nanoid()).current
+  const chatId = useRef(generateUUID()).current
   const [sidebarState, setSidebarState] = useState<
     'closed' | 'outline' | 'search' | 'thumbnails'
   >('closed')
