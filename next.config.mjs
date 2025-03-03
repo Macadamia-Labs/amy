@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  devIndicators: false // Disable the static route indicator
+}
 
-export default nextConfig;
+export default nextConfig

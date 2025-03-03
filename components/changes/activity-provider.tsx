@@ -47,7 +47,7 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     <ShellThicknessIssueExample key="shell" />,
     <FlowRateMismatchIssueExample key="flow" />,
     <EmailForwardingExample key="email" />,
-    <UploadedFileExample key="uploaded" />,
+    // <UploadedFileExample key="uploaded" />,
     // <UndersizedManwayIssueExample key="manway" />,
     // <FlowRateMismatchIssueExample key="flow" />,
     // <InletNozzleIssueExample key="inlet" />,
