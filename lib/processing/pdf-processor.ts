@@ -1,6 +1,10 @@
 import fetch from 'node-fetch'
+import { config } from '../config'
 import { createServiceRoleClient } from '../supabase/service-role'
 import { ProcessedPDFResult, ProcessingServiceResponse } from './types'
+
+// Helper function for delay
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export async function processPDF(
   resourceId: string,
@@ -49,14 +53,10 @@ export async function processPDF(
         )
       }
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(
-      `PDF processing service error: ${response.statusText} (${response.status})\nDetails: ${errorText}`
-    )
-  }
+      const result = (await response.json()) as ProcessingServiceResponse
 
-  const result = (await response.json()) as ProcessingServiceResponse
+      // Create a public URL or use a default empty string
+      const publicUrl = result.pages[0] || ''
 
       return {
         imageUrl: publicUrl,

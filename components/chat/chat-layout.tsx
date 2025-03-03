@@ -1,11 +1,9 @@
 'use client'
 
 import { Chat } from '@/components/chat/chat'
-import { CooperTabs } from '@/components/cooper-tabs'
 import { Button } from '@/components/ui/button'
 import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { useCooper } from '@/lib/providers/cooper-provider'
-import { App } from '@/lib/types/apps'
 import { cn } from '@/lib/utils'
 import { ChatRequestOptions } from 'ai'
 import { CreateMessage, Message } from 'ai/react'
@@ -15,6 +13,9 @@ import { Dispatch, SetStateAction } from 'react'
 interface ChatLayoutProps {
   id: string
   messages: Message[]
+  setMessages: (
+    messages: Message[] | ((messages: Message[]) => Message[])
+  ) => void
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
@@ -24,17 +25,33 @@ interface ChatLayoutProps {
   setInput: Dispatch<SetStateAction<string>>
   reload?: any
   stop?: any
+  addToolResult: ({
+    toolCallId,
+    result
+  }: {
+    toolCallId: string
+    result: any
+  }) => void
+  handleSubmit: (
+    event?: {
+      preventDefault?: () => void
+    },
+    chatRequestOptions?: ChatRequestOptions
+  ) => void
 }
 
 export function ChatLayout({
   id,
   messages,
+  setMessages,
   append,
   isLoading,
   input,
   setInput,
   reload,
-  stop
+  stop,
+  addToolResult,
+  handleSubmit
 }: ChatLayoutProps) {
   const { showTabs, setShowTabs, hasContent } = useCooper()
 
@@ -61,15 +78,17 @@ export function ChatLayout({
 
         <Chat
           id={id}
-          app={App.Cooper}
           header="Cooper"
           messages={messages}
+          setMessages={setMessages}
           append={append}
           isLoading={isLoading}
           input={input}
           setInput={setInput}
           reload={reload}
           stop={stop}
+          addToolResult={addToolResult}
+          handleSubmit={handleSubmit}
         />
       </ResizablePanel>
       {/* {showTabs && hasContent && ( */}
@@ -80,7 +99,6 @@ export function ChatLayout({
           )}
           defaultSize={50}
         >
-          <CooperTabs chatId={id} />
         </ResizablePanel>
       )}
     </ResizablePanelGroup>
