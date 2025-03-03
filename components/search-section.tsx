@@ -1,9 +1,9 @@
 'use client'
 
-import { CHAT_ID } from '@/lib/constants'
 import type { SearchResults as TypeSearchResults } from '@/lib/types'
 import { ToolInvocation } from 'ai'
 import { useChat } from 'ai/react'
+import { CHAT_ID } from '../lib/constants'
 import { CollapsibleMessage } from './collapsible-message'
 import { SearchSkeleton } from './default-skeleton'
 import { SearchResults } from './search-results'

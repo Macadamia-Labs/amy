@@ -1,9 +1,9 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge'
-import { CHAT_ID } from '@/lib/constants'
 import { useChat } from 'ai/react'
 import { Check, Lightbulb, Loader2 } from 'lucide-react'
+import { CHAT_ID } from '../lib/constants'
 import { CollapsibleMessage } from './collapsible-message'
 import { DefaultSkeleton } from './default-skeleton'
 import { BotMessage } from './message'
