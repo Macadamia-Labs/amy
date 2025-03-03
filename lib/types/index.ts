@@ -171,6 +171,26 @@ export interface Issue {
     status: 'draft' | 'active' | 'completed' | 'failed' | 'running'
   }>
   comments?: Comment[]
+  standards?: Array<{
+    id: string
+    code: string
+    name: string
+    category: string
+    description: string
+    lastUpdated: Date
+    relevantSections: string[]
+  }>
+  documents?: Array<{
+    id: string
+    type: string
+    title: string
+    fileUrl: string
+    version: string
+    createdAt: Date
+    updatedAt: Date
+    status: string
+  }>
+  severity?: string
 }
 
 export type ResourceOrigin =
@@ -195,7 +215,7 @@ export interface Resource {
   file_path: string
   user_id: string
   created_at: string
-  origin: ResourceOrigin
+  origin?: ResourceOrigin
   processed?: boolean
   processing_result?: any
   processing_completed_at?: string

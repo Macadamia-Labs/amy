@@ -1,6 +1,6 @@
 'use client'
 
-import { useScrollToBottom } from '@/lib/hooks/use-scroll-to-bottom'
+import { useScrollToBottom } from '@/hooks/use-scroll-to-bottom'
 import { ChatRequestOptions, Message } from 'ai'
 import { memo } from 'react'
 import { PreviewMessage, ThinkingMessage } from './message'
