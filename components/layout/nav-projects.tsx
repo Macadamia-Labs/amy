@@ -33,8 +33,8 @@ import { useRouter } from 'next/navigation'
 const exampleProjects: (Project & { color: string })[] = [
   {
     id: '1',
-    name: 'Industrial Storage Tank for Water',
-    description: 'CFD simulation of wind turbine performance',
+    name: 'Pressure Vessel',
+    description: 'Pressure Vessel Design',
     created_at: new Date(2024, 2, 15).toISOString(),
     updated_at: new Date(2024, 2, 15).toISOString(),
     color: 'bg-purple-500'
