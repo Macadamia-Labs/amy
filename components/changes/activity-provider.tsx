@@ -163,11 +163,19 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     })
   }
 
-  // Initialize with empty list (no items shown by default)
+  // Initialize with first 3 changes
   useEffect(() => {
-    // Start with no visible changes
-    setVisibleChanges([])
-    setCurrentIndex(0)
+    // Show first 3 changes
+    const initialChanges = changeComponents.slice(0, 3)
+    setVisibleChanges(initialChanges)
+    setCurrentIndex(3)
+
+    // Set initial issue counts based on first 3 changes
+    setIssueCounts({
+      openIssues: 1,
+      inProgress: 0,
+      resolved: 1
+    })
   }, [])
 
   // Add space bar event listener to add next item
