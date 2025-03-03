@@ -95,7 +95,7 @@ export const categoryIcons = {
 export const defaultFolders: Resource[] = [
   {
     id: 'pressure-vessel-folder',
-    title: 'Pressure Vessel',
+    title: 'Silicon Packaging - Micro Saw',
     description: 'Pressure Vessel related standards and codes',
     category: 'folder',
     file_path: '',

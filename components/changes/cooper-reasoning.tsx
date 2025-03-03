@@ -1,5 +1,7 @@
 'use client'
 
+import { BoxIcon, WorkflowIcon } from '@/lib/utils/icons'
+import React from 'react'
 import Loader from '../lottie/loader'
 import { useActivity } from './activity-provider'
 
@@ -11,6 +13,7 @@ interface IssueCategory {
 
 interface NavItem {
   label: string
+  icon?: React.ReactNode
 }
 
 export function CooperReasoningSection() {
@@ -19,8 +22,8 @@ export function CooperReasoningSection() {
   
   // Navigation items
   const navItems: NavItem[] = [
-    { label: 'Resources' },
-    { label: 'Workflows' }
+    { label: 'Resources', icon: <BoxIcon className="w-6 h-6" /> },
+    { label: 'Workflows', icon: <WorkflowIcon className="w-6 h-6" /> }
   ]
 
   // Create issue categories using the counts from ActivityProvider
@@ -66,7 +69,9 @@ export function CooperReasoningSection() {
           {/* Navigation items */}
           {navItems.map((item, index) => (
             <div key={index} className="rounded-lg p-4 flex-1 text-center border border-gray-200">
-              <div className="text-2xl font-bold">&nbsp;</div>
+              <div className="flex justify-center items-center mb-2">
+                {item.icon}
+              </div>
               <div className="text-sm">{item.label}</div>
             </div>
           ))}

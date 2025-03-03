@@ -91,8 +91,8 @@ export const sampleIssues: Issue[] = [
       '- Reduce pressure losses and prevent excessive turbulence\n' +
       '- Improve system longevity and reliability\n\n' +
       'Action Plan\n\n' +
-      '- 1️⃣ Contact Contractor B to revise the construction drawings\n' +
-      '- 2️⃣ Notify Constructor C to order new pipe size and adjust cost estimates accordingly\n',
+      '- Contact Contractor B to revise the construction drawings\n' +
+      '- Notify Constructor C to order new pipe size and adjust cost estimates accordingly\n',
     resources: mapResourceIds(['technical-drawing', 'datasheet-upw', 'asme-b31-3']),
     comments: [
       {
