@@ -8,7 +8,12 @@ import React, {
   useState
 } from 'react'
 import { AnalyzingChangesExample } from './analyzing-changes'
-import { EmailForwardingExample, UploadedFileExample } from './changes-list'
+import {
+  EmailForwardingExample,
+  FlowRateMismatchIssueExample,
+  ShellThicknessIssueExample,
+  UploadedFileExample
+} from './changes-list'
 
 type ActivityContextType = {
   visibleChanges: React.ReactNode[]
@@ -38,7 +43,9 @@ type ActivityProviderProps = {
 export function ActivityProvider({ children }: ActivityProviderProps) {
   // Sequence of components to be displayed (in correct order - first to appear at top)
   const changeComponents = [
-    // <ShellThicknessIssueExample key="shell" />,
+    <UploadedFileExample key="uploaded" />,
+    <ShellThicknessIssueExample key="shell" />,
+    <FlowRateMismatchIssueExample key="flow" />,
     <EmailForwardingExample key="email" />,
     <UploadedFileExample key="uploaded" />,
     // <UndersizedManwayIssueExample key="manway" />,

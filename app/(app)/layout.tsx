@@ -7,7 +7,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <div className="flex h-screen w-screen">
         <CooperSidebar />
         <SidebarInset>{children}</SidebarInset>
