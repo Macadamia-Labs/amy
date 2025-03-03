@@ -7,13 +7,12 @@ import React, {
   useEffect,
   useState
 } from 'react'
+import { AnalyzingChangesExample } from './analyzing-changes'
 import {
-  PropagatedChangeExample,
   SupplierAExample,
   SupplierAExample1,
   SupplierAExample2,
-  SupplierAExample4,
-  SupplierAExample5
+  SupplierAExample4
 } from './changes-list'
 
 type ActivityContextType = {
@@ -56,12 +55,14 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
   // Sequence of components to be displayed (in correct order - first to appear at top)
   const changeComponents = [
     // <ShellThicknessIssueExample key="shell" />,
-    <PropagatedChangeExample key="propagated" />,
+    // <PropagatedChangeExample key="propagated" />,
     <SupplierAExample key="supplierA" />,
     <SupplierAExample1 key="supplierA1" />,
     <SupplierAExample2 key="supplierA2" />,
     <SupplierAExample4 key="supplierA4" />,
-    <SupplierAExample5 key="supplierA5" />
+    // <SupplierAExample5 key="supplierA5" />,
+    <AnalyzingChangesExample key="analyzing" />
+
     // <MaterialSpecificationChangeExample key="material" />,
     // <ValueChangeExample key="value" />,
     // <StatusChangeExample key="status" />,
@@ -72,7 +73,6 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     // <InletNozzleIssueExample key="inlet" />,
     // <SupportSaddlesIssueExample key="support" />,
     // <LiftingLugIssueExample key="lifting" />,
-    // <AnalyzingChangesExample key="analyzing" />
   ]
 
   // State to track which items should be visible
@@ -163,11 +163,17 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
     })
   }
 
-  // Initialize with empty list (no items shown by default)
+  // Initialize with first three items
   useEffect(() => {
-    // Start with no visible changes
-    setVisibleChanges([])
-    setCurrentIndex(0)
+    // Start with first three changes
+    setVisibleChanges(changeComponents.slice(0, 3))
+    setCurrentIndex(3)
+    // Update issue counts for the initial state
+    setIssueCounts({
+      openIssues: 1,
+      inProgress: 0,
+      resolved: 1
+    })
   }, [])
 
   // Add space bar event listener to add next item

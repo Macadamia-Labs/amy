@@ -56,11 +56,11 @@ export default function Page() {
 
         {/* Dashboard metrics */}
         <div className="grid grid-cols-4 gap-4 mt-6 mb-6">
-          <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center justify-center border border-blue-200">
-            <span className="text-3xl font-bold text-blue-600/90">
+          <div className="bg-red-50 rounded-xl p-4 flex flex-col items-center justify-center border border-red-200">
+            <span className="text-3xl font-bold text-red-600/90">
               {issueCounts.openIssues}
             </span>
-            <span className="text-sm text-blue-800/90 font-medium">
+            <span className="text-sm text-red-800/90 font-medium">
               Open Issues
             </span>
           </div>
