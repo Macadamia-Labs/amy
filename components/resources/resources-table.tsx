@@ -1,5 +1,6 @@
 'use client'
 
+import Loader from '@/components/lottie/loader'
 import { useResources } from '@/components/providers/resources-provider'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -233,6 +234,10 @@ export function ResourcesTable() {
                   ) : (
                     <FolderIcon className="size-6 text-muted-foreground" />
                   )
+                ) : resource.status === 'loading' ||
+                  resource.status === 'processing' ||
+                  uploadStatus.get(resource.id) === 'loading' ? (
+                  <Loader className="size-6 text-blue-500" />
                 ) : resource.title.startsWith('ASME') ? (
                   categoryIcons['Technical Document'] &&
                   React.createElement(categoryIcons['Technical Document'], {
@@ -265,7 +270,21 @@ export function ResourcesTable() {
                       </span>
                     ) : resource.status === 'error' ||
                       uploadStatus.get(resource.id) === 'error' ? (
-                      <span className="text-red-500/80">Processing failed</span>
+                      <span className="text-red-500/80">
+                        {resource.processing_error || 'Processing failed'}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 ml-2 hover:bg-red-100"
+                          onClick={e => {
+                            e.stopPropagation()
+                            handleReprocess(resource.id)
+                          }}
+                        >
+                          <RefreshCw className="h-3 w-3 mr-1" />
+                          Retry
+                        </Button>
+                      </span>
                     ) : (
                       resource.description || 'No description'
                     )}
@@ -279,7 +298,10 @@ export function ResourcesTable() {
               <div className="relative group">
                 <div className="mx-auto w-fit m">{getStatusIcon(resource)}</div>
                 {resource.processing_error && (
-                  <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap">
+                  <div className="absolute hidden group-hover:block bg-black text-white p-2 rounded z-10 -top-8 left-0 whitespace-nowrap max-w-[300px] break-words">
+                    <div className="font-medium text-red-400 mb-1">
+                      Processing Error:
+                    </div>
                     {resource.processing_error}
                   </div>
                 )}

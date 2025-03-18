@@ -31,7 +31,7 @@ export async function processResource(
     // Get file extension and validate supported types
     const fileExtension =
       resource.file_path.split('.').pop()?.toLowerCase() || ''
-    const supportedTypes = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png']
+    const supportedTypes = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'heic']
 
     if (!supportedTypes.includes(fileExtension)) {
       throw new Error(
@@ -65,6 +65,7 @@ export async function processResource(
       case 'jpg':
       case 'jpeg':
       case 'png':
+      case 'heic':
         result = await processImage(fileURL, userId)
         break
       default:

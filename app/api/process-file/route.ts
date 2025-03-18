@@ -25,7 +25,13 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error processing file:', error)
     return NextResponse.json(
-      { error: 'Failed to process file' },
+      {
+        error: (error as Error).message || 'Failed to process file',
+        status: 'error',
+        processing_error:
+          (error as Error).message ||
+          'An unexpected error occurred while processing the file. Please try again.'
+      },
       { status: 500 }
     )
   }
