@@ -112,7 +112,7 @@ export const AnalyzingChangesExample = () => {
       description: 'Analyzing updated version of Project Requirements',
       isLoading: true,
       result: 'Project Requirements review complete',
-      duration: 1200,
+      duration: 3000,
       status: 'waiting',
       result_type: 'looks_fine'
     },
@@ -121,16 +121,17 @@ export const AnalyzingChangesExample = () => {
       description: 'Retrieving related documents and structural codes',
       isLoading: true,
       result: 'Retrieved 8 related documents and structural codes',
-      duration: 1500,
+      duration: 3000,
       status: 'waiting',
       result_type: 'looks_fine'
     },
     {
       id: 'compliance',
-      description: 'Checking compliance with ASME BPVC VII DIV 1 and ASME BPVC II-D',
+      description:
+        'Checking compliance with ASME BPVC VII DIV 1 and ASME BPVC II-D',
       isLoading: true,
       result: 'Design mistakes detected for ASME BPVC Section VIII DIV 1',
-      duration: 1700,
+      duration: 3000,
       status: 'waiting',
       result_type: 'requires_more_info'
     },
@@ -139,7 +140,7 @@ export const AnalyzingChangesExample = () => {
       description: 'Performing calculations to check required vessel thickness',
       isLoading: true,
       result: 'Thickness calculations completed using UG-27 and UG-28',
-      duration: 2000,
+      duration: 5000,
       status: 'waiting',
       result_type: 'requires_more_info'
     },
@@ -149,7 +150,7 @@ export const AnalyzingChangesExample = () => {
       isLoading: true,
       result:
         'Shell thickness of 3/8" (0.375") is insufficient for 50 psig at 650 °F + Full Vacuum',
-      duration: 1600,
+      duration: 5000,
       status: 'waiting',
       result_type: 'issue_detected'
     },
@@ -157,9 +158,8 @@ export const AnalyzingChangesExample = () => {
       id: 'thickness_issue2',
       description: 'Identifying solution for insufficient shell thickness',
       isLoading: true,
-      result:
-        'Proposed new solution for insufficient shell thickness',
-      duration: 1600,
+      result: 'Proposed new solution for insufficient shell thickness',
+      duration: 6000,
       status: 'waiting',
       result_type: 'looks_fine'
     },
@@ -167,8 +167,9 @@ export const AnalyzingChangesExample = () => {
       id: 'related_designs',
       description: 'Checking inlet nozzle reinforcements',
       isLoading: true,
-      result: '6" Inlet Nozzle (B) missing required repad per ASME BPVC VIII Div. 1 UG-37',
-      duration: 1800,
+      result:
+        '6" Inlet Nozzle (B) missing required repad per ASME BPVC VIII Div. 1 UG-37',
+      duration: 3000,
       status: 'waiting',
       result_type: 'issue_detected'
     },
@@ -177,7 +178,7 @@ export const AnalyzingChangesExample = () => {
       description: 'Identifying solution for nozzle reinforcement',
       isLoading: true,
       result: 'Proposed new solution to reinforce 6" Inlet Nozzle (B)',
-      duration: 1800,
+      duration: 3000,
       status: 'waiting',
       result_type: 'looks_fine'
     }

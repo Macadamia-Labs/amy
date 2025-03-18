@@ -1,10 +1,10 @@
 'use client'
 
-import { CHAT_ID } from '@/lib/constants'
-import { cn } from '@/lib/utils'
 import { useChat } from 'ai/react'
 import { Copy } from 'lucide-react'
 import { toast } from 'sonner'
+import { CHAT_ID } from '../lib/constants'
+import { cn } from '../lib/utils'
 import { ChatShare } from './chat-share'
 import { Button } from './ui/button'
 

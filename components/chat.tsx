@@ -1,9 +1,9 @@
 'use client'
 
-import { CHAT_ID } from '@/lib/constants'
 import { Message, useChat } from 'ai/react'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
+import { CHAT_ID } from '../lib/constants'
 import { ChatMessages } from './chat-messages'
 import { ChatPanel } from './chat-panel'
 
