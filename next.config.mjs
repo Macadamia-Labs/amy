@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  devIndicators: false // Disable the static route indicator
+  devIndicators: {
+    buildActivity: false
+  }
 }
 
 export default nextConfig
