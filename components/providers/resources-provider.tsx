@@ -34,21 +34,7 @@ export function ResourcesProvider({
   initialResources: Resource[]
 }) {
   const { user } = useAuth()
-  // const resourcesWithFolder = [
-  //   ...defaultFolders.map(folder => ({
-  //     ...folder,
-  //     user_id: user?.id || ''
-  //   })),
-  //   ...defaultResources.map(resource => ({
-  //     ...resource,
-  //     user_id: user?.id || ''
-  //   })),
-  //   ...initialResources.map(r => ({
-  //     ...r,
-  //     parent_id: r.category === 'Engineering Drawings' ? 'example-folder' : null
-  //   }))
-  // ]
-  const [resources, setResources] = useState<Resource[]>([])
+  const [resources, setResources] = useState<Resource[]>(initialResources)
   const [processingResources, setProcessingResources] = useState<Set<string>>(
     new Set()
   )
@@ -113,13 +99,14 @@ export function ResourcesProvider({
           const newResource = payload.new as Resource
           console.log('New resource added:', newResource)
 
-          // Only add the resource if it doesn't already exist
+          // Add the new resource to state using deduplication logic
           setResources(prev => {
-            if (prev.some(r => r.id === newResource.id)) {
-              // If the resource exists, update it instead
-              return prev.map(r => (r.id === newResource.id ? newResource : r))
-            }
-            return [...prev, newResource]
+            const existingMap = new Map(prev.map(r => [r.id, r]))
+            existingMap.set(newResource.id, {
+              ...existingMap.get(newResource.id),
+              ...newResource
+            })
+            return Array.from(existingMap.values())
           })
         }
       )
@@ -207,22 +194,6 @@ export function ResourcesProvider({
     status: 'loading' | 'success' | 'error'
   ) => {
     setUploadStatusMap(prev => new Map(prev).set(id, status))
-
-    // If we're setting an error status, also update the resource's status
-    if (status === 'error') {
-      setResources(prev =>
-        prev.map(resource =>
-          resource.id === id
-            ? {
-                ...resource,
-                status: 'error',
-                processing_error:
-                  'Failed to process file. Click retry to try again.'
-              }
-            : resource
-        )
-      )
-    }
   }
 
   return (
