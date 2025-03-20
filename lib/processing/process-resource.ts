@@ -8,7 +8,7 @@ import { ProcessedResource } from './types'
 export async function processResource(
   resource: Resource,
   userId: string
-): Promise<any> {
+): Promise<ProcessedResource> {
   const supabase = createServiceRoleClient()
   try {
     console.log(
@@ -52,6 +52,11 @@ export async function processResource(
 
     const fileURL = signedUrlResponse.data.signedUrl
     let result: ProcessedResource
+
+    console.log(
+      '[process-resource] Processing resource with file extension:',
+      fileExtension
+    )
 
     // Process based on file type
     switch (fileExtension) {

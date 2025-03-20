@@ -14,13 +14,13 @@ export interface ProcessedPDFResult {
 export interface ProcessedDocumentResult {
   description: string
   content: string
-  tags: string[]
+  tags?: string[]
 }
 
 export interface ProcessedImageResult {
   description: string
   content: string
-  tags: string[]
+  tags?: string[]
 }
 
 export type ProcessedResource =

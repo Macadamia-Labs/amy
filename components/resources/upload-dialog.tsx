@@ -2,9 +2,17 @@
 
 import { useResources } from '@/components/providers/resources-provider'
 import { Button } from '@/components/ui/button'
+import { Resource, ResourceStatus } from '@/lib/types'
+import { UploadResource } from '@/lib/upload/resource-handler'
 import { generateUUID } from '@/lib/utils/helpers'
 import * as React from 'react'
 import { toast } from 'sonner'
+
+interface UploadResponse {
+  message: string
+  resource?: UploadResource
+  resources?: UploadResource[]
+}
 
 export function UploadDialog() {
   const { addResources, setUploadStatus } = useResources()
@@ -21,32 +29,46 @@ export function UploadDialog() {
       `Processing: ${successCount}/${files.length} files uploaded`
     )
 
-    // Process all files
-    const uploadPromises = files.map(async file => {
-      // Generate a local ID for each file
+    // Prepare all files for upload first
+    const uploadItems = files.map(file => {
       const localId = generateUUID()
 
-      // Set initial upload status
-      setUploadStatus(localId, 'loading')
+      // Create initial resource object
+      const initialResource: Resource = {
+        id: localId,
+        title: file.name,
+        description:
+          file.type === 'application/zip' ? 'Zip archive being processed' : '',
+        category: file.type === 'application/zip' ? 'archive' : 'uncategorized',
+        file_path: '',
+        user_id: '',
+        created_at: new Date().toISOString(),
+        status: 'pending' as ResourceStatus,
+        origin: 'upload'
+      }
 
-      // Add to context
-      addResources([
-        {
-          id: localId,
-          title: file.name,
-          description: '',
-          category: 'uncategorized',
-          file_path: '',
-          user_id: '',
-          created_at: new Date().toISOString(),
-          status: 'pending'
-        }
-      ])
+      return {
+        id: localId,
+        file,
+        resource: initialResource
+      }
+    })
 
+    // Add all resources to the context at once for better UI update batching
+    addResources(uploadItems.map(item => item.resource))
+
+    // Set initial status for all files
+    uploadItems.forEach(item => {
+      setUploadStatus(item.id, 'loading')
+    })
+
+    // Process all files
+    const uploadPromises = uploadItems.map(async ({ id, file, resource }) => {
       // Prepare the form data
       const formData = new FormData()
-      formData.append('id', localId)
+      formData.append('id', id)
       formData.append('file', file)
+      formData.append('isZip', String(file.type === 'application/zip'))
 
       try {
         const response = await fetch('/api/upload', {
@@ -56,11 +78,50 @@ export function UploadDialog() {
 
         if (!response.ok) {
           const msg = await response.text()
-          console.log('Upload failed:', msg)
-          setUploadStatus(localId, 'error')
+          console.error('Upload failed:', msg)
+          setUploadStatus(id, 'error')
           return false
         } else {
-          successCount++
+          const data = (await response.json()) as UploadResponse
+
+          // Handle zip file response
+          if (file.type === 'application/zip' && data.resources) {
+            // Update the folder status
+            setUploadStatus(id, 'success')
+
+            // Add all extracted resources to the context
+            const extractedResources = data.resources.filter(r => r.id !== id)
+            if (extractedResources.length > 0) {
+              // Set initial status for all extracted files before adding them
+              extractedResources.forEach(resource => {
+                if (resource.status === 'pending') {
+                  setUploadStatus(resource.id, 'loading')
+                }
+              })
+
+              // Add all resources at once for better performance
+              addResources(
+                extractedResources.map(r => ({
+                  ...r,
+                  status: r.status as ResourceStatus
+                }))
+              )
+            }
+          } else if (data.resource) {
+            // Update with server-provided resource data if available
+            addResources([
+              {
+                ...data.resource,
+                status: data.resource.status as ResourceStatus
+              }
+            ])
+            successCount++
+            setUploadStatus(id, 'success')
+          } else {
+            successCount++
+            setUploadStatus(id, 'success')
+          }
+
           toast.loading(
             `Processing: ${successCount}/${files.length} files uploaded`,
             { id: loadingToast }
@@ -69,7 +130,7 @@ export function UploadDialog() {
         }
       } catch (error) {
         console.error('Error uploading:', error)
-        setUploadStatus(localId, 'error')
+        setUploadStatus(id, 'error')
         return false
       }
     })
@@ -113,6 +174,7 @@ export function UploadDialog() {
         disabled={uploading}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         aria-label="Upload file"
+        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.heic,.zip"
         multiple
       />
       <Button disabled={uploading}>

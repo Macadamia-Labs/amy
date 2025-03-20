@@ -1,7 +1,7 @@
-import { inngest } from '@/lib/inngest/client'
 import { authorizeUser } from '@/lib/supabase/authorize-user'
 import { createClient } from '@/lib/supabase/server'
-import { generateUUID } from '@/lib/utils/helpers'
+import { uploadFile } from '@/lib/upload/resource-handler'
+import { processZipFile } from '@/lib/upload/zip-handler'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
 
   const formData = await request.formData()
   const file = formData.get('file') as File
-  const title = (formData.get('title') as string) || file?.name || 'Untitled'
   const clientId = formData.get('id') as string | undefined
+  const isZip = formData.get('isZip') === 'true'
 
   if (!file) {
     return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
@@ -26,61 +26,22 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createClient()
-    const resourceId = clientId || generateUUID()
-    const fileExt = file.name?.split('.').pop() || ''
-    const filePath = `${user.id}/${resourceId}.${fileExt}`
 
-    // Upload file to Supabase storage
-    const { error: uploadError } = await supabase.storage
-      .from('resources')
-      .upload(filePath, file)
-
-    if (uploadError) {
-      console.error('Supabase storage error:', uploadError)
+    // Handle zip files differently
+    if (isZip) {
+      const resources = await processZipFile(file, user.id, supabase)
       return NextResponse.json(
-        { error: 'Error uploading file to storage' },
-        { status: 500 }
+        {
+          message: 'Zip file was processed successfully.',
+          resources
+        },
+        { status: 200 }
       )
     }
 
-    // Create resource record
-    const resource = {
-      id: resourceId,
-      title,
-      file_path: filePath,
-      file_type: fileExt,
-      user_id: user.id,
-      created_at: new Date().toISOString(),
-      status: 'pending',
-      origin: 'upload'
-    }
+    // Regular file upload handling
+    const resource = await uploadFile(file, user.id, clientId, supabase)
 
-    // Insert resource metadata in DB
-    const { error: dbError } = await supabase
-      .from('resources')
-      .insert(resource)
-      .select()
-
-    if (dbError) {
-      // If DB insert fails, remove uploaded file
-      await supabase.storage.from('resources').remove([filePath])
-      console.error('Database error:', dbError)
-      return NextResponse.json(
-        { error: 'Error saving resource metadata' },
-        { status: 500 }
-      )
-    }
-
-    // Trigger inngest event, so that the file is processed in the background
-    await inngest.send({
-      name: 'file.uploaded',
-      data: {
-        resource,
-        userId: user.id
-      }
-    })
-
-    // Return the resource
     return NextResponse.json(
       {
         message:

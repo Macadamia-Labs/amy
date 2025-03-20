@@ -148,10 +148,10 @@ export async function getResourceEnriched(
   if (!resource) return null
   const { data } = await supabase.storage
     .from('resources')
-    .getPublicUrl(resource.file_path)
+    .createSignedUrl(resource.file_path, 60 * 60 * 24 * 30)
 
   const embeddings = await getResourceEmbeddings(resourceId)
-  return { ...resource, file_url: data.publicUrl, embeddings }
+  return { ...resource, file_url: data?.signedUrl, embeddings }
 }
 
 export async function updateResource(
@@ -182,7 +182,7 @@ export async function getUserProfile(userId: string) {
     .from('user_profiles')
     .select('*')
     .eq('user_id', userId)
-    .single()
+    .maybeSingle()
 
   if (error) throw error
   return data

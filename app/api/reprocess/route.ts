@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
   try {
     const { resourceId } = await request.json()
+    console.log('reprocessing resource', resourceId)
 
     if (!resourceId) {
       return NextResponse.json(

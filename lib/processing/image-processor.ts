@@ -5,7 +5,8 @@ export async function processImage(
   fileURL: string,
   userId: string
 ): Promise<ProcessedImageResult> {
-  const processingEndpoint = `${process.env.IMAGE_PROCESSING_URL}/api/process-image`
+  console.log('[process-image] Processing image with file URL:', fileURL)
+  const processingEndpoint = `${process.env.IMAGE_PROCESSING_URL}/process-image`
   const response = await fetch(processingEndpoint, {
     method: 'POST',
     headers: {
@@ -24,10 +25,8 @@ export async function processImage(
       `Image processing service error: ${response.statusText} (${response.status})\nDetails: ${errorText}`
     )
   }
+  const data = await response.json()
+  console.log('[process-image] Response:', data)
 
-  const { object } = (await response.json()) as {
-    object: ProcessedImageResult
-  }
-
-  return object
+  return data as ProcessedImageResult
 }

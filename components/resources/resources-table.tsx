@@ -35,7 +35,7 @@ import {
 import { CheckedState } from '@radix-ui/react-checkbox'
 import { Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import LoadingDots from '../magicui/loading-dots'
 
@@ -67,6 +67,23 @@ export function ResourcesTable() {
 
   // Initialize expandedFolders with no folders expanded by default
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
+
+  // Clear selected IDs when resources change
+  useEffect(() => {
+    // When resources change, check if selected IDs are still valid
+    if (resources.length > 0) {
+      const validIds = new Set(resources.map(r => r.id))
+      setSelectedIds(prev => {
+        const newSelected = new Set<string>()
+        prev.forEach(id => {
+          if (validIds.has(id)) {
+            newSelected.add(id)
+          }
+        })
+        return newSelected
+      })
+    }
+  }, [resources])
 
   // Group resources by parent_id
   const resourcesByParent = resources.reduce((acc, resource) => {
@@ -160,6 +177,14 @@ export function ResourcesTable() {
     }
   }
 
+  const isResourceProcessing = (resource: Resource) => {
+    return (
+      resource.status === 'pending' ||
+      resource.status === 'processing' ||
+      uploadStatus.get(resource.id) === 'loading'
+    )
+  }
+
   const getStatusIcon = (resource: Resource) => {
     return getResourceStatusIcon(resource, uploadStatus)
   }
@@ -208,6 +233,7 @@ export function ResourcesTable() {
     const isFolder = resource.is_folder
     const isExpanded = expandedFolders.has(resource.id)
     const childResources = resourcesByParent[resource.id] || []
+    const isProcessing = isResourceProcessing(resource)
 
     return (
       <React.Fragment key={resource.id}>
@@ -234,9 +260,7 @@ export function ResourcesTable() {
                   ) : (
                     <FolderIcon className="size-6 text-muted-foreground" />
                   )
-                ) : resource.status === 'loading' ||
-                  resource.status === 'processing' ||
-                  uploadStatus.get(resource.id) === 'loading' ? (
+                ) : isProcessing ? (
                   <Loader className="size-6 text-blue-500" />
                 ) : resource.title.startsWith('ASME') ? (
                   categoryIcons['Technical Document'] &&
@@ -261,9 +285,7 @@ export function ResourcesTable() {
                   <div className="text-xs text-muted-foreground font-light line-clamp-1">
                     {isFolder ? (
                       `${childResources.length} items`
-                    ) : resource.status === 'loading' ||
-                      resource.status === 'processing' ||
-                      uploadStatus.get(resource.id) === 'loading' ? (
+                    ) : isProcessing ? (
                       <span>
                         Processing
                         <LoadingDots />
@@ -272,18 +294,6 @@ export function ResourcesTable() {
                       uploadStatus.get(resource.id) === 'error' ? (
                       <span className="text-red-500/80">
                         {resource.processing_error || 'Processing failed'}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 ml-2 hover:bg-red-100"
-                          onClick={e => {
-                            e.stopPropagation()
-                            handleReprocess(resource.id)
-                          }}
-                        >
-                          <RefreshCw className="h-3 w-3 mr-1" />
-                          Retry
-                        </Button>
                       </span>
                     ) : (
                       resource.description || 'No description'
@@ -332,15 +342,25 @@ export function ResourcesTable() {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleReprocess(resource.id)}
-                      disabled={reprocessingIds.has(resource.id)}
-                      className="focus:bg-muted"
+                      disabled={
+                        reprocessingIds.has(resource.id) || isProcessing
+                      }
+                      className={`focus:bg-muted ${
+                        resource.status === 'error' ||
+                        uploadStatus.get(resource.id) === 'error'
+                          ? 'text-red-500 focus:text-red-500'
+                          : ''
+                      }`}
                     >
                       {reprocessingIds.has(resource.id) ? (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       ) : (
                         <RefreshCw className="h-4 w-4 mr-2" />
                       )}
-                      Reprocess
+                      {resource.status === 'error' ||
+                      uploadStatus.get(resource.id) === 'error'
+                        ? 'Retry Processing'
+                        : 'Reprocess'}
                     </DropdownMenuItem>
                   </>
                 )}
@@ -387,6 +407,7 @@ export function ResourcesTable() {
           <p className="text-muted-foreground">
             Access engineering documents, standards, and project communications
           </p>
+          <p>Number of resources: {resources.length}</p>
         </div>
 
         {selectedIds.size > 0 && (

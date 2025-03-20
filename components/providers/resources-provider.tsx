@@ -1,25 +1,17 @@
 'use client'
 
+import { useResourceChanges } from '@/hooks/use-resource-changes'
 import { useAuth } from '@/lib/providers/auth-provider'
-import { createClient } from '@/lib/supabase/client'
 import { Resource } from '@/lib/types'
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState
-} from 'react'
+import { createContext, ReactNode, useContext, useState } from 'react'
 
 interface ResourcesContextType {
   resources: Resource[]
   addResources: (newResources: Resource[]) => void
   removeResource: (id: string) => void
-  processingResources: Set<string>
-  setProcessingResource: (id: string) => void
-  clearProcessingResource: (id: string) => void
   uploadStatus: Map<string, 'loading' | 'success' | 'error'>
   setUploadStatus: (id: string, status: 'loading' | 'success' | 'error') => void
+  handleResourceUpdate: (resource: Resource) => void
 }
 
 const ResourcesContext = createContext<ResourcesContextType | undefined>(
@@ -35,165 +27,129 @@ export function ResourcesProvider({
 }) {
   const { user } = useAuth()
   const [resources, setResources] = useState<Resource[]>(initialResources)
-  const [processingResources, setProcessingResources] = useState<Set<string>>(
-    new Set()
-  )
   const [uploadStatus, setUploadStatusMap] = useState<
     Map<string, 'loading' | 'success' | 'error'>
   >(new Map())
 
-  useEffect(() => {
-    if (!user?.id) return
-
-    const supabase = createClient()
-
-    // Subscribe to resource updates
-    const subscription = supabase
-      .channel('resources')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'resources',
-          filter: `user_id=eq.${user?.id}`
-        },
-        payload => {
-          const updatedResource = payload.new as Resource
-
-          console.log('Resource updated:', updatedResource)
-
-          // Update the resource in state
-          setResources(prev =>
-            prev.map(resource =>
-              resource.id === updatedResource.id ? updatedResource : resource
-            )
-          )
-
-          // Update upload status based on status
-          if (updatedResource.status === 'completed') {
-            setUploadStatusMap(prev =>
-              new Map(prev).set(updatedResource.id, 'success')
-            )
-          } else if (updatedResource.status === 'error') {
-            setUploadStatusMap(prev =>
-              new Map(prev).set(updatedResource.id, 'error')
-            )
-          }
-
-          // Clear processing state if done
-          if (updatedResource.status !== 'pending') {
-            clearProcessingResource(updatedResource.id)
-          }
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'resources',
-          filter: `user_id=eq.${user?.id}`
-        },
-        payload => {
-          const newResource = payload.new as Resource
-          console.log('New resource added:', newResource)
-
-          // Add the new resource to state using deduplication logic
-          setResources(prev => {
-            const existingMap = new Map(prev.map(r => [r.id, r]))
-            existingMap.set(newResource.id, {
-              ...existingMap.get(newResource.id),
-              ...newResource
-            })
-            return Array.from(existingMap.values())
-          })
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'DELETE',
-          schema: 'public',
-          table: 'resources',
-          filter: `user_id=eq.${user?.id}`
-        },
-        payload => {
-          const deletedResourceId = payload.old.id
-          console.log('Resource deleted:', deletedResourceId)
-
-          // Remove the resource from state
-          setResources(prev => prev.filter(r => r.id !== deletedResourceId))
-        }
-      )
-      .subscribe()
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [user?.id])
-
-  const setProcessingResource = (id: string) => {
-    setProcessingResources(prev => new Set([...prev, id]))
-  }
-
-  const clearProcessingResource = (id: string) => {
-    setProcessingResources(prev => {
-      const next = new Set(prev)
+  const removeResource = (id: string) => {
+    setResources(prev => prev.filter(resource => resource.id !== id))
+    setUploadStatusMap(prev => {
+      const next = new Map(prev)
       next.delete(id)
       return next
     })
   }
 
-  const addResources = (newResources: Resource[]) => {
-    // Ensure we're working with valid Resource objects
-    const validResources = newResources.filter(
-      (resource): resource is Resource => {
-        return (
-          resource &&
-          typeof resource.id === 'string' &&
-          typeof resource.title === 'string' &&
-          typeof resource.description === 'string' &&
-          typeof resource.category === 'string' &&
-          typeof resource.file_path === 'string' &&
-          typeof resource.user_id === 'string' &&
-          typeof resource.created_at === 'string'
-        )
-      }
-    )
+  const handleResourceUpdate = (updatedResource: Resource) => {
+    console.log('Resource updated:', updatedResource)
 
     setResources(prev => {
-      // Create a map of existing resources for quick lookup
-      const existingMap = new Map(prev.map(r => [r.id, r]))
+      const existingResource = prev.find(r => r.id === updatedResource.id)
+      if (!existingResource) return [...prev, updatedResource]
 
-      // Update existing resources or add new ones
-      validResources.forEach(resource => {
-        existingMap.set(resource.id, {
-          ...existingMap.get(resource.id),
-          ...resource
-        })
-      })
-
-      return Array.from(existingMap.values())
+      return prev.map(resource =>
+        resource.id === updatedResource.id
+          ? { ...existingResource, ...updatedResource }
+          : resource
+      )
     })
 
-    // Set processing state for new resources that are pending
-    validResources.forEach(resource => {
-      if (resource.status === 'pending') {
-        setProcessingResource(resource.id)
-      }
-    })
+    // Update upload status based on status
+    if (updatedResource.status === 'completed') {
+      setUploadStatusMap(prev =>
+        new Map(prev).set(updatedResource.id, 'success')
+      )
+    } else if (updatedResource.status === 'error') {
+      setUploadStatusMap(prev => new Map(prev).set(updatedResource.id, 'error'))
+    } else if (
+      updatedResource.status === 'pending' ||
+      updatedResource.status === 'processing'
+    ) {
+      setUploadStatusMap(prev =>
+        new Map(prev).set(updatedResource.id, 'loading')
+      )
+    }
   }
 
-  const removeResource = (id: string) => {
-    setResources(prev => prev.filter(resource => resource.id !== id))
+  // Use the new hook for Supabase changes
+  useResourceChanges({
+    userId: user?.id,
+    onUpdate: handleResourceUpdate,
+    onDelete: removeResource
+  })
+
+  const addResources = (newResources: Resource[]) => {
+    console.log('Adding resources:', newResources)
+    // Batch all state updates together for better performance and consistency
+    setResources(prev => {
+      // Add new resources immediately to the state
+      const updatedResources = [...prev]
+
+      newResources.forEach(resource => {
+        const existingIndex = updatedResources.findIndex(
+          r => r.id === resource.id
+        )
+        if (existingIndex === -1) {
+          // Add new resource
+          updatedResources.push(resource)
+        } else {
+          // Update existing resource
+          updatedResources[existingIndex] = {
+            ...updatedResources[existingIndex],
+            ...resource
+          }
+        }
+      })
+
+      console.log('Updated resources:', updatedResources)
+
+      return updatedResources
+    })
+
+    // Update upload statuses
+    setUploadStatusMap(prev => {
+      const newStatusMap = new Map(prev)
+      newResources.forEach(resource => {
+        if (resource.status === 'pending' || resource.status === 'processing') {
+          newStatusMap.set(resource.id, 'loading')
+        } else if (resource.status === 'completed') {
+          newStatusMap.set(resource.id, 'success')
+        } else if (resource.status === 'error') {
+          newStatusMap.set(resource.id, 'error')
+        }
+      })
+      return newStatusMap
+    })
   }
 
   const setUploadStatus = (
     id: string,
     status: 'loading' | 'success' | 'error'
   ) => {
+    // Update both the upload status and resource status atomically
     setUploadStatusMap(prev => new Map(prev).set(id, status))
+
+    setResources(prev =>
+      prev.map(resource => {
+        if (resource.id !== id) return resource
+
+        const updates: Partial<Resource> = {
+          status:
+            status === 'error'
+              ? 'error'
+              : status === 'success'
+              ? 'completed'
+              : 'processing'
+        }
+
+        if (status === 'error') {
+          updates.processing_error =
+            'Failed to process file. Click retry to try again.'
+        }
+
+        return { ...resource, ...updates }
+      })
+    )
   }
 
   return (
@@ -202,11 +158,9 @@ export function ResourcesProvider({
         resources,
         addResources,
         removeResource,
-        processingResources,
-        setProcessingResource,
-        clearProcessingResource,
         uploadStatus,
-        setUploadStatus
+        setUploadStatus,
+        handleResourceUpdate
       }}
     >
       {children}
