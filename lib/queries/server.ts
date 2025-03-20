@@ -150,8 +150,7 @@ export async function getResourceEnriched(
     .from('resources')
     .createSignedUrl(resource.file_path, 60 * 60 * 24 * 30)
 
-  const embeddings = await getResourceEmbeddings(resourceId)
-  return { ...resource, file_url: data?.signedUrl, embeddings }
+  return { ...resource, file_url: data?.signedUrl }
 }
 
 export async function updateResource(
