@@ -1,23 +1,24 @@
 export interface ProcessingServiceResponse {
-  pages: string[]
+  title: string
   description: string
-  outline: any
+  content: any
 }
 
 export interface ProcessedPDFResult {
-  imageUrl: string
-  filePaths?: string[]
+  title: string
   description: string
-  outline: any
+  content: any
 }
 
 export interface ProcessedDocumentResult {
+  title: string
   description: string
   content: string
   tags?: string[]
 }
 
 export interface ProcessedImageResult {
+  title: string
   description: string
   content: string
   tags?: string[]

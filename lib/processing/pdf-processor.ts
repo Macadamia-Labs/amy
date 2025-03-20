@@ -1,6 +1,5 @@
 import fetch from 'node-fetch'
 import { config } from '../config'
-import { createServiceRoleClient } from '../supabase/service-role'
 import { ProcessedPDFResult, ProcessingServiceResponse } from './types'
 
 export async function processPDF(
@@ -8,7 +7,6 @@ export async function processPDF(
   fileURL: string,
   userId: string
 ): Promise<ProcessedPDFResult> {
-  const supabase = createServiceRoleClient()
   // Use config for URL with fallback
   const processingUrl =
     process.env.PDF_PROCESSING_URL || config.pdfProcessingService.url
@@ -46,16 +44,12 @@ export async function processPDF(
 
     const result = (await response.json()) as ProcessingServiceResponse
 
-    // Get public URL for the first page
-    const {
-      data: { publicUrl }
-    } = supabase.storage.from('resources').getPublicUrl(result.pages[0])
+    console.log('[pdf-processor] Result:', result)
 
     return {
-      imageUrl: publicUrl,
-      filePaths: result.pages,
+      title: result.title,
       description: result.description,
-      outline: result.outline || []
+      content: result.content
     }
   } catch (error: any) {
     clearTimeout(timeoutId)

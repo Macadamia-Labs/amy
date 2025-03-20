@@ -27,6 +27,7 @@ export function ResourcesProvider({
 }) {
   const { user } = useAuth()
   const [resources, setResources] = useState<Resource[]>(initialResources)
+
   const [uploadStatus, setUploadStatusMap] = useState<
     Map<string, 'loading' | 'success' | 'error'>
   >(new Map())
@@ -54,21 +55,22 @@ export function ResourcesProvider({
       )
     })
 
-    // Update upload status based on status
-    if (updatedResource.status === 'completed') {
-      setUploadStatusMap(prev =>
-        new Map(prev).set(updatedResource.id, 'success')
-      )
-    } else if (updatedResource.status === 'error') {
+    // Only update upload status in specific cases
+    if (updatedResource.status === 'error') {
+      // Always update to error state if the resource fails
+      console.log('Setting upload status to error for', updatedResource.id)
       setUploadStatusMap(prev => new Map(prev).set(updatedResource.id, 'error'))
-    } else if (
-      updatedResource.status === 'pending' ||
-      updatedResource.status === 'processing'
-    ) {
-      setUploadStatusMap(prev =>
-        new Map(prev).set(updatedResource.id, 'loading')
-      )
+    } else if (updatedResource.status === 'completed') {
+      // For completion, only set to success if not already set
+      const currentStatus = uploadStatus.get(updatedResource.id)
+      if (currentStatus !== 'success') {
+        console.log('Setting upload status to success for', updatedResource.id)
+        setUploadStatusMap(prev =>
+          new Map(prev).set(updatedResource.id, 'success')
+        )
+      }
     }
+    // Never downgrade from success to loading based on resource status changes
   }
 
   // Use the new hook for Supabase changes
@@ -109,15 +111,34 @@ export function ResourcesProvider({
     // Update upload statuses
     setUploadStatusMap(prev => {
       const newStatusMap = new Map(prev)
+
       newResources.forEach(resource => {
-        if (resource.status === 'pending' || resource.status === 'processing') {
-          newStatusMap.set(resource.id, 'loading')
-        } else if (resource.status === 'completed') {
-          newStatusMap.set(resource.id, 'success')
-        } else if (resource.status === 'error') {
+        // Don't override existing upload status unless the resource has a status
+        // that would change the upload status
+        const currentStatus = newStatusMap.get(resource.id)
+
+        if (resource.status === 'error') {
+          // Always set error status
           newStatusMap.set(resource.id, 'error')
+        } else if (resource.status === 'completed') {
+          // Always set completed resources to success
+          newStatusMap.set(resource.id, 'success')
+        } else if (
+          (resource.status === 'pending' || resource.status === 'processing') &&
+          currentStatus !== 'success'
+        ) {
+          // Only set to loading if current status is not success
+          // This prevents downgrading from success to loading
+          newStatusMap.set(resource.id, 'loading')
         }
+
+        console.log(
+          `Set upload status for ${resource.id} to ${newStatusMap.get(
+            resource.id
+          )}`
+        )
       })
+
       return newStatusMap
     })
   }
@@ -126,30 +147,32 @@ export function ResourcesProvider({
     id: string,
     status: 'loading' | 'success' | 'error'
   ) => {
-    // Update both the upload status and resource status atomically
-    setUploadStatusMap(prev => new Map(prev).set(id, status))
+    // Update only the upload status, not the resource status
+    console.log(`Setting upload status for ${id} to ${status}`)
 
-    setResources(prev =>
-      prev.map(resource => {
-        if (resource.id !== id) return resource
+    setUploadStatusMap(prev => {
+      const newMap = new Map(prev)
+      newMap.set(id, status)
+      console.log(`New upload status map has ${newMap.size} entries`)
+      console.log(`Status for ${id} is now ${newMap.get(id)}`)
+      return newMap
+    })
 
-        const updates: Partial<Resource> = {
-          status:
-            status === 'error'
-              ? 'error'
-              : status === 'success'
-              ? 'completed'
-              : 'processing'
-        }
+    // Only update the resource status for error conditions
+    if (status === 'error') {
+      setResources(prev =>
+        prev.map(resource => {
+          if (resource.id !== id) return resource
 
-        if (status === 'error') {
-          updates.processing_error =
-            'Failed to process file. Click retry to try again.'
-        }
-
-        return { ...resource, ...updates }
-      })
-    )
+          return {
+            ...resource,
+            status: 'error',
+            processing_error:
+              'Failed to process file. Click retry to try again.'
+          }
+        })
+      )
+    }
   }
 
   return (

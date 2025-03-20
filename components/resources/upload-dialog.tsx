@@ -109,6 +109,12 @@ export function UploadDialog() {
             }
           } else if (data.resource) {
             // Update with server-provided resource data if available
+            console.log('Server returned resource data:', data.resource)
+
+            // Set upload status to success because upload is complete
+            setUploadStatus(id, 'success')
+
+            // Add resource with its current status (could be 'processing' or 'completed')
             addResources([
               {
                 ...data.resource,
@@ -116,10 +122,19 @@ export function UploadDialog() {
               }
             ])
             successCount++
-            setUploadStatus(id, 'success')
           } else {
             successCount++
+            // Set upload status to success because upload is complete
+            console.log('Setting upload status to success for', id)
             setUploadStatus(id, 'success')
+
+            // Update the resource itself to processing status
+            addResources([
+              {
+                ...resource,
+                status: 'processing' as ResourceStatus
+              }
+            ])
           }
 
           toast.loading(

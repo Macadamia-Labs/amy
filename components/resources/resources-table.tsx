@@ -1,6 +1,5 @@
 'use client'
 
-import Loader from '@/components/lottie/loader'
 import { useResources } from '@/components/providers/resources-provider'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -54,6 +53,78 @@ function ResourceSourceCell({ resource }: ResourceSourceCellProps) {
       </div>
     </div>
   )
+}
+
+// New component for rendering resource icons
+interface ResourceIconProps {
+  resource: Resource
+  isExpanded?: boolean
+}
+
+function ResourceIcon({ resource, isExpanded = false }: ResourceIconProps) {
+  if (resource.is_folder) {
+    return isExpanded ? (
+      <FolderOpenIcon className="size-6 text-muted-foreground" />
+    ) : (
+      <FolderIcon className="size-6 text-muted-foreground" />
+    )
+  }
+
+  // Handle special case for ASME documents
+  if (
+    resource.title.startsWith('ASME') &&
+    categoryIcons['Technical Document']
+  ) {
+    return React.createElement(categoryIcons['Technical Document'], {
+      className: 'size-6 text-muted-foreground'
+    })
+  }
+
+  // Check if the category exists in categoryIcons
+  if (
+    resource.category &&
+    categoryIcons[resource.category as keyof typeof categoryIcons]
+  ) {
+    const CategoryIcon =
+      categoryIcons[resource.category as keyof typeof categoryIcons]
+    return <CategoryIcon className="size-6 text-muted-foreground" />
+  }
+
+  // For "Standards" category, use Technical Document icon
+  if (
+    resource.category === 'Standards' &&
+    categoryIcons['Technical Document']
+  ) {
+    return React.createElement(categoryIcons['Technical Document'], {
+      className: 'size-6 text-muted-foreground'
+    })
+  }
+
+  if (resource.file_type === 'pdf') {
+    return React.createElement(categoryIcons['pdf'], {
+      className: 'size-6 text-muted-foreground'
+    })
+  }
+
+  if (
+    resource.file_type === 'png' ||
+    resource.file_type === 'jpg' ||
+    resource.file_type === 'jpeg'
+  ) {
+    return React.createElement(categoryIcons['image'], {
+      className: 'size-6 text-muted-foreground'
+    })
+  }
+
+  // Use TextFileIcon as fallback for document-type resources
+  if (categoryIcons['uncategorized']) {
+    return React.createElement(categoryIcons['uncategorized'], {
+      className: 'size-6 text-muted-foreground'
+    })
+  }
+
+  // Ultimate fallback
+  return getResourceStatusIcon(resource, new Map())
 }
 
 export function ResourcesTable() {
@@ -178,11 +249,7 @@ export function ResourcesTable() {
   }
 
   const isResourceProcessing = (resource: Resource) => {
-    return (
-      resource.status === 'pending' ||
-      resource.status === 'processing' ||
-      uploadStatus.get(resource.id) === 'loading'
-    )
+    return resource.status === 'processing'
   }
 
   const getStatusIcon = (resource: Resource) => {
@@ -254,38 +321,18 @@ export function ResourcesTable() {
               style={{ paddingLeft: `${level * 24}px` }}
             >
               <div className="flex items-center gap-3">
-                {isFolder ? (
-                  isExpanded ? (
-                    <FolderOpenIcon className="size-6 text-muted-foreground" />
-                  ) : (
-                    <FolderIcon className="size-6 text-muted-foreground" />
-                  )
-                ) : isProcessing ? (
-                  <Loader className="size-6 text-blue-500" />
-                ) : resource.title.startsWith('ASME') ? (
-                  categoryIcons['Technical Document'] &&
-                  React.createElement(categoryIcons['Technical Document'], {
-                    className: 'size-6 text-muted-foreground'
-                  })
-                ) : (
-                  categoryIcons[
-                    resource.category as keyof typeof categoryIcons
-                  ] &&
-                  React.createElement(
-                    categoryIcons[
-                      resource.category as keyof typeof categoryIcons
-                    ],
-                    {
-                      className: 'size-6 text-muted-foreground'
-                    }
-                  )
-                )}
+                <ResourceIcon resource={resource} isExpanded={isExpanded} />
                 <div className="flex-1">
                   <span className="text-sm font-medium">{resource.title}</span>
                   <div className="text-xs text-muted-foreground font-light line-clamp-1">
                     {isFolder ? (
                       `${childResources.length} items`
-                    ) : isProcessing ? (
+                    ) : uploadStatus.get(resource.id) === 'loading' ? (
+                      <span>
+                        Uploading
+                        <LoadingDots />
+                      </span>
+                    ) : resource.status === 'processing' ? (
                       <span>
                         Processing
                         <LoadingDots />
@@ -407,7 +454,6 @@ export function ResourcesTable() {
           <p className="text-muted-foreground">
             Access engineering documents, standards, and project communications
           </p>
-          <p>Number of resources: {resources.length}</p>
         </div>
 
         {selectedIds.size > 0 && (

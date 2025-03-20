@@ -1,5 +1,6 @@
 import {
   handleResourceError,
+  handleResourceProcessing,
   handleResourceSuccess
 } from '@/lib/actions/resources'
 import { processResource } from '../processing/process-resource'
@@ -12,6 +13,7 @@ export const processFile = inngest.createFunction(
     const { resource, userId } = event.data
 
     try {
+      handleResourceProcessing(resource.id)
       // Process the file and get the results
       const result = await processResource(resource, userId)
 

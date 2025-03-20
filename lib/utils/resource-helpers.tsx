@@ -1,4 +1,5 @@
-import Loader from '@/components/lottie/loader'
+import LoadingDots from '@/components/magicui/loading-dots'
+import { Badge } from '@/components/ui/badge'
 import { DEFAULT_INTEGRATIONS } from '@/data/integrations'
 import { categoryIcons } from '@/data/resources'
 import { Resource } from '@/lib/types'
@@ -19,18 +20,26 @@ export const getResourceStatusIcon = (
     categoryIcons[resource.category as keyof typeof categoryIcons]
   const currentUploadStatus = uploadStatus.get(resource.id)
 
-  if (
-    currentUploadStatus === 'loading' ||
-    resource.status === 'loading' ||
-    resource.status === 'processing'
-  ) {
-    return <Loader className="size-6 text-blue-500" />
+  if (currentUploadStatus === 'loading') {
+    return (
+      <Badge className="flex items-center text-blue-500 bg-blue-500/10 hover:bg-blue-500/20">
+        <span className="text-xs font-medium mr-1">Uploading</span>
+        <LoadingDots />
+      </Badge>
+    )
   } else if (currentUploadStatus === 'error' || resource.status === 'error') {
     return <XCircleIcon className="size-6 text-red-500" />
   } else if (
-    currentUploadStatus === 'success' ||
-    resource.status === 'completed'
+    resource.status === 'processing' ||
+    resource.status === 'pending'
   ) {
+    return (
+      <Badge className="flex items-center text-yellow-500 bg-yellow-500/10 hover:bg-yellow-500/20">
+        <span className="text-xs font-medium mr-1">Processing</span>
+        <LoadingDots />
+      </Badge>
+    )
+  } else if (resource.status === 'completed') {
     return <CheckCircleIcon className="size-6 text-green-500" />
   } else if (IconComponent) {
     return <IconComponent className="size-6 text-muted-foreground" />

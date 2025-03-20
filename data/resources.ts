@@ -3,6 +3,7 @@ import {
   BoxIcon,
   ChartColumnIcon,
   ConvoIcon,
+  ImageIcon,
   NotesIcon,
   TextFileIcon
 } from '@/lib/utils/icons'
@@ -88,8 +89,9 @@ export const categoryIcons = {
   'Geometry Files': BoxIcon,
   Specification: TextFileIcon,
   'Technical Document': TextFileIcon,
-  folder: BoxIcon,
-  uncategorized: TextFileIcon
+  pdf: TextFileIcon,
+  image: ImageIcon,
+  uncategorized: BoxIcon
 }
 
 export const defaultFolders: Resource[] = [

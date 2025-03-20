@@ -213,6 +213,7 @@ export interface Resource {
   description: string
   category: string
   file_path: string
+  file_type: string
   user_id: string
   created_at: string
   origin?: ResourceOrigin

@@ -7,16 +7,30 @@ export const handleResourceSuccess = async (
   result: ProcessedResource
 ) => {
   const supabase = await createServiceRoleClient()
+  console.log('[handleResourceSuccess] Saving result:', result)
   const { error: updateError } = await supabase
     .from('resources')
     .update({
+      title: result.title,
       description: result.description,
-      outline: 'outline' in result ? result.outline : null,
+      content: result.content,
       processed: true,
       processing_result: result,
       processing_completed_at: new Date().toISOString(),
       status: 'completed'
     })
+    .eq('id', resourceId)
+
+  if (updateError) {
+    throw updateError
+  }
+}
+
+export const handleResourceProcessing = async (resourceId: string) => {
+  const supabase = await createServiceRoleClient()
+  const { error: updateError } = await supabase
+    .from('resources')
+    .update({ status: 'processing' })
     .eq('id', resourceId)
 
   if (updateError) {
