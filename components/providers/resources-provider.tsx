@@ -8,7 +8,7 @@ import { createContext, ReactNode, useContext, useState } from 'react'
 interface ResourcesContextType {
   resources: Resource[]
   addResources: (newResources: Resource[]) => void
-  removeResource: (id: string) => void
+  removeResources: (ids: string | string[]) => void
   uploadStatus: Map<string, 'loading' | 'success' | 'error'>
   setUploadStatus: (id: string, status: 'loading' | 'success' | 'error') => void
   handleResourceUpdate: (resource: Resource) => void
@@ -32,11 +32,21 @@ export function ResourcesProvider({
     Map<string, 'loading' | 'success' | 'error'>
   >(new Map())
 
-  const removeResource = (id: string) => {
-    setResources(prev => prev.filter(resource => resource.id !== id))
+  const removeResources = (ids: string | string[]) => {
+    console.log('Removing resources:', ids)
+    const idsToRemove = Array.isArray(ids) ? ids : [ids]
+    
+    // Only remove resources that exist in the current state
+    setResources(prev => {
+      const existingIds = new Set(prev.map(r => r.id))
+      const validIdsToRemove = idsToRemove.filter(id => existingIds.has(id))
+      return prev.filter(resource => !validIdsToRemove.includes(resource.id))
+    })
+
+    // Clean up upload statuses
     setUploadStatusMap(prev => {
       const next = new Map(prev)
-      next.delete(id)
+      idsToRemove.forEach(id => next.delete(id))
       return next
     })
   }
@@ -46,7 +56,12 @@ export function ResourcesProvider({
 
     setResources(prev => {
       const existingResource = prev.find(r => r.id === updatedResource.id)
-      if (!existingResource) return [...prev, updatedResource]
+      if (!existingResource) {
+        // Add new resource and maintain sort order
+        return [...prev, updatedResource].sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+      }
 
       return prev.map(resource =>
         resource.id === updatedResource.id
@@ -77,35 +92,27 @@ export function ResourcesProvider({
   useResourceChanges({
     userId: user?.id,
     onUpdate: handleResourceUpdate,
-    onDelete: removeResource
+    onDelete: removeResources
   })
 
   const addResources = (newResources: Resource[]) => {
     console.log('Adding resources:', newResources)
     // Batch all state updates together for better performance and consistency
     setResources(prev => {
-      // Add new resources immediately to the state
-      const updatedResources = [...prev]
+      // Add new resources immediately to the state and maintain sort order
+      const updatedResources = [...prev, ...newResources].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
 
-      newResources.forEach(resource => {
-        const existingIndex = updatedResources.findIndex(
-          r => r.id === resource.id
-        )
-        if (existingIndex === -1) {
-          // Add new resource
-          updatedResources.push(resource)
-        } else {
-          // Update existing resource
-          updatedResources[existingIndex] = {
-            ...updatedResources[existingIndex],
-            ...resource
-          }
-        }
-      })
+      // Remove duplicates while maintaining sort order
+      const uniqueResources = updatedResources.filter(
+        (resource, index, self) =>
+          index === self.findIndex(r => r.id === resource.id)
+      )
 
-      console.log('Updated resources:', updatedResources)
+      console.log('Updated resources:', uniqueResources)
 
-      return updatedResources
+      return uniqueResources
     })
 
     // Update upload statuses
@@ -180,7 +187,7 @@ export function ResourcesProvider({
       value={{
         resources,
         addResources,
-        removeResource,
+        removeResources,
         uploadStatus,
         setUploadStatus,
         handleResourceUpdate

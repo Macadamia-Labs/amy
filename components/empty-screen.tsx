@@ -3,20 +3,20 @@ import { ArrowRight } from 'lucide-react'
 
 const exampleMessages = [
   {
-    heading: 'What is DeepSeek R1?',
-    message: 'What is DeepSeek R1?'
+    heading: 'What pump am I using in my system?',
+    message: 'What pump am I using in my system?'
   },
   {
-    heading: 'Why is Nvidia growing rapidly?',
-    message: 'Why is Nvidia growing rapidly?'
+    heading: 'What are all the standards used in this design?',
+    message: 'What are all the standards used in this design?'
   },
   {
-    heading: 'Tesla vs Rivian',
-    message: 'Tesla vs Rivian'
+    heading: 'What type of material is used in this design?',
+    message: 'What type of material is used in this design?'
   },
   {
-    heading: 'Summary: https://arxiv.org/pdf/2501.05707',
-    message: 'Summary: https://arxiv.org/pdf/2501.05707'
+    heading: 'Give me an overview of all the components in this design.',
+    message: 'Give me an overview of all the components in this design.'
   }
 ]
 export function EmptyScreen({

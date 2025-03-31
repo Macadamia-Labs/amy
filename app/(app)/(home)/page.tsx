@@ -1,6 +1,6 @@
-import { ActivityView } from '@/components/changes/activity-wrapper'
-import { exampleChanges } from '@/components/changes/example-changes'
+import { Chat } from '@/components/chat'
 import { resources, type ResourceItem } from '@/data/resources'
+import { generateUUID } from '@/lib/utils/helpers'
 
 export default function AppPage() {
   // Hardcoded selection of resources by ID
@@ -11,7 +11,7 @@ export default function AppPage() {
 
   return (
     <div className="p-4 w-full overflow-auto">
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <div className="flex items-center gap-2">
           <div className="h-12 w-1 bg-purple-500 rounded-full"></div>
           <div>
@@ -23,7 +23,7 @@ export default function AppPage() {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Recent Resources Section */}
       {/* <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Recent Resources</h2>
@@ -57,10 +57,12 @@ export default function AppPage() {
             )
           })}
         </div> */}
-      <div className="mt-4 w-full">
+      {/* <div className="mt-4 w-full">
         <ActivityView changes={exampleChanges} />
-      </div>
+      </div> */}
       {/* </div> */}
+
+      <Chat id={generateUUID()} />
     </div>
   )
 }

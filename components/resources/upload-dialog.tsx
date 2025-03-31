@@ -44,7 +44,8 @@ export function UploadDialog() {
         user_id: '',
         created_at: new Date().toISOString(),
         status: 'pending' as ResourceStatus,
-        origin: 'upload'
+        origin: 'upload',
+        file_type: file.type
       }
 
       return {

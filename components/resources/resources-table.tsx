@@ -37,7 +37,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import LoadingDots from '../magicui/loading-dots'
-
+import { Badge } from '../ui/badge'
 interface ResourceSourceCellProps {
   resource: Resource
 }
@@ -128,13 +128,15 @@ function ResourceIcon({ resource, isExpanded = false }: ResourceIconProps) {
 }
 
 export function ResourcesTable() {
-  const { resources, removeResource, uploadStatus, setUploadStatus } =
+  const { resources, removeResources, uploadStatus, setUploadStatus } =
     useResources()
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
-  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())
+  const [isDeleting, setIsDeleting] = useState(false)
   const [reprocessingIds, setReprocessingIds] = useState<Set<string>>(new Set())
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
   // Initialize expandedFolders with no folders expanded by default
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
@@ -165,6 +167,15 @@ export function ResourcesTable() {
     acc[parentId].push(resource)
     return acc
   }, {} as Record<string, Resource[]>)
+
+  // Get root level resources for pagination
+  const rootResources = (resourcesByParent['root'] || []).sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  )
+  const totalPages = Math.ceil(rootResources.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedRootResources = rootResources.slice(startIndex, endIndex)
 
   const toggleFolder = (folderId: string) => {
     setExpandedFolders(prev => {
@@ -219,17 +230,30 @@ export function ResourcesTable() {
   }
 
   const handleBulkDelete = async () => {
+    const idsToDelete = Array.from(selectedIds)
+    if (idsToDelete.length === 0) return
+
     try {
-      setDeletingIds(new Set(selectedIds))
-      await deleteResources(Array.from(selectedIds))
-      selectedIds.forEach(id => removeResource(id))
+      console.log('[handleBulkDelete] Starting bulk delete for:', idsToDelete)
+      setIsDeleting(true)
+      
+      // Add a timeout of 60 seconds for bulk operations
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Bulk delete operation timed out')), 30000)
+      })
+
+      await Promise.race([deleteResources(idsToDelete), timeoutPromise])
+      
+      console.log('[handleBulkDelete] Delete successful, updating UI')
+      removeResources(idsToDelete)
       setSelectedIds(new Set())
       toast.success('Selected resources deleted successfully')
     } catch (error) {
-      console.error('Error deleting resources:', error)
-      toast.error('Failed to delete some resources')
+      console.error('[handleBulkDelete] Error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to delete some resources')
+      // Keep the deletingIds state to show loading state for failed deletions
     } finally {
-      setDeletingIds(new Set())
+      setIsDeleting(false)
     }
   }
 
@@ -284,15 +308,25 @@ export function ResourcesTable() {
 
   const handleDelete = async (id: string) => {
     try {
-      setDeletingIds(new Set([id]))
-      await deleteResource(id)
-      removeResource(id)
+      console.log('[handleDelete] Starting delete for:', id)
+      setIsDeleting(true)
+      
+      // Add a timeout of 30 seconds for single delete
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Delete operation timed out')), 30000)
+      })
+
+      await Promise.race([deleteResource(id), timeoutPromise])
+      
+      console.log('[handleDelete] Delete successful, updating UI')
+      removeResources(id)
       toast.success('Resource deleted successfully')
     } catch (error) {
-      console.error('Error deleting resource:', error)
-      toast.error('Failed to delete resource')
+      console.error('[handleDelete] Error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to delete resource')
+      // Keep the deletingIds state to show loading state for failed deletion
     } finally {
-      setDeletingIds(new Set())
+      setIsDeleting(false)
     }
   }
 
@@ -365,7 +399,9 @@ export function ResourcesTable() {
               </div>
             )}
           </TableCell>
-          <TableCell>{!isFolder && resource.category}</TableCell>
+          <TableCell>
+            {!isFolder && <Badge variant="outline">{resource.category}</Badge>}
+          </TableCell>
           <TableCell>
             {!isFolder && <ResourceSourceCell resource={resource} />}
           </TableCell>
@@ -414,9 +450,9 @@ export function ResourcesTable() {
                 <DropdownMenuItem
                   onClick={() => handleDelete(resource.id)}
                   className="text-destructive focus:text-destructive"
-                  disabled={deletingIds.has(resource.id)}
+                  disabled={isDeleting}
                 >
-                  {deletingIds.has(resource.id) ? (
+                  {isDeleting ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
                     <Trash2 className="h-4 w-4 mr-2" />
@@ -462,9 +498,9 @@ export function ResourcesTable() {
               variant="destructive"
               size="sm"
               onClick={handleBulkDelete}
-              disabled={deletingIds.size > 0}
+              disabled={isDeleting}
             >
-              {deletingIds.size > 0 ? (
+              {isDeleting ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : (
                 <Trash2 className="h-4 w-4 mr-2" />
@@ -488,32 +524,60 @@ export function ResourcesTable() {
             </p>
           </div>
         ) : (
-          <UITable>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Resource</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>From</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="w-[50px]">Actions</TableHead>
-                <TableHead className="w-[50px]">
-                  <Checkbox
-                    checked={
-                      selectedIds.size === resources.length &&
-                      resources.length > 0
-                    }
-                    onCheckedChange={toggleSelectAll}
-                  />
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {(resourcesByParent['root'] || []).map(resource =>
-                renderResourceRow(resource)
-              )}
-            </TableBody>
-          </UITable>
+          <>
+            <UITable>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Resource</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>From</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead className="w-[50px]">Actions</TableHead>
+                  <TableHead className="w-[50px]">
+                    <Checkbox
+                      checked={
+                        selectedIds.size === resources.length &&
+                        resources.length > 0
+                      }
+                      onCheckedChange={toggleSelectAll}
+                    />
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedRootResources.map(resource =>
+                  renderResourceRow(resource)
+                )}
+              </TableBody>
+            </UITable>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t">
+                <div className="text-sm text-muted-foreground">
+                  Showing {startIndex + 1} to {Math.min(endIndex, rootResources.length)} of{' '}
+                  {rootResources.length} resources
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

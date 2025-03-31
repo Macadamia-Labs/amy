@@ -1,10 +1,9 @@
 import { createClient } from '@/lib/supabase/client'
 import { Chat, Report } from '@/lib/types/database'
 
-const supabase = createClient()
-
 // Chat queries used in chats-provider
 export async function getChats(): Promise<Chat[]> {
+  const supabase = createClient()
   const {
     data: { user },
     error: userError
@@ -43,6 +42,7 @@ export async function getChats(): Promise<Chat[]> {
 export async function createChat(
   chat: Omit<Chat, 'id' | 'created_at'>
 ): Promise<Chat | null> {
+  const supabase = createClient()
   try {
     const { data, error } = await supabase
       .from('chats')
@@ -59,6 +59,7 @@ export async function createChat(
 }
 
 export async function deleteChat(id: string): Promise<void> {
+  const supabase = createClient()
   try {
     const { error } = await supabase.from('chats').delete().eq('id', id)
 
@@ -72,6 +73,7 @@ export async function updateChatTitle(
   chatId: string,
   newTitle: string
 ): Promise<void> {
+  const supabase = createClient()
   const { error } = await supabase
     .from('chats')
     .update({ title: newTitle })
@@ -84,6 +86,7 @@ export async function updateChatTitle(
 }
 
 export async function bulkDeleteChats(chatIds: string[]): Promise<void> {
+  const supabase = createClient()
   const { error } = await supabase.from('chats').delete().in('id', chatIds)
 
   if (error) {
@@ -94,6 +97,7 @@ export async function bulkDeleteChats(chatIds: string[]): Promise<void> {
 
 // Report queries used in reports-provider
 export async function getReports(): Promise<Report[]> {
+  const supabase = createClient()
   const {
     data: { user },
     error: userError
@@ -120,6 +124,7 @@ export async function getReports(): Promise<Report[]> {
 }
 
 export async function deleteReport(id: string): Promise<void> {
+  const supabase = createClient()
   try {
     const { error } = await supabase.from('reports').delete().eq('id', id)
     if (error) throw error
@@ -129,40 +134,48 @@ export async function deleteReport(id: string): Promise<void> {
 }
 
 export async function deleteResources(ids: string[]): Promise<void> {
+  const supabase = createClient()
+  console.log('[deleteResources] Starting deletion for ids:', ids)
+  
   try {
-    // First fetch all resources to get their file paths
+    // First get the file paths
     const { data: resources, error: fetchError } = await supabase
       .from('resources')
-      .select('id, file_path')
+      .select('file_path')
       .in('id', ids)
 
     if (fetchError) {
-      console.error('Error fetching resources:', fetchError)
+      console.error('[deleteResources] Error fetching file paths:', fetchError)
       throw fetchError
     }
 
     // Delete files from storage if they exist
-    const filePaths =
-      resources?.filter(r => r.file_path).map(r => r.file_path) || []
+    const filePaths = resources?.filter(r => r.file_path).map(r => r.file_path) || []
     if (filePaths.length > 0) {
       const { error: storageError } = await supabase.storage
         .from('resources')
         .remove(filePaths)
 
       if (storageError) {
-        console.error('Error deleting files from storage:', storageError)
+        console.error('[deleteResources] Error deleting storage files:', storageError)
+        // Continue with database deletion even if storage deletion fails
       }
     }
 
-    // Delete all resource records in one command
+    // Delete database records
     const { error: deleteError } = await supabase
       .from('resources')
       .delete()
       .in('id', ids)
 
-    if (deleteError) throw deleteError
+    if (deleteError) {
+      console.error('[deleteResources] Error deleting database records:', deleteError)
+      throw deleteError
+    }
+
+    console.log('[deleteResources] Successfully deleted resources')
   } catch (error) {
-    console.error('Error deleting resources:', error)
+    console.error('[deleteResources] Error:', error)
     throw error
   }
 }
@@ -172,6 +185,7 @@ export async function deleteResource(id: string): Promise<void> {
 }
 
 export async function shareResource(id: string): Promise<string> {
+  const supabase = createClient()
   try {
     const { data: resource, error: fetchError } = await supabase
       .from('resources')
