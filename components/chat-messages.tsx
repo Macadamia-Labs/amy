@@ -90,7 +90,7 @@ export function ChatMessages({
   }
 
   return (
-    <div className="relative mx-auto px-4 w-full">
+    <div className="relative mx-auto px-4 w-full py-4">
       {messages.map(message => (
         <div key={message.id} className="mb-4 flex flex-col gap-4">
           <RenderMessage
@@ -114,7 +114,7 @@ export function ChatMessages({
         ) : (
           <Spinner />
         ))}
-      <div ref={messagesEndRef} /> {/* Add empty div as scroll anchor */}
+      <div ref={messagesEndRef} className="h-4" /> {/* Add some padding at the bottom */}
     </div>
   )
 }

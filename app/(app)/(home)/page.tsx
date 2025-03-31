@@ -10,7 +10,7 @@ export default function AppPage() {
     .filter(resource => resource !== undefined) as ResourceItem[]
 
   return (
-    <div className="p-4 w-full overflow-auto">
+    <div className="p-4 w-full overflow-auto h-full">
       {/* <div className="mb-8">
         <div className="flex items-center gap-2">
           <div className="h-12 w-1 bg-purple-500 rounded-full"></div>

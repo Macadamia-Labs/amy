@@ -60,25 +60,32 @@ export function Chat({
   }
 
   return (
-    <div className="flex flex-col w-full max-w-3xl pt-14 pb-60 mx-auto stretch">
-      <ChatMessages
-        messages={messages}
-        data={data}
-        onQuerySelect={onQuerySelect}
-        isLoading={isLoading}
-        chatId={id}
-      />
-      <ChatPanel
-        input={input}
-        handleInputChange={handleInputChange}
-        handleSubmit={onSubmit}
-        isLoading={isLoading}
-        messages={messages}
-        setMessages={setMessages}
-        stop={stop}
-        query={query}
-        append={append}
-      />
+    <div className="flex flex-col w-full max-w-3xl h-full mx-auto justify-center">
+      {
+        messages.length > 0 && (
+          <div className="flex-1 overflow-y-auto">
+            <ChatMessages
+              messages={messages}
+              data={data}
+              onQuerySelect={onQuerySelect}
+              isLoading={isLoading}
+              chatId={id}
+          />
+        </div>
+      ) }
+      <div className="sticky bottom-0 bg-background">
+        <ChatPanel
+          input={input}
+          handleInputChange={handleInputChange}
+          handleSubmit={onSubmit}
+          isLoading={isLoading}
+          messages={messages}
+          setMessages={setMessages}
+          stop={stop}
+          query={query}
+          append={append}
+        />
+      </div>
     </div>
   )
 }
