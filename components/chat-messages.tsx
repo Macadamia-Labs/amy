@@ -10,6 +10,7 @@ interface ChatMessagesProps {
   onQuerySelect: (query: string) => void
   isLoading: boolean
   chatId?: string
+  onResetToMessage?: (messageId: string) => void
 }
 
 export function ChatMessages({
@@ -17,7 +18,8 @@ export function ChatMessages({
   data,
   onQuerySelect,
   isLoading,
-  chatId
+  chatId,
+  onResetToMessage
 }: ChatMessagesProps) {
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({})
   const manualToolCallId = 'manual-tool-call'
@@ -99,6 +101,7 @@ export function ChatMessages({
             getIsOpen={getIsOpen}
             onOpenChange={handleOpenChange}
             onQuerySelect={onQuerySelect}
+            onResetToMessage={onResetToMessage}
             chatId={chatId}
           />
         </div>

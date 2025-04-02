@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 
 export const maxDuration = 30
 
-const DEFAULT_MODEL = 'openai:gpt-4o-mini'
+const DEFAULT_MODEL = 'openai:gpt-4o'
 
 export async function POST(req: Request) {
   try {
@@ -22,7 +22,8 @@ export async function POST(req: Request) {
 
     const cookieStore = await cookies()
     const modelFromCookie = cookieStore.get('selected-model')?.value
-    const searchMode = cookieStore.get('search-mode')?.value === 'true'
+    // const searchMode = cookieStore.get('search-mode')?.value === 'true'
+    const searchMode = true
     const model = modelFromCookie || DEFAULT_MODEL
     const provider = model.split(':')[0]
     if (!isProviderEnabled(provider)) {
@@ -33,6 +34,9 @@ export async function POST(req: Request) {
     }
 
     const supportsToolCalling = isToolCallSupported(model)
+
+    console.log('model', model)
+    console.log('supportsToolCalling', supportsToolCalling)
 
     return supportsToolCalling
       ? createToolCallingStreamResponse({

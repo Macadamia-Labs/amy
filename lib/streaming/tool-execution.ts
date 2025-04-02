@@ -1,9 +1,9 @@
 import {
-  CoreMessage,
-  DataStreamWriter,
-  generateId,
-  generateText,
-  JSONValue
+    CoreMessage,
+    DataStreamWriter,
+    generateId,
+    generateText,
+    JSONValue
 } from 'ai'
 import { z } from 'zod'
 import { searchSchema } from '../schema/search'
@@ -63,6 +63,10 @@ export async function executeToolCall(
 
             Search parameters:
             ${searchSchemaString}
+
+            IMPORTANT: The include_domains and exclude_domains fields are required. If you don't want to include or exclude any domains, use empty values like this:
+            <include_domains></include_domains>
+            <exclude_domains></exclude_domains>
 
             If you don't need a tool, respond with <tool_call><tool></tool></tool_call>`,
     messages: coreMessages

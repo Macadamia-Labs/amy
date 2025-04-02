@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+# Fix Build Errors
+- Execute `pnpm build` to find all build errors
+- Then fix these errors
+- Then loop until no more errors
+

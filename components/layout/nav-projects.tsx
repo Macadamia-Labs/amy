@@ -6,10 +6,13 @@ import {
   Folder,
   Forward,
   MoreHorizontal,
+  Pencil,
   Trash2
 } from 'lucide-react'
 import { useState } from 'react'
 
+import { CreateProjectDialog } from '@/components/projects/create-project-dialog'
+import { RenameProjectDialog } from '@/components/projects/rename-project-dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,59 +29,21 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar'
+import { deleteProject } from '@/lib/actions/projects'
 import { Project } from '@/lib/types/database'
 import { useRouter } from 'next/navigation'
-
-// Example hardcoded projects for development
-const exampleProjects: (Project & { color: string })[] = [
-  {
-    id: '1',
-    name: 'Starlink Silicon Packaging',
-    description: 'CFD simulation of wind turbine performance',
-    created_at: new Date(2024, 2, 15).toISOString(),
-    updated_at: new Date(2024, 2, 15).toISOString(),
-    color: 'bg-purple-500'
-  },
-  {
-    id: '2',
-    name: 'Solar Panel Optimization',
-    description: 'Thermal analysis of solar panel configurations',
-    created_at: new Date(2024, 2, 10).toISOString(),
-    updated_at: new Date(2024, 2, 10).toISOString(),
-    color: 'bg-amber-500'
-  },
-  {
-    id: '3',
-    name: 'Battery Cooling System',
-    description: 'Heat transfer simulation for EV batteries',
-    created_at: new Date(2024, 2, 5).toISOString(),
-    updated_at: new Date(2024, 2, 5).toISOString(),
-    color: 'bg-blue-500'
-  },
-  {
-    id: '4',
-    name: 'Bridge Structure Analysis',
-    description: 'Structural simulation of bridge design',
-    created_at: new Date(2024, 2, 1).toISOString(),
-    updated_at: new Date(2024, 2, 1).toISOString(),
-    color: 'bg-purple-500'
-  }
-]
+import { toast } from 'sonner'
 
 export function NavProjects({
-  projects: providedProjects = [],
+  projects = [],
   defaultColor = 'bg-blue-500'
 }: {
-  projects?: (Project & { color?: string })[]
+  projects: (Project & { color?: string })[]
   defaultColor?: string
 }) {
   const { isMobile } = useSidebar()
   const router = useRouter()
   const [showAll, setShowAll] = useState(false)
-
-  // Use example projects if no projects are provided
-  const projects =
-    providedProjects.length > 0 ? providedProjects : exampleProjects
 
   // Sort projects by creation time (most recent first) and get the display list
   const sortedProjects = [...projects].sort((a, b) => {
@@ -89,10 +54,13 @@ export function NavProjects({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <div className="flex items-center justify-between">
+        <SidebarGroupLabel>Projects</SidebarGroupLabel>
+        <CreateProjectDialog />
+      </div>
       <SidebarMenu>
         {displayProjects.map(item => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item.id}>
             <SidebarMenuButton
               onClick={e => {
                 e.preventDefault()
@@ -128,9 +96,30 @@ export function NavProjects({
                   <Forward className="text-muted-foreground" />
                   <span>Share Project</span>
                 </DropdownMenuItem>
+                <RenameProjectDialog 
+                  project={item} 
+                  trigger={
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      <Pencil className="text-muted-foreground" />
+                      <span>Rename Project</span>
+                    </DropdownMenuItem>
+                  }
+                />
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Trash2 className="text-muted-foreground" />
+                <DropdownMenuItem
+                  onClick={async () => {
+                    if (!item.id) return;
+                    const result = await deleteProject(item.id)
+                    if (result.error) {
+                      toast.error(result.error)
+                    } else {
+                      toast.success('Project deleted successfully')
+                      router.refresh();
+                    }
+                  }}
+                  className="text-destructive"
+                >
+                  <Trash2 className="text-destructive" />
                   <span>Delete Project</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+# Fix Lint Errors
+- Execute `pnpm lint` to find all lint errors
+- Then fix these errors
+- Then loop until no more errors

@@ -1,14 +1,13 @@
 "use client";
 
-import Image from "next/image";
-import { redirect, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/providers/auth-provider";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Suspense } from "react";
+import { useAuth } from "@/lib/providers/auth-provider";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { redirect, usePathname } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 export default function LoginPage() {
   return (

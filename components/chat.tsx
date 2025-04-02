@@ -59,6 +59,14 @@ export function Chat({
     handleSubmit(e)
   }
 
+  const handleResetToMessage = (messageId: string) => {
+    const messageIndex = messages.findIndex(msg => msg.id === messageId)
+    if (messageIndex !== -1) {
+      setMessages(messages.slice(0, messageIndex + 1))
+      setData(undefined) // reset data to clear tool call
+    }
+  }
+
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto justify-center">
       {
@@ -70,9 +78,11 @@ export function Chat({
               onQuerySelect={onQuerySelect}
               isLoading={isLoading}
               chatId={id}
-          />
-        </div>
-      ) }
+              onResetToMessage={handleResetToMessage}
+            />
+          </div>
+        )
+      }
       <div className="sticky bottom-0 bg-background">
         <ChatPanel
           input={input}

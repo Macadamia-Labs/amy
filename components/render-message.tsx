@@ -4,6 +4,7 @@ import { AnswerSection } from './answer-section'
 import { ReasoningAnswerSection } from './reasoning-answer-section'
 import RelatedQuestions from './related-questions'
 import { ToolSection } from './tool-section'
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from './ui/context-menu'
 import { UserMessage } from './user-message'
 
 interface RenderMessageProps {
@@ -12,6 +13,7 @@ interface RenderMessageProps {
   getIsOpen: (id: string) => boolean
   onOpenChange: (id: string, open: boolean) => void
   onQuerySelect: (query: string) => void
+  onResetToMessage?: (messageId: string) => void
   chatId?: string
 }
 
@@ -21,6 +23,7 @@ export function RenderMessage({
   getIsOpen,
   onOpenChange,
   onQuerySelect,
+  onResetToMessage,
   chatId
 }: RenderMessageProps) {
   const relatedQuestions = useMemo(
@@ -100,63 +103,92 @@ export function RenderMessage({
   }, [reasoningAnnotation, message.reasoning])
 
   if (message.role === 'user') {
-    return <UserMessage message={message.content} />
+    return (
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <UserMessage message={message.content} />
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem onClick={() => onResetToMessage?.(messageId)}>
+            Reset conversation to this message
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    )
   }
 
   if (message.toolInvocations?.length) {
     return (
-      <>
-        {message.toolInvocations.map(tool => (
-          <ToolSection
-            key={tool.toolCallId}
-            tool={tool}
-            isOpen={getIsOpen(messageId)}
-            onOpenChange={open => onOpenChange(messageId, open)}
-          />
-        ))}
-      </>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <>
+            {message.toolInvocations.map(tool => (
+              <ToolSection
+                key={tool.toolCallId}
+                tool={tool}
+                isOpen={getIsOpen(messageId)}
+                onOpenChange={open => onOpenChange(messageId, open)}
+              />
+            ))}
+          </>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem onClick={() => onResetToMessage?.(messageId)}>
+            Reset conversation to this message
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     )
   }
 
   return (
-    <>
-      {toolData.map(tool => (
-        <ToolSection
-          key={tool.toolCallId}
-          tool={tool}
-          isOpen={getIsOpen(tool.toolCallId)}
-          onOpenChange={open => onOpenChange(tool.toolCallId, open)}
-        />
-      ))}
-      {reasoningResult ? (
-        <ReasoningAnswerSection
-          content={{
-            reasoning: reasoningResult,
-            answer: message.content,
-            time: reasoningTime
-          }}
-          isOpen={getIsOpen(messageId)}
-          onOpenChange={open => onOpenChange(messageId, open)}
-          chatId={chatId}
-        />
-      ) : (
-        <AnswerSection
-          content={message.content}
-          isOpen={getIsOpen(messageId)}
-          onOpenChange={open => onOpenChange(messageId, open)}
-          chatId={chatId}
-        />
-      )}
-      {!message.toolInvocations &&
-        relatedQuestions &&
-        relatedQuestions.length > 0 && (
-          <RelatedQuestions
-            annotations={relatedQuestions as JSONValue[]}
-            onQuerySelect={onQuerySelect}
-            isOpen={getIsOpen(`${messageId}-related`)}
-            onOpenChange={open => onOpenChange(`${messageId}-related`, open)}
-          />
-        )}
-    </>
+    <ContextMenu>
+      <ContextMenuTrigger>
+        <>
+          {toolData.map(tool => (
+            <ToolSection
+              key={tool.toolCallId}
+              tool={tool}
+              isOpen={getIsOpen(tool.toolCallId)}
+              onOpenChange={open => onOpenChange(tool.toolCallId, open)}
+            />
+          ))}
+          {reasoningResult ? (
+            <ReasoningAnswerSection
+              content={{
+                reasoning: reasoningResult,
+                answer: message.content,
+                time: reasoningTime
+              }}
+              isOpen={getIsOpen(messageId)}
+              onOpenChange={open => onOpenChange(messageId, open)}
+              chatId={chatId}
+            />
+          ) : (
+            <AnswerSection
+              content={message.content}
+              isOpen={getIsOpen(messageId)}
+              onOpenChange={open => onOpenChange(messageId, open)}
+              chatId={chatId}
+            />
+          )}
+          {!message.toolInvocations &&
+            relatedQuestions &&
+            relatedQuestions.length > 0 && (
+              <RelatedQuestions
+                annotations={relatedQuestions as JSONValue[]}
+                onQuerySelect={onQuerySelect}
+                isOpen={getIsOpen(`${messageId}-related`)}
+                onOpenChange={open => onOpenChange(`${messageId}-related`, open)}
+              />
+            )}
+        </>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem onClick={() => onResetToMessage?.(messageId)}>
+          Reset conversation to this message
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   )
 }

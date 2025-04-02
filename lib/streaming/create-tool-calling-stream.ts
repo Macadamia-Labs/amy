@@ -6,7 +6,6 @@ import {
   streamText
 } from 'ai'
 import { getMaxAllowedTokens, truncateMessages } from '../utils/context-window'
-import { isReasoningModel } from '../utils/registry'
 import { handleStreamFinish } from './handle-stream-finish'
 import { BaseStreamConfig } from './types'
 
@@ -38,7 +37,7 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
               model,
               chatId,
               dataStream,
-              skipRelatedQuestions: isReasoningModel(model)
+              skipRelatedQuestions: true,
             })
           }
         })

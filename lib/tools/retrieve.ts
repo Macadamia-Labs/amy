@@ -1,99 +1,32 @@
+import { hybridSearch } from "@/lib/actions/retrieval"
 import { tool } from 'ai'
-import { retrieveSchema } from '@/lib/schema/retrieve'
-import { SearchResults as SearchResultsType } from '@/lib/types'
+import { z } from 'zod'
 
-const CONTENT_CHARACTER_LIMIT = 10000
+const retrieveSchema = z.object({
+  query: z.string().describe('The search query to find relevant documentation')
+})
 
-async function fetchJinaReaderData(
+interface DocumentMatch {
+  id: string
+  content: string
   url: string
-): Promise<SearchResultsType | null> {
-  try {
-    const response = await fetch(`https://r.jina.ai/${url}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'X-With-Generated-Alt': 'true'
-      }
-    })
-    const json = await response.json()
-    if (!json.data || json.data.length === 0) {
-      return null
-    }
-
-    const content = json.data.content.slice(0, CONTENT_CHARACTER_LIMIT)
-
-    return {
-      results: [
-        {
-          title: json.data.title,
-          content,
-          url: json.data.url
-        }
-      ],
-      query: '',
-      images: []
-    }
-  } catch (error) {
-    console.error('Jina Reader API error:', error)
-    return null
-  }
-}
-
-async function fetchTavilyExtractData(
-  url: string
-): Promise<SearchResultsType | null> {
-  try {
-    const apiKey = process.env.TAVILY_API_KEY
-    const response = await fetch('https://api.tavily.com/extract', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ api_key: apiKey, urls: [url] })
-    })
-    const json = await response.json()
-    if (!json.results || json.results.length === 0) {
-      return null
-    }
-
-    const result = json.results[0]
-    const content = result.raw_content.slice(0, CONTENT_CHARACTER_LIMIT)
-
-    return {
-      results: [
-        {
-          title: content.slice(0, 100),
-          content,
-          url: result.url
-        }
-      ],
-      query: '',
-      images: []
-    }
-  } catch (error) {
-    console.error('Tavily Extract API error:', error)
-    return null
-  }
+  metadata: object
+  similarity_score: number
 }
 
 export const retrieveTool = tool({
-  description: 'Retrieve content from the web',
+  description: 'Retrieve information from the knowledge base. Use this tool to find relevant sources.',
   parameters: retrieveSchema,
-  execute: async ({ url }) => {
-    let results: SearchResultsType | null
-
-    // Use Jina if the API key is set, otherwise use Tavily
-    const useJina = process.env.JINA_API_KEY
-    if (useJina) {
-      results = await fetchJinaReaderData(url)
-    } else {
-      results = await fetchTavilyExtractData(url)
-    }
-
-    if (!results) {
-      return null
-    }
-
-    return results
+  execute: async ({ query }) => {
+    console.log("Retrieving documentation for:", query)
+    const matches = await hybridSearch(query)
+    
+    return matches.map((match: DocumentMatch) => ({
+      id: match.id,
+      content: match.content,
+      url: match.url,
+      metadata: match.metadata,
+      similarity_score: match.similarity_score
+    }))
   }
 })
