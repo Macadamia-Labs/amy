@@ -202,7 +202,6 @@ export type ResourceOrigin =
 
 export type ResourceStatus =
   | 'pending'
-  | 'loading'
   | 'processing'
   | 'completed'
   | 'error'

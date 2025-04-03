@@ -319,7 +319,7 @@ export function ResourcesTable() {
   const handleReprocess = async (id: string) => {
     try {
       setReprocessingIds(new Set([id]))
-      setUploadStatus(id, 'loading')
+      setUploadStatus(id, 'processing')
       await reprocessResource(id)
       toast.success('Resource reprocessing started')
     } catch (error) {
@@ -386,9 +386,9 @@ export function ResourcesTable() {
                   <div className="text-xs text-muted-foreground font-light line-clamp-1">
                     {isFolder ? (
                       `${childResources.length} items`
-                    ) : uploadStatus.get(resource.id) === 'loading' ? (
+                    ) : uploadStatus.get(resource.id) === 'processing' ? (
                       <span>
-                        Uploading
+                        Processing
                         <LoadingDots />
                       </span>
                     ) : resource.status === 'processing' ? (

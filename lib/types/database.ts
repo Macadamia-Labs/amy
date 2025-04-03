@@ -1,3 +1,5 @@
+import { ResourceStatus } from './index'
+
 export interface Chat {
   id: string
   title: string
@@ -58,6 +60,7 @@ export interface Resource {
   title: string
   description: string
   content: string
+  content_as_text?: string
   category: string
   file_path: string
   file_type: string
@@ -66,7 +69,7 @@ export interface Resource {
   updated_at: string
   file_url?: string
   embeddings?: any[]
-  status: 'loading' | 'processing' | 'completed' | 'error'
+  status: ResourceStatus
   processing_result?: {
     outline: any[]
   }

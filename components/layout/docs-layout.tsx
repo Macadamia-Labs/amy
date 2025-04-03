@@ -45,6 +45,11 @@ export function DocsLayout() {
   const isPdf = resource?.file_type === 'pdf'
   const isImage = ['png', 'jpg', 'jpeg'].includes(resource?.file_type || '')
 
+  // Clean up page tags from content
+  const cleanPageTags = (content: string) => {
+    return content.replace(/<page number='\d+'>/g, '').replace(/<\/page>/g, '')
+  }
+
   // Parse PDF content if available
   const pdfContent =
     isPdf && resource?.content
@@ -163,6 +168,13 @@ export function DocsLayout() {
                 />
               </TabsContent>
             )}
+            <TabsContent value="full" className="h-full">
+              <MemoizedReactMarkdown className="h-full overflow-auto p-4 whitespace-pre-wrap font-mono text-sm">
+                {resource?.content_as_text
+                  ? cleanPageTags(resource.content_as_text)
+                  : 'No full text content available'}
+              </MemoizedReactMarkdown>
+            </TabsContent>
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={35} minSize={30} order={2}>

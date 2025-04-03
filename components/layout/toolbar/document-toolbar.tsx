@@ -46,17 +46,20 @@ export function DocumentToolbar({
           <TabsList>
             <TabsTrigger value="pdf">PDF</TabsTrigger>
             <TabsTrigger value="markdown">Content</TabsTrigger>
+            <TabsTrigger value="full">Full</TabsTrigger>
           </TabsList>
         )}
         {isImage && (
           <TabsList>
             <TabsTrigger value="image">Image</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
+            <TabsTrigger value="full">Full</TabsTrigger>
           </TabsList>
         )}
         {!isPdf && !isImage && (
           <TabsList>
             <TabsTrigger value="content">Content</TabsTrigger>
+            <TabsTrigger value="full">Full</TabsTrigger>
           </TabsList>
         )}
       </div>

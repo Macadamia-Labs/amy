@@ -2,15 +2,15 @@
 
 import { useResourceChanges } from '@/hooks/use-resource-changes'
 import { useAuth } from '@/lib/providers/auth-provider'
-import { Resource } from '@/lib/types'
+import { Resource, ResourceStatus } from '@/lib/types'
 import { createContext, ReactNode, useContext, useState } from 'react'
 
 interface ResourcesContextType {
   resources: Resource[]
   addResources: (newResources: Resource[]) => void
   removeResources: (ids: string | string[]) => void
-  uploadStatus: Map<string, 'loading' | 'success' | 'error'>
-  setUploadStatus: (id: string, status: 'loading' | 'success' | 'error') => void
+  uploadStatus: Map<string, ResourceStatus>
+  setUploadStatus: (id: string, status: ResourceStatus) => void
   handleResourceUpdate: (resource: Resource) => void
 }
 
@@ -29,7 +29,7 @@ export function ResourcesProvider({
   const [resources, setResources] = useState<Resource[]>(initialResources)
 
   const [uploadStatus, setUploadStatusMap] = useState<
-    Map<string, 'loading' | 'success' | 'error'>
+    Map<string, ResourceStatus>
   >(new Map())
 
   const removeResources = (ids: string | string[]) => {
@@ -152,7 +152,7 @@ export function ResourcesProvider({
 
   const setUploadStatus = (
     id: string,
-    status: 'loading' | 'success' | 'error'
+    status: ResourceStatus
   ) => {
     // Update only the upload status, not the resource status
     console.log(`Setting upload status for ${id} to ${status}`)

@@ -1,4 +1,5 @@
 import { ReactElement } from 'react'
+import { ResourceStatus } from './index'
 
 export interface Resource {
   id: string
@@ -6,7 +7,7 @@ export interface Resource {
   description?: string
   category: string
   origin: string
-  status: 'loading' | 'processing' | 'completed' | 'error'
+  status: ResourceStatus
   processing_error?: string
   created_at: string
   is_folder?: boolean
