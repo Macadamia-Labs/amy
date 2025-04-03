@@ -1,6 +1,8 @@
+"use server"
 import { generateUUID } from '@/lib/utils/helpers'
 import { ProcessedResource } from '../processing/types'
 import { createServiceRoleClient } from '../supabase/service-role'
+import { ResourceStatus } from '../types'
 
 export const handleResourceSuccess = async (
   resourceId: string,
@@ -79,5 +81,17 @@ export const createPdfPages = async (
 
   if (pagesError) {
     throw new Error(`Failed to create page entries: ${pagesError.message}`)
+  }
+}
+
+export const setResourcesStatus = async (resource_id: string, status: ResourceStatus) => {
+  const supabase = await createServiceRoleClient()
+  const { error: updateError } = await supabase
+    .from('resources')
+    .update({ status })
+    .eq('id', resource_id)
+
+  if (updateError) {
+    throw updateError
   }
 }

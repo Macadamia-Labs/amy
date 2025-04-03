@@ -1,3 +1,4 @@
+import { setResourcesStatus } from '../actions/resources'
 import { createServiceRoleClient } from '../supabase/service-role'
 import { Resource } from '../types/database'
 import { processDocument } from './document-processor'
@@ -81,6 +82,7 @@ export async function processResource(
 
     return result
   } catch (error) {
+    await setResourcesStatus(resource.id, 'error')
     console.error('[process-resource] Error processing resource:', error)
     throw error
   }

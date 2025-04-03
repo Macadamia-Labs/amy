@@ -225,3 +225,30 @@ export async function reprocessResource(id: string): Promise<void> {
     throw new Error(error)
   }
 }
+
+export async function getSignedFileUrl(id: string): Promise<string> {
+  const supabase = createClient()
+  try {
+    const { data: resource, error: fetchError } = await supabase
+      .from('resources')
+      .select('file_path')
+      .eq('id', id)
+      .single()
+
+    if (fetchError) throw fetchError
+    if (!resource?.file_path) throw new Error('Resource not found')
+
+    // Create a signed URL that expires in 1 hour
+    const { data, error: signError } = await supabase.storage
+      .from('resources')
+      .createSignedUrl(resource.file_path, 60 * 60) // 1 hour expiration
+
+    if (signError) throw signError
+    if (!data?.signedUrl) throw new Error('Failed to create signed URL')
+
+    return data.signedUrl
+  } catch (error) {
+    console.error('Error getting signed URL:', error)
+    throw error
+  }
+}

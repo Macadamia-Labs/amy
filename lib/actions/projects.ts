@@ -167,4 +167,41 @@ export async function updateProject(
     console.error('Unexpected error updating project:', error)
     return { error: 'An unexpected error occurred while updating the project.' }
   }
+}
+
+export async function getProject(
+  projectId: string
+): Promise<{ project?: Project; error?: string }> {
+  try {
+    const supabase = await createClient()
+
+    // Get the current user
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser()
+
+    if (userError || !user) {
+      return { error: 'Unauthorized' }
+    }
+
+    // Fetch the project by ID and ensure it belongs to the user
+    const { data: project, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', projectId)
+      .eq('user_id', user.id)
+      .single()
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return { error: 'Project not found' }
+      }
+      return { error: error.message }
+    }
+
+    return { project }
+  } catch (error) {
+    return { error: 'An unexpected error occurred while fetching the project' }
+  }
 } 

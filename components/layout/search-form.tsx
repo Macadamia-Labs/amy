@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowBigRightDash } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import * as React from 'react'
 
 import {
@@ -45,6 +46,14 @@ const CHAT_TEMPLATES = [
   }
 ]
 
+// Navigation shortcuts
+const NAVIGATION_ITEMS = [
+  { icon: '🏠', title: 'Home', path: '/', shortcut: 'gh' },
+  { icon: '📂', title: 'Resources', path: '/resources', shortcut: 'gr' },
+  { icon: '⏱️', title: 'Issues', path: '/issues', shortcut: 'gi' },
+  { icon: '🔐', title: 'Integrations', path: '/integrations', shortcut: 'gn' }
+]
+
 export function SearchForm({
   onSearch,
   ...props
@@ -52,6 +61,7 @@ export function SearchForm({
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState('')
   const formRef = React.useRef<HTMLFormElement>(null)
+  const router = useRouter()
 
   const toggleOpen = React.useCallback(() => {
     setOpen(!open)
@@ -63,11 +73,27 @@ export function SearchForm({
         e.preventDefault()
         toggleOpen()
       }
+
+      // Listen for navigation shortcuts (g+key)
+      if (e.key === 'g' && !open) {
+        const keydownListener = (e2: KeyboardEvent) => {
+          const navItem = NAVIGATION_ITEMS.find(
+            item => item.shortcut === `g${e2.key}`
+          )
+          if (navItem) {
+            e2.preventDefault()
+            router.push(navItem.path)
+          }
+          document.removeEventListener('keydown', keydownListener)
+        }
+        
+        document.addEventListener('keydown', keydownListener, { once: true })
+      }
     }
 
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [toggleOpen])
+  }, [toggleOpen, open, router])
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault()
@@ -88,9 +114,15 @@ export function SearchForm({
     setOpen(false)
   }
 
+  const handleNavigate = (path: string) => {
+    router.push(path)
+    setOpen(false)
+  }
+
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
+      console.log('Enter key pressed')
       formRef.current?.requestSubmit()
     }
   }
@@ -147,6 +179,23 @@ export function SearchForm({
             </kbd>{' '}
             to send
           </CommandEmpty>
+          <CommandGroup heading="Navigate to">
+            {NAVIGATION_ITEMS.map((item, index) => (
+              <CommandItem
+                key={index}
+                className="cursor-pointer"
+                onSelect={() => handleNavigate(item.path)}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="flex items-center gap-2">
+                    <span>{item.icon}</span>
+                    <span>{item.title}</span>
+                  </span>
+                  <ShortCut>{item.shortcut}</ShortCut>
+                </div>
+              </CommandItem>
+            ))}
+          </CommandGroup>
           <CommandGroup heading="Start with a template">
             {CHAT_TEMPLATES.map((template, index) => (
               <CommandItem

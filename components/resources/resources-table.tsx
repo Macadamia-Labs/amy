@@ -21,6 +21,7 @@ import { categoryIcons } from '@/data/resources'
 import {
   deleteResource,
   deleteResources,
+  getSignedFileUrl,
   reprocessResource,
   shareResource
 } from '@/lib/queries/client'
@@ -32,7 +33,7 @@ import {
   getResourceStatusIcon
 } from '@/lib/utils/resource-helpers'
 import { CheckedState } from '@radix-ui/react-checkbox'
-import { Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
+import { Copy, Link2, Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -291,6 +292,30 @@ export function ResourcesTable() {
     }
   }
 
+  const handleCopySignedUrl = async (id: string) => {
+    const loadingToast = toast.loading('Generating signed URL...', )
+    try {
+      const signedUrl = await getSignedFileUrl(id)
+      await navigator.clipboard.writeText(signedUrl)
+      toast.success('Signed URL copied to clipboard')
+    } catch (error) {
+      console.error('Error getting signed URL:', error)
+      toast.error('Failed to get signed URL')
+    } finally {
+      toast.dismiss(loadingToast)
+    }
+  }
+
+  const handleCopyId = async (id: string) => {
+    try {
+      await navigator.clipboard.writeText(id)
+      toast.success('Resource ID copied to clipboard')
+    } catch (error) {
+      console.error('Error copying ID:', error)
+      toast.error('Failed to copy resource ID')
+    }
+  }
+
   const handleReprocess = async (id: string) => {
     try {
       setReprocessingIds(new Set([id]))
@@ -422,6 +447,14 @@ export function ResourcesTable() {
                     <DropdownMenuItem onClick={() => handleShare(resource.id)}>
                       <Share className="h-4 w-4 mr-2" />
                       Share
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleCopySignedUrl(resource.id)}>
+                      <Link2 className="h-4 w-4 mr-2" />
+                      Copy Signed URL
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleCopyId(resource.id)}>
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy ID
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleReprocess(resource.id)}
