@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { createUserProfile, getUserProfile } from './lib/queries/server'
+import { createUserProfile, getUserProfile } from './lib/actions/users'
 
 export async function middleware(request: NextRequest) {
   try {
@@ -42,7 +42,11 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     // Redirect authenticated users away from login page
-    if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/auth'))) {
+    if (
+      user &&
+      (request.nextUrl.pathname.startsWith('/login') ||
+        request.nextUrl.pathname.startsWith('/auth'))
+    ) {
       const url = request.nextUrl.clone()
       url.pathname = '/'
       return NextResponse.redirect(url)

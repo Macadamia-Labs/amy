@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import Textarea from 'react-textarea-autosize'
 import { EmptyScreen } from './empty-screen'
-import { StandardSelector } from './model-selector'
+import { ResourcesSelector } from './resources/resources-selector'
 import { Button } from './ui/button'
 
 interface ChatPanelProps {
@@ -19,7 +19,9 @@ interface ChatPanelProps {
   setMessages: (messages: Message[]) => void
   query?: string
   stop: () => void
-  append: (message: any) => void
+  append: (message: Message) => void
+  selectedResourceIds: Set<string>
+  setSelectedResourceIds: (ids: Set<string>) => void
 }
 
 export function ChatPanel({
@@ -31,14 +33,16 @@ export function ChatPanel({
   setMessages,
   query,
   stop,
-  append
+  append,
+  selectedResourceIds,
+  setSelectedResourceIds
 }: ChatPanelProps) {
   const [showEmptyScreen, setShowEmptyScreen] = useState(false)
   const router = useRouter()
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const isFirstRender = useRef(true)
-  const [isComposing, setIsComposing] = useState(false) // Composition state
-  const [enterDisabled, setEnterDisabled] = useState(false) // Disable Enter after composition ends
+  const [isComposing, setIsComposing] = useState(false)
+  const [enterDisabled, setEnterDisabled] = useState(false)
 
   const handleCompositionStart = () => setIsComposing(true)
 
@@ -55,17 +59,16 @@ export function ChatPanel({
     router.push('/')
   }
 
-  // if query is not empty, submit the query
   useEffect(() => {
     if (isFirstRender.current && query && query.trim().length > 0) {
       append({
+        id: Math.random().toString(),
         role: 'user',
         content: query
       })
       isFirstRender.current = false
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }, [query, append])
 
   return (
     <form
@@ -112,11 +115,12 @@ export function ChatPanel({
           onBlur={() => setShowEmptyScreen(false)}
         />
 
-        {/* Bottom menu area */}
         <div className="flex items-center justify-between p-3">
           <div className="flex items-center gap-2">
-            <StandardSelector />
-            {/* <SearchModeToggle /> */}
+            <ResourcesSelector
+              selectedIds={selectedResourceIds}
+              onSelect={setSelectedResourceIds}
+            />
           </div>
           <div className="flex items-center gap-2">
             {messages.length > 0 && (

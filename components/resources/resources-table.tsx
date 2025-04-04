@@ -24,7 +24,7 @@ import {
   getSignedFileUrl,
   reprocessResource,
   shareResource
-} from '@/lib/queries/client'
+} from '@/lib/actions/resources'
 import { Resource } from '@/lib/types'
 import { FolderIcon, FolderOpenIcon } from '@/lib/utils/icons'
 import {
@@ -33,7 +33,15 @@ import {
   getResourceStatusIcon
 } from '@/lib/utils/resource-helpers'
 import { CheckedState } from '@radix-ui/react-checkbox'
-import { Copy, Link2, Loader2, MoreHorizontal, RefreshCw, Share, Trash2 } from 'lucide-react'
+import {
+  Copy,
+  Link2,
+  Loader2,
+  MoreHorizontal,
+  RefreshCw,
+  Share,
+  Trash2
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -171,7 +179,8 @@ export function ResourcesTable() {
 
   // Get root level resources for pagination
   const rootResources = (resourcesByParent['root'] || []).sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   )
   const totalPages = Math.ceil(rootResources.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
@@ -237,21 +246,28 @@ export function ResourcesTable() {
     try {
       console.log('[handleBulkDelete] Starting bulk delete for:', idsToDelete)
       setIsDeleting(true)
-      
+
       // Add a timeout of 60 seconds for bulk operations
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Bulk delete operation timed out')), 30000)
+        setTimeout(
+          () => reject(new Error('Bulk delete operation timed out')),
+          30000
+        )
       })
 
       await Promise.race([deleteResources(idsToDelete), timeoutPromise])
-      
+
       console.log('[handleBulkDelete] Delete successful, updating UI')
       removeResources(idsToDelete)
       setSelectedIds(new Set())
       toast.success('Selected resources deleted successfully')
     } catch (error) {
       console.error('[handleBulkDelete] Error:', error)
-      toast.error(error instanceof Error ? error.message : 'Failed to delete some resources')
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete some resources'
+      )
       // Keep the deletingIds state to show loading state for failed deletions
     } finally {
       setIsDeleting(false)
@@ -293,7 +309,7 @@ export function ResourcesTable() {
   }
 
   const handleCopySignedUrl = async (id: string) => {
-    const loadingToast = toast.loading('Generating signed URL...', )
+    const loadingToast = toast.loading('Generating signed URL...')
     try {
       const signedUrl = await getSignedFileUrl(id)
       await navigator.clipboard.writeText(signedUrl)
@@ -335,20 +351,22 @@ export function ResourcesTable() {
     try {
       console.log('[handleDelete] Starting delete for:', id)
       setIsDeleting(true)
-      
+
       // Add a timeout of 30 seconds for single delete
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Delete operation timed out')), 30000)
       })
 
       await Promise.race([deleteResource(id), timeoutPromise])
-      
+
       console.log('[handleDelete] Delete successful, updating UI')
       removeResources(id)
       toast.success('Resource deleted successfully')
     } catch (error) {
       console.error('[handleDelete] Error:', error)
-      toast.error(error instanceof Error ? error.message : 'Failed to delete resource')
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to delete resource'
+      )
       // Keep the deletingIds state to show loading state for failed deletion
     } finally {
       setIsDeleting(false)
@@ -448,7 +466,9 @@ export function ResourcesTable() {
                       <Share className="h-4 w-4 mr-2" />
                       Share
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleCopySignedUrl(resource.id)}>
+                    <DropdownMenuItem
+                      onClick={() => handleCopySignedUrl(resource.id)}
+                    >
                       <Link2 className="h-4 w-4 mr-2" />
                       Copy Signed URL
                     </DropdownMenuItem>
@@ -587,14 +607,17 @@ export function ResourcesTable() {
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-4 py-3 border-t">
                 <div className="text-sm text-muted-foreground">
-                  Showing {startIndex + 1} to {Math.min(endIndex, rootResources.length)} of{' '}
+                  Showing {startIndex + 1} to{' '}
+                  {Math.min(endIndex, rootResources.length)} of{' '}
                   {rootResources.length} resources
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    onClick={() =>
+                      setCurrentPage(prev => Math.max(1, prev - 1))
+                    }
                     disabled={currentPage === 1}
                   >
                     Previous
@@ -602,7 +625,9 @@ export function ResourcesTable() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    onClick={() =>
+                      setCurrentPage(prev => Math.min(totalPages, prev + 1))
+                    }
                     disabled={currentPage === totalPages}
                   >
                     Next

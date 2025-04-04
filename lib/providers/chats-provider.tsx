@@ -3,10 +3,9 @@
 import {
   bulkDeleteChats,
   createChat,
-  deleteChat as deleteChatFromDb,
   getChats,
   updateChatTitle
-} from '@/lib/queries/client'
+} from '@/lib/actions/chat'
 import { Chat } from '@/lib/types/database'
 import {
   createContext,
@@ -84,7 +83,7 @@ export function ChatsProvider({ children }: ChatsProviderProps) {
 
   const deleteChat = useCallback(async (chatId: string) => {
     try {
-      await deleteChatFromDb(chatId)
+      await deleteChat(chatId)
       setChats(prevChats => prevChats.filter(chat => chat.id !== chatId))
     } catch (error) {
       console.error('Error deleting chat:', error)

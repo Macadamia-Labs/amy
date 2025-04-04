@@ -10,4 +10,8 @@ export interface BaseStreamConfig {
     content: string
     activeSection: Section | null
   }
+  resourcesContext?: {
+    resourceIds: string[]
+    resourcesContent: string
+  }
 }

@@ -32,13 +32,18 @@ interface ResearcherConfig {
     content: string
     activeSection: Section | null
   }
+  resourcesContext?: {
+    resourceIds: string[]
+    resourcesContent: string
+  }
 }
 
 export function researcher({
   messages,
   model,
   searchMode,
-  context
+  context,
+  resourcesContext
 }: ResearcherConfig): ResearcherReturn {
   try {
     const currentDate = new Date().toLocaleString()
@@ -63,13 +68,18 @@ When answering questions:
 - If the question is not related to the document, you can ignore the document context`
     }
 
+    if (resourcesContext) {
+      fullPrompt += `\n\n The user attached the following resources as context:
+${JSON.stringify(resourcesContext)}`
+    }
+
     return {
       model: getModel(model),
       system: fullPrompt,
       messages,
       tools: {
         webSearch: searchTool,
-        retrieve: retrieveTool,
+        retrieve: retrieveTool
       },
       // experimental_activeTools: searchMode
       //   ? ['search', 'retrieve']

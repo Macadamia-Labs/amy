@@ -200,11 +200,7 @@ export type ResourceOrigin =
   | 'matlab'
   | string
 
-export type ResourceStatus =
-  | 'pending'
-  | 'processing'
-  | 'completed'
-  | 'error'
+export type ResourceStatus = 'pending' | 'processing' | 'completed' | 'error'
 
 export interface Resource {
   id: string
@@ -223,4 +219,5 @@ export interface Resource {
   processing_error?: string
   is_folder?: boolean
   parent_id?: string | null
+  content_as_text?: string
 }

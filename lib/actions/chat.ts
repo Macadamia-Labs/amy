@@ -1,6 +1,7 @@
 'use server'
 
 import { getRedisClient, RedisWrapper } from '@/lib/redis/config'
+import { createClient } from '@/lib/supabase/server'
 import { type Chat } from '@/lib/types'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
@@ -157,4 +158,49 @@ export async function shareChat(id: string, userId: string = 'anonymous') {
   await redis.hmset(`chat:${id}`, payload)
 
   return payload
+}
+
+export async function createChat(
+  chat: Omit<Chat, 'id' | 'created_at'>
+): Promise<Chat | null> {
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('chats')
+      .insert(chat)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data as Chat
+  } catch (error) {
+    console.error('Error creating chat:', error)
+    return null
+  }
+}
+
+export async function updateChatTitle(
+  chatId: string,
+  newTitle: string
+): Promise<void> {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('chats')
+    .update({ title: newTitle })
+    .eq('id', chatId)
+
+  if (error) {
+    console.error('Error updating chat title:', error)
+    throw error
+  }
+}
+
+export async function bulkDeleteChats(chatIds: string[]): Promise<void> {
+  const supabase = await createClient()
+  const { error } = await supabase.from('chats').delete().in('id', chatIds)
+
+  if (error) {
+    console.error('Error bulk deleting chats:', error)
+    throw error
+  }
 }

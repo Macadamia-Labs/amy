@@ -1,8 +1,8 @@
+import { ToolInvocation } from '@/hooks/use-tool-chat'
 import { JSONValue, Message } from 'ai'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { RenderMessage } from './render-message'
 import { ToolSection } from './tool-section'
-import { Spinner } from './ui/spinner'
 
 interface ChatMessagesProps {
   messages: Message[]
@@ -11,13 +11,13 @@ interface ChatMessagesProps {
   isLoading: boolean
   chatId?: string
   onResetToMessage?: (messageId: string) => void
+  toolInvocations?: ToolInvocation[]
 }
 
 export function ChatMessages({
   messages,
   data,
   onQuerySelect,
-  isLoading,
   chatId,
   onResetToMessage
 }: ChatMessagesProps) {
@@ -76,7 +76,7 @@ export function ChatMessages({
     1 -
     [...messages].reverse().findIndex(msg => msg.role === 'user')
 
-  const showLoading = isLoading && messages[messages.length - 1].role === 'user'
+  // const showLoading = isLoading && messages[messages.length - 1].role === 'user'
 
   const getIsOpen = (id: string) => {
     const baseId = id.endsWith('-related') ? id.slice(0, -8) : id
@@ -106,18 +106,16 @@ export function ChatMessages({
           />
         </div>
       ))}
-      {showLoading &&
-        (lastToolData ? (
-          <ToolSection
-            key={manualToolCallId}
-            tool={lastToolData}
-            isOpen={getIsOpen(manualToolCallId)}
-            onOpenChange={open => handleOpenChange(manualToolCallId, open)}
-          />
-        ) : (
-          <Spinner />
-        ))}
-      <div ref={messagesEndRef} className="h-4" /> {/* Add some padding at the bottom */}
+      {lastToolData && (
+        <ToolSection
+          key={manualToolCallId}
+          tool={lastToolData}
+          isOpen={getIsOpen(manualToolCallId)}
+          onOpenChange={open => handleOpenChange(manualToolCallId, open)}
+        />
+      )}
+      <div ref={messagesEndRef} className="h-4" />{' '}
+      {/* Add some padding at the bottom */}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import ResourcesHeader from '@/components/layout/resources-header'
 import { ResourcesProvider } from '@/components/providers/resources-provider'
-import { getResources } from '@/lib/queries/server'
+import { getResources } from '@/lib/actions/resources'
+
 export default async function ResourcesLayout({
   children
 }: {

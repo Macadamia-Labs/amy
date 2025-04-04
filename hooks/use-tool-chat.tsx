@@ -15,7 +15,7 @@ import { toast } from 'sonner'
 //   useScriptDataStreamHandler
 // } from './use-data-handler'
 
-interface ToolInvocation {
+export interface ToolInvocation {
   state: 'result'
   toolCallId: string
   toolName: string
@@ -26,9 +26,17 @@ interface ToolInvocation {
 interface UseToolChatProps {
   id?: string
   initialMessages?: CoreMessage[]
+  resourcesContext?: {
+    resourceIds: string[]
+    resourcesContent: string
+  }
 }
 
-export function useToolChat({ id, initialMessages }: UseToolChatProps) {
+export function useToolChat({
+  id,
+  initialMessages,
+  resourcesContext
+}: UseToolChatProps) {
   // const handleToolCall = useToolCallHandler()
   // const { requirements, simulationSteps } = useCooper()
 
@@ -44,15 +52,15 @@ export function useToolChat({ id, initialMessages }: UseToolChatProps) {
     setData,
     ...chatHelpers
   } = useChat({
-    api: process.env.NEXT_PUBLIC_CHAT_API_URL,
+    // api: process.env.NEXT_PUBLIC_CHAT_API_URL,
     headers: {
       Authorization: `Bearer ${token}`
     },
     initialMessages: (initialMessages as Message[]) || [],
     id,
     body: {
-      app: 'cooper',
-      id
+      id,
+      resourcesContext
     },
     onResponse(response) {
       if (response.status === 401) {
@@ -73,32 +81,18 @@ export function useToolChat({ id, initialMessages }: UseToolChatProps) {
       //   append: originalAppend
       // })
     },
-    experimental_throttle: 50
+    experimental_throttle: 50,
+    sendExtraMessageFields: true
   })
-
-  const toolInvocations = messages
-    .filter(
-      msg =>
-        Array.isArray(msg.toolInvocations) && msg.toolInvocations.length > 0
-    )
-    .flatMap(msg => (msg.toolInvocations || []) as ToolInvocation[])
-
-  // const { mainScript, setMainScript } = useMainScriptHandler(data, setData)
-  // const { isProcessing } = useScriptDataStreamHandler(data, setData)
 
   async function appendWithMetadata(
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
   ) {
-    // const currentSelection = await getCurrentSelection()
     return originalAppend(message, {
       ...chatRequestOptions,
       body: {
         ...chatRequestOptions?.body
-        // currentSelection,
-        // mainScript,
-        // simulationRequirements: requirements,
-        // simulationSteps
       }
     })
   }
@@ -110,28 +104,28 @@ export function useToolChat({ id, initialMessages }: UseToolChatProps) {
     if (event?.preventDefault) {
       event.preventDefault()
     }
-    // const currentSelection = await getCurrentSelection()
     return originalHandleSubmit(event, {
       ...chatRequestOptions,
       body: {
         ...chatRequestOptions?.body
-        // currentSelection,
-        // mainScript,
-        // simulationRequirements: requirements,
-        // simulationSteps
       }
     })
   }
 
+  const toolInvocations = messages
+    .filter(
+      msg =>
+        Array.isArray(msg.toolInvocations) && msg.toolInvocations.length > 0
+    )
+    .flatMap(msg => (msg.toolInvocations || []) as ToolInvocation[])
+
   return {
     data,
     messages,
-    isLoading: isLoading,
-    // mainScript,
-    // setMainScript,
-    toolInvocations,
+    isLoading,
     ...chatHelpers,
     append: appendWithMetadata,
-    handleSubmit: submitWithMetadata
+    handleSubmit: submitWithMetadata,
+    toolInvocations
   }
 }

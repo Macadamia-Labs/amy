@@ -44,6 +44,10 @@ interface ManualResearcherConfig {
     content: string
     activeSection: Section | null
   }
+  resourcesContext?: {
+    resourceIds: string[]
+    resourcesContent: string
+  }
 }
 
 type ManualResearcherReturn = Parameters<typeof streamText>[0]
@@ -52,7 +56,8 @@ export function manualResearcher({
   messages,
   model,
   isSearchEnabled = true,
-  context
+  context,
+  resourcesContext
 }: ManualResearcherConfig): ManualResearcherReturn {
   try {
     const currentDate = new Date().toLocaleString()
@@ -79,6 +84,11 @@ When answering questions:
 - If the question is about the document, focus on the content from the active section first
 - You can reference other parts of the document if needed
 - If the question is not related to the document, you can ignore the document context`
+    }
+
+    if (resourcesContext) {
+      fullPrompt += `\n\n The user attached the following resources as context:
+${JSON.stringify(resourcesContext)}`
     }
 
     return {

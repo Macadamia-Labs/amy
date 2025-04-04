@@ -9,7 +9,15 @@ const DEFAULT_MODEL = 'openai:gpt-4o'
 
 export async function POST(req: Request) {
   try {
-    const { messages, id: chatId, context } = await req.json()
+    const {
+      messages,
+      id: chatId,
+      context,
+      resourcesContext,
+      body
+    } = await req.json()
+    console.log('resourcesContext', resourcesContext)
+    console.log('body', body)
     const referer = req.headers.get('referer')
     const isSharePage = referer?.includes('/share/')
 
@@ -44,14 +52,16 @@ export async function POST(req: Request) {
           model,
           chatId,
           searchMode,
-          context
+          context,
+          resourcesContext
         })
       : createManualToolStreamResponse({
           messages,
           model,
           chatId,
           searchMode,
-          context
+          context,
+          resourcesContext
         })
   } catch (error) {
     console.error('API route error:', error)

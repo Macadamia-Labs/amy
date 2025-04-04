@@ -23,6 +23,8 @@ export async function handleStreamFinish({
   skipRelatedQuestions = false,
   annotations = []
 }: HandleStreamFinishParams) {
+  console.log('handleStreamFinish skipped for now', responseMessages)
+  return
   try {
     const extendedCoreMessages = convertToExtendedCoreMessages(originalMessages)
     let allAnnotations = [...annotations]

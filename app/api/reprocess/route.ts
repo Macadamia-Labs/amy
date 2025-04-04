@@ -1,5 +1,5 @@
+import { getResource, updateResource } from '@/lib/actions/resources'
 import { inngest } from '@/lib/inngest/client'
-import { getResource, updateResource } from '@/lib/queries/server'
 import { authorizeUser } from '@/lib/supabase/authorize-user'
 import { NextResponse } from 'next/server'
 
