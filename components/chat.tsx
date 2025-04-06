@@ -9,6 +9,15 @@ import React, { useEffect, useState } from 'react'
 import { CHAT_ID } from '../lib/constants'
 import { ChatMessages } from './chat-messages'
 import { ChatPanel } from './chat-panel'
+import { Button } from './ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from './ui/dialog'
+import { ScrollArea } from './ui/scroll-area'
 
 export function Chat({
   id,
@@ -24,6 +33,7 @@ export function Chat({
   )
   const { resources } = useResources()
   const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
+  const [debugOpen, setDebugOpen] = useState(false)
 
   const selectedResourcesContent = React.useMemo(() => {
     const selectedResources = resources.filter(r =>
@@ -79,8 +89,27 @@ export function Chat({
 
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto justify-center">
+      <div className="flex justify-end p-2">
+        <Dialog open={debugOpen} onOpenChange={setDebugOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              Debug Messages
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle>Messages Debug View</DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="h-full max-h-[60vh]">
+              <pre className="whitespace-pre-wrap text-sm p-4 bg-muted rounded-md">
+                {JSON.stringify(messages, null, 2)}
+              </pre>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+      </div>
       {messages.length > 0 && (
-        <div className="flex-1 overflow-y-auto">
+        <ScrollArea className="flex-1">
           <ChatMessages
             messages={messages}
             data={localData}
@@ -90,7 +119,7 @@ export function Chat({
             onResetToMessage={handleResetToMessage}
             toolInvocations={toolInvocations}
           />
-        </div>
+        </ScrollArea>
       )}
       <div className="sticky bottom-0 bg-background">
         <ChatPanel

@@ -1,4 +1,4 @@
-import { hybridSearch } from "@/lib/actions/retrieval"
+import { hybridSearch } from '@/lib/actions/retrieval'
 import { tool } from 'ai'
 import { z } from 'zod'
 
@@ -15,12 +15,13 @@ interface DocumentMatch {
 }
 
 export const retrieveTool = tool({
-  description: 'Retrieve information from the knowledge base. Use this tool to find relevant sources.',
+  description:
+    'Retrieve information from the knowledge base. Use this tool to find relevant sources based on a query.',
   parameters: retrieveSchema,
   execute: async ({ query }) => {
-    console.log("Retrieving documentation for:", query)
+    console.log('Retrieving documentation for:', query)
     const matches = await hybridSearch(query)
-    
+
     return matches.map((match: DocumentMatch) => ({
       id: match.id,
       content: match.content,

@@ -180,6 +180,14 @@ export function ActivityProvider({ children }: ActivityProviderProps) {
   // Add space bar event listener to add next item
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Don't capture space if user is typing in an input or textarea
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
+        return
+      }
+
       if (
         event.code === 'Space' &&
         !animationComplete &&

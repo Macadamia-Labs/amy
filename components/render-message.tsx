@@ -1,10 +1,16 @@
 import { JSONValue, Message, ToolInvocation } from 'ai'
 import { useMemo } from 'react'
 import { AnswerSection } from './answer-section'
+import { BotMessage } from './message'
 import { ReasoningAnswerSection } from './reasoning-answer-section'
 import RelatedQuestions from './related-questions'
 import { ToolSection } from './tool-section'
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from './ui/context-menu'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger
+} from './ui/context-menu'
 import { UserMessage } from './user-message'
 
 interface RenderMessageProps {
@@ -33,6 +39,18 @@ export function RenderMessage({
       ),
     [message.annotations]
   )
+
+  // Extract tool invocations from message parts
+  const toolInvocations = useMemo(() => {
+    return (
+      message.parts
+        ?.filter(part => part.type === 'tool-invocation')
+        .map(part =>
+          part.type === 'tool-invocation' ? part.toolInvocation : null
+        )
+        .filter((tool): tool is ToolInvocation => tool !== null) || []
+    )
+  }, [message.parts])
 
   // Render for manual tool call
   const toolData = useMemo(() => {
@@ -92,15 +110,23 @@ export function RenderMessage({
   }, [reasoningAnnotation])
 
   const reasoningResult = useMemo(() => {
-    if (!reasoningAnnotation) return message.reasoning
+    // First try to get reasoning from parts
+    const reasoningPart = message.parts?.find(part => part.type === 'reasoning')
+    if (reasoningPart?.type === 'reasoning') {
+      return reasoningPart.reasoning
+    }
+
+    // Fallback to annotation if exists
+    if (!reasoningAnnotation) return undefined
     if (
       typeof reasoningAnnotation.data === 'object' &&
       reasoningAnnotation.data !== null
     ) {
-      return reasoningAnnotation.data.reasoning ?? message.reasoning
+      return reasoningAnnotation.data.reasoning
     }
-    return message.reasoning
-  }, [reasoningAnnotation, message.reasoning])
+
+    return undefined
+  }, [reasoningAnnotation, message.parts])
 
   if (message.role === 'user') {
     return (
@@ -117,12 +143,13 @@ export function RenderMessage({
     )
   }
 
-  if (message.toolInvocations?.length) {
+  if (toolInvocations.length > 0) {
     return (
       <ContextMenu>
         <ContextMenuTrigger>
           <>
-            {message.toolInvocations.map(tool => (
+            <BotMessage message={message.content} />
+            {toolInvocations.map(tool => (
               <ToolSection
                 key={tool.toolCallId}
                 tool={tool}
@@ -172,14 +199,16 @@ export function RenderMessage({
               chatId={chatId}
             />
           )}
-          {!message.toolInvocations &&
+          {!toolInvocations.length &&
             relatedQuestions &&
             relatedQuestions.length > 0 && (
               <RelatedQuestions
                 annotations={relatedQuestions as JSONValue[]}
                 onQuerySelect={onQuerySelect}
                 isOpen={getIsOpen(`${messageId}-related`)}
-                onOpenChange={open => onOpenChange(`${messageId}-related`, open)}
+                onOpenChange={open =>
+                  onOpenChange(`${messageId}-related`, open)
+                }
               />
             )}
         </>

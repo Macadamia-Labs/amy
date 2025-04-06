@@ -11,7 +11,7 @@ export interface SearchResultsProps {
   results: SearchResultItem[]
 }
 
-export function SearchResults({ results }: SearchResultsProps) {
+export function SearchResults({ results = [] }: SearchResultsProps) {
   // State to manage whether to display the results
   const [showAllResults, setShowAllResults] = useState(false)
 
@@ -19,7 +19,8 @@ export function SearchResults({ results }: SearchResultsProps) {
     setShowAllResults(true)
   }
 
-  const displayedResults = showAllResults ? results : results.slice(0, 3)
+  const displayedResults =
+    results.length > 3 && !showAllResults ? results.slice(0, 3) : results
   const additionalResultsCount = results.length > 3 ? results.length - 3 : 0
   const displayUrlName = (url: string) => {
     const hostname = new URL(url).hostname

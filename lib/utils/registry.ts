@@ -151,7 +151,8 @@ export function isToolCallSupported(model?: string) {
   if (provider === 'openai') {
     return (
       (modelName?.includes('o1') && !modelName?.includes('o1-mini')) ||
-      modelName?.includes('o3')
+      modelName?.includes('o3') ||
+      modelName?.includes('gpt-4o')
     )
   }
 

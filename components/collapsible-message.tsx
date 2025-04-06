@@ -48,7 +48,8 @@ export function CollapsibleMessage({
         <div
           className={cn(
             'flex-1 rounded-2xl p-4',
-            showBorder && 'border border-border/50'
+            showBorder && 'border border-border/50',
+            role === 'user' && 'bg-muted/50'
           )}
         >
           <Collapsible

@@ -23,7 +23,10 @@ export async function handleStreamFinish({
   skipRelatedQuestions = false,
   annotations = []
 }: HandleStreamFinishParams) {
-  console.log('handleStreamFinish skipped for now', responseMessages)
+  console.log(
+    'handleStreamFinish skipped for now',
+    JSON.stringify(responseMessages, null, 2)
+  )
   return
   try {
     const extendedCoreMessages = convertToExtendedCoreMessages(originalMessages)

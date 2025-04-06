@@ -36,6 +36,14 @@ export type SearchResultItem = {
   content: string
 }
 
+export type RetrieveResults = RetrieveResultItem[]
+
+export type RetrieveResultItem = {
+  id: string
+  content: string
+  metadata: object
+}
+
 export type ExaSearchResultItem = {
   score: number
   title: string

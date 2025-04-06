@@ -7,7 +7,6 @@ import { CHAT_ID } from '../lib/constants'
 import { CollapsibleMessage } from './collapsible-message'
 import { DefaultSkeleton } from './default-skeleton'
 import { BotMessage } from './message'
-import { MessageActions } from './message-actions'
 import { StatusIndicator } from './ui/status-indicator'
 
 interface ReasoningAnswerContent {
@@ -85,11 +84,11 @@ export function ReasoningAnswerSection({
         {content.answer && (
           <div className="flex flex-col gap-4">
             <BotMessage message={content.answer || ''} />
-            <MessageActions
+            {/* <MessageActions
               message={content.answer || ''}
               chatId={chatId}
               enableShare={enableShare}
-            />
+            /> */}
           </div>
         )}
       </CollapsibleMessage>

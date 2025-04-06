@@ -4,7 +4,6 @@ import { Text } from 'lucide-react'
 import { CollapsibleMessage } from './collapsible-message'
 import { DefaultSkeleton } from './default-skeleton'
 import { BotMessage } from './message'
-import { MessageActions } from './message-actions'
 
 export type AnswerSectionProps = {
   content: string
@@ -30,11 +29,11 @@ export function AnswerSection({
   const message = content ? (
     <div className="flex flex-col gap-1">
       <BotMessage message={content} />
-      <MessageActions
+      {/* <MessageActions
         message={content}
         chatId={chatId}
         enableShare={enableShare}
-      />
+      /> */}
     </div>
   ) : (
     <DefaultSkeleton />
