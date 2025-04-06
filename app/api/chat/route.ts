@@ -14,10 +14,14 @@ export async function POST(req: Request) {
       id: chatId,
       context,
       resourcesContext,
-      body
+      body,
+      model: requestModel
     } = await req.json()
+
     console.log('resourcesContext', resourcesContext)
     console.log('body', body)
+    console.log('requestModel from body:', requestModel)
+
     const referer = req.headers.get('referer')
     const isSharePage = referer?.includes('/share/')
 
@@ -30,21 +34,36 @@ export async function POST(req: Request) {
 
     const cookieStore = await cookies()
     const modelFromCookie = cookieStore.get('selected-model')?.value
-    // const searchMode = cookieStore.get('search-mode')?.value === 'true'
+    console.log('modelFromCookie:', modelFromCookie)
+
     const searchMode = true
-    const model = modelFromCookie || DEFAULT_MODEL
+
+    let model: string
+    if (requestModel && typeof requestModel === 'string') {
+      model = requestModel
+    } else if (modelFromCookie) {
+      model = modelFromCookie
+    } else {
+      model = DEFAULT_MODEL
+    }
+
+    console.log('Final model selected for this request:', model)
+
     const provider = model.split(':')[0]
     if (!isProviderEnabled(provider)) {
-      return new Response(`Selected provider is not enabled ${provider}`, {
+      console.error(
+        `Selected provider '${provider}' is not enabled for model '${model}'`
+      )
+      return new Response(`Selected provider is not enabled: ${provider}`, {
         status: 404,
         statusText: 'Not Found'
       })
     }
 
     const supportsToolCalling = isToolCallSupported(model)
-
-    console.log('model', model)
-    console.log('supportsToolCalling', supportsToolCalling)
+    console.log(
+      `Model '${model}' supports tool calling: ${supportsToolCalling}`
+    )
 
     return supportsToolCalling
       ? createToolCallingStreamResponse({
@@ -65,12 +84,11 @@ export async function POST(req: Request) {
         })
   } catch (error) {
     console.error('API route error:', error)
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unexpected error occurred'
     return new Response(
       JSON.stringify({
-        error:
-          error instanceof Error
-            ? error.message
-            : 'An unexpected error occurred',
+        error: errorMessage,
         status: 500
       }),
       {

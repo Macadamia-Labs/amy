@@ -1,12 +1,13 @@
 'use client'
 
-import { ChatList } from '@/components/chat/chat-list';
-import { ChatScrollAnchor } from '@/components/chat/chat-scroll-anchor';
-import { cn } from '@/lib/utils';
-import { ChatRequestOptions, Message } from 'ai';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { MultimodalInput } from './input/multimodal-input';
-import { MessagesDialog } from './messages-dialog';
+import { ChatList } from '@/components/chat/chat-list'
+import { ChatScrollAnchor } from '@/components/chat/chat-scroll-anchor'
+import { ModelSelector } from '@/components/model-selector'
+import { cn } from '@/lib/utils'
+import { ChatRequestOptions, Message } from 'ai'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { MultimodalInput } from './input/multimodal-input'
+import { MessagesDialog } from './messages-dialog'
 
 interface UploadQueueItem {
   name: string
@@ -47,6 +48,8 @@ export interface ChatProps extends React.ComponentProps<'div'> {
     chatRequestOptions?: ChatRequestOptions
   ) => void
   mainScript?: string
+  selectedModel?: string
+  onModelChange?: (model: string) => void
 }
 
 export function Chat({
@@ -63,7 +66,9 @@ export function Chat({
   setInput,
   stop,
   handleSubmit,
-  mainScript
+  mainScript,
+  selectedModel = 'openai:gpt-4',
+  onModelChange
 }: ChatProps) {
   const convertedMessages = messages.map(msg => ({
     ...msg,
@@ -76,7 +81,15 @@ export function Chat({
 
   return (
     <div className="flex flex-col h-full max-h-screen p-2">
-      <h2 className="font-bold text-lg p-2">{header || 'Copilot'}</h2>
+      <div className="flex items-center justify-between p-2">
+        <h2 className="font-bold text-lg">{header || 'Copilot'}</h2>
+        {onModelChange && (
+          <ModelSelector
+            selectedModel={selectedModel}
+            onModelChange={onModelChange}
+          />
+        )}
+      </div>
 
       <MessagesDialog
         open={showMessagesDialog}

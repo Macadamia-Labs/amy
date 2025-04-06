@@ -30,12 +30,14 @@ interface UseToolChatProps {
     resourceIds: string[]
     resourcesContent: string
   }
+  selectedModel?: string
 }
 
 export function useToolChat({
   id,
   initialMessages,
-  resourcesContext
+  resourcesContext,
+  selectedModel
 }: UseToolChatProps) {
   // const handleToolCall = useToolCallHandler()
   // const { requirements, simulationSteps } = useCooper()
@@ -60,7 +62,8 @@ export function useToolChat({
     id,
     body: {
       id,
-      resourcesContext
+      resourcesContext,
+      model: selectedModel
     },
     onResponse(response) {
       if (response.status === 401) {
@@ -92,7 +95,8 @@ export function useToolChat({
     return originalAppend(message, {
       ...chatRequestOptions,
       body: {
-        ...chatRequestOptions?.body
+        ...chatRequestOptions?.body,
+        model: selectedModel
       }
     })
   }
@@ -107,7 +111,8 @@ export function useToolChat({
     return originalHandleSubmit(event, {
       ...chatRequestOptions,
       body: {
-        ...chatRequestOptions?.body
+        ...chatRequestOptions?.body,
+        model: selectedModel
       }
     })
   }

@@ -23,6 +23,7 @@ export function Chat({
     new Set()
   )
   const { resources } = useResources()
+  const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
 
   const selectedResourcesContent = React.useMemo(() => {
     const selectedResources = resources.filter(r =>
@@ -51,14 +52,15 @@ export function Chat({
     resourcesContext: {
       resourceIds: Array.from(selectedResourceIds),
       resourcesContent: selectedResourcesContent
-    }
+    },
+    selectedModel
   })
 
   const [localData, setLocalData] = useState<JSONValue[] | undefined>()
 
   useEffect(() => {
     setMessages(savedMessages as any)
-  }, [id])
+  }, [id, setMessages, savedMessages])
 
   const onQuerySelect = (query: string) => {
     append({
@@ -104,6 +106,8 @@ export function Chat({
           append={append}
           selectedResourceIds={selectedResourceIds}
           setSelectedResourceIds={setSelectedResourceIds}
+          selectedModel={selectedModel}
+          onModelChange={setSelectedModel}
         />
       </div>
     </div>

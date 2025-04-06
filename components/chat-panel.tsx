@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import Textarea from 'react-textarea-autosize'
 import { EmptyScreen } from './empty-screen'
+import { ModelSelector } from './model-selector'
 import { ResourcesSelector } from './resources/resources-selector'
 import { Button } from './ui/button'
 
@@ -22,6 +23,8 @@ interface ChatPanelProps {
   append: (message: Message) => void
   selectedResourceIds: Set<string>
   setSelectedResourceIds: (ids: Set<string>) => void
+  selectedModel: string
+  onModelChange: (model: string) => void
 }
 
 export function ChatPanel({
@@ -35,7 +38,9 @@ export function ChatPanel({
   stop,
   append,
   selectedResourceIds,
-  setSelectedResourceIds
+  setSelectedResourceIds,
+  selectedModel,
+  onModelChange
 }: ChatPanelProps) {
   const [showEmptyScreen, setShowEmptyScreen] = useState(false)
   const router = useRouter()
@@ -120,6 +125,10 @@ export function ChatPanel({
             <ResourcesSelector
               selectedIds={selectedResourceIds}
               onSelect={setSelectedResourceIds}
+            />
+            <ModelSelector
+              selectedModel={selectedModel}
+              onModelChange={onModelChange}
             />
           </div>
           <div className="flex items-center gap-2">

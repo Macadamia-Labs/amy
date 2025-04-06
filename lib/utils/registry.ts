@@ -148,6 +148,13 @@ export function isToolCallSupported(model?: string) {
     return false
   }
 
+  if (provider === 'openai') {
+    return (
+      (modelName?.includes('o1') && !modelName?.includes('o1-mini')) ||
+      modelName?.includes('o3')
+    )
+  }
+
   // Deepseek R1 is not supported
   // Deepseek v3's tool call is unstable, so we include it in the list
   return !modelName?.includes('deepseek')
@@ -160,6 +167,7 @@ export function isReasoningModel(model: string): boolean {
   return (
     model.includes('deepseek-r1') ||
     model.includes('deepseek-reasoner') ||
-    model.includes('o3-mini')
+    model.includes('o1') ||
+    model.includes('o3')
   )
 }
