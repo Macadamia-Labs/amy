@@ -40,11 +40,10 @@ export function Chat({
     input,
     handleInputChange,
     handleSubmit,
-    isLoading,
+    status,
     setMessages,
     stop,
     append,
-    data,
     toolInvocations
   } = useToolChat({
     id: CHAT_ID,
@@ -86,7 +85,7 @@ export function Chat({
             messages={messages}
             data={localData}
             onQuerySelect={onQuerySelect}
-            isLoading={isLoading}
+            isLoading={status === 'streaming' || status === 'submitted'}
             chatId={id}
             onResetToMessage={handleResetToMessage}
             toolInvocations={toolInvocations}
@@ -98,7 +97,7 @@ export function Chat({
           input={input}
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
-          isLoading={isLoading}
+          isLoading={status === 'streaming' || status === 'submitted'}
           messages={messages}
           setMessages={setMessages}
           stop={stop}

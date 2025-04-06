@@ -1,6 +1,6 @@
 'use client'
 
-import { Chat } from '@/components/chat/chat'
+import { Chat } from '@/components/chat'
 import { useToolChat } from '@/hooks/use-tool-chat'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { useChats } from '@/lib/providers/chats-provider'
@@ -36,7 +36,7 @@ export function DocumentChat({ id, initialMessages }: DocumentChatProps) {
     setMessages,
     input,
     append: originalAppend,
-    isLoading,
+    status,
     setInput,
     reload,
     stop,
@@ -99,7 +99,7 @@ export function DocumentChat({ id, initialMessages }: DocumentChatProps) {
       setMessages={setMessages}
       append={appendWithContext}
       addToolResult={addToolResult}
-      isLoading={isLoading}
+      isLoading={status === 'streaming' || status === 'submitted'}
       input={input}
       setInput={setInput}
       reload={reload}

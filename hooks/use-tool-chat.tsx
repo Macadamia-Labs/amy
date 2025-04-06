@@ -48,7 +48,7 @@ export function useToolChat({
   const {
     data,
     messages,
-    isLoading,
+    status,
     append: originalAppend,
     handleSubmit: originalHandleSubmit,
     setData,
@@ -127,7 +127,7 @@ export function useToolChat({
   return {
     data,
     messages,
-    isLoading,
+    status,
     ...chatHelpers,
     append: appendWithMetadata,
     handleSubmit: submitWithMetadata,
