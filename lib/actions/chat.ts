@@ -1,163 +1,124 @@
 'use server'
 
-import { getRedisClient, RedisWrapper } from '@/lib/redis/config'
 import { createClient } from '@/lib/supabase/server'
-import { type Chat } from '@/lib/types'
+import { Chat } from '@/lib/types/database'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-
-async function getRedis(): Promise<RedisWrapper> {
-  return await getRedisClient()
-}
-
-const CHAT_VERSION = 'v2'
-function getUserChatKey(userId: string) {
-  return `user:${CHAT_VERSION}:chat:${userId}`
-}
 
 export async function getChats(userId?: string | null) {
   if (!userId) {
     return []
   }
 
+  const supabase = await createClient()
   try {
-    const redis = await getRedis()
-    const chats = await redis.zrange(getUserChatKey(userId), 0, -1, {
-      rev: true
-    })
+    const { data, error } = await supabase
+      .from('chats')
+      .select('*')
+      .eq('user_id', userId)
+      .order('last_message_at', { ascending: false })
 
-    if (chats.length === 0) {
-      return []
-    }
-
-    const results = await Promise.all(
-      chats.map(async chatKey => {
-        const chat = await redis.hgetall(chatKey)
-        return chat
-      })
-    )
-
-    return results
-      .filter((result): result is Record<string, any> => {
-        if (result === null || Object.keys(result).length === 0) {
-          return false
-        }
-        return true
-      })
-      .map(chat => {
-        const plainChat = { ...chat }
-        if (typeof plainChat.messages === 'string') {
-          try {
-            plainChat.messages = JSON.parse(plainChat.messages)
-          } catch (error) {
-            plainChat.messages = []
-          }
-        }
-        if (plainChat.createdAt && !(plainChat.createdAt instanceof Date)) {
-          plainChat.createdAt = new Date(plainChat.createdAt)
-        }
-        return plainChat as Chat
-      })
+    if (error) throw error
+    return data as Chat[]
   } catch (error) {
+    console.error('Error fetching chats:', error)
     return []
   }
 }
 
 export async function getChat(id: string, userId: string = 'anonymous') {
-  const redis = await getRedis()
-  const chat = await redis.hgetall<Chat>(`chat:${id}`)
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('chats')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single()
 
-  if (!chat) {
+    if (error) throw error
+    return data as Chat
+  } catch (error) {
+    console.error('Error fetching chat:', error)
     return null
   }
-
-  // Parse the messages if they're stored as a string
-  if (typeof chat.messages === 'string') {
-    try {
-      chat.messages = JSON.parse(chat.messages)
-    } catch (error) {
-      chat.messages = []
-    }
-  }
-
-  // Ensure messages is always an array
-  if (!Array.isArray(chat.messages)) {
-    chat.messages = []
-  }
-
-  return chat
 }
 
 export async function clearChats(
   userId: string = 'anonymous'
 ): Promise<{ error?: string }> {
-  const redis = await getRedis()
-  const userChatKey = getUserChatKey(userId)
-  const chats = await redis.zrange(userChatKey, 0, -1)
-  if (!chats.length) {
-    return { error: 'No chats to clear' }
+  const supabase = await createClient()
+  try {
+    const { error } = await supabase
+      .from('chats')
+      .delete()
+      .eq('user_id', userId)
+
+    if (error) throw error
+    revalidatePath('/')
+    redirect('/')
+    return {}
+  } catch (error) {
+    console.error('Error clearing chats:', error)
+    return { error: 'Failed to clear chats' }
   }
-  const pipeline = redis.pipeline()
-
-  for (const chat of chats) {
-    pipeline.del(chat)
-    pipeline.zrem(userChatKey, chat)
-  }
-
-  await pipeline.exec()
-
-  revalidatePath('/')
-  redirect('/')
 }
 
 export async function saveChat(chat: Chat, userId: string = 'anonymous') {
+  const supabase = await createClient()
   try {
-    const redis = await getRedis()
-    const pipeline = redis.pipeline()
-
-    const chatToSave = {
+    const { error } = await supabase.from('chats').upsert({
       ...chat,
-      messages: JSON.stringify(chat.messages)
-    }
+      user_id: userId,
+      last_message_at: new Date().toISOString()
+    })
 
-    pipeline.hmset(`chat:${chat.id}`, chatToSave)
-    pipeline.zadd(getUserChatKey(userId), Date.now(), `chat:${chat.id}`)
-
-    const results = await pipeline.exec()
-
-    return results
+    if (error) throw error
+    return true
   } catch (error) {
+    console.error('Error saving chat:', error)
     throw error
   }
 }
 
 export async function getSharedChat(id: string) {
-  const redis = await getRedis()
-  const chat = await redis.hgetall<Chat>(`chat:${id}`)
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('chats')
+      .select('*')
+      .eq('id', id)
+      .eq('is_shared', true)
+      .single()
 
-  if (!chat || !chat.sharePath) {
+    if (error) throw error
+    return data as Chat
+  } catch (error) {
+    console.error('Error fetching shared chat:', error)
     return null
   }
-
-  return chat
 }
 
 export async function shareChat(id: string, userId: string = 'anonymous') {
-  const redis = await getRedis()
-  const chat = await redis.hgetall<Chat>(`chat:${id}`)
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('chats')
+      .update({
+        is_shared: true,
+        share_path: `/share/${id}`
+      })
+      .eq('id', id)
+      .eq('user_id', userId)
+      .select()
+      .single()
 
-  if (!chat || chat.userId !== userId) {
+    if (error) throw error
+    return data as Chat
+  } catch (error) {
+    console.error('Error sharing chat:', error)
     return null
   }
-
-  const payload = {
-    ...chat,
-    sharePath: `/share/${id}`
-  }
-
-  await redis.hmset(`chat:${id}`, payload)
-
-  return payload
 }
 
 export async function createChat(
@@ -167,7 +128,10 @@ export async function createChat(
   try {
     const { data, error } = await supabase
       .from('chats')
-      .insert(chat)
+      .insert({
+        ...chat,
+        last_message_at: new Date().toISOString()
+      })
       .select()
       .single()
 

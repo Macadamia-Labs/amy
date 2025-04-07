@@ -71,12 +71,16 @@ export async function handleStreamFinish({
 
     // Get the chat from the database if it exists, otherwise create a new one
     const savedChat = (await getChat(chatId)) ?? {
-      messages: [],
-      createdAt: new Date(),
-      userId: 'anonymous',
-      path: `/search/${chatId}`,
+      id: chatId,
       title: originalMessages[0].content,
-      id: chatId
+      user_id: 'anonymous', // TODO: Change to user id
+      app: 'search',
+      messages: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      last_message_at: new Date().toISOString(),
+      is_shared: false,
+      share_path: ''
     }
 
     // Save chat with complete response and related questions

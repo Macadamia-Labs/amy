@@ -65,16 +65,6 @@ export type SerperSearchResultItem = {
   position: number
 }
 
-export interface Chat extends Record<string, any> {
-  id: string
-  title: string
-  createdAt: Date
-  userId: string
-  path: string
-  messages: ExtendedCoreMessage[] // Note: Changed from AIMessage to ExtendedCoreMessage
-  sharePath?: string
-}
-
 // ExtendedCoreMessage for saveing annotations
 export type ExtendedCoreMessage = Omit<CoreMessage, 'role' | 'content'> & {
   role: CoreMessage['role'] | 'data'

@@ -10,6 +10,8 @@ export interface Chat {
   last_message_at: string
   messages: any[]
   files?: FileRecord[]
+  is_shared: boolean
+  share_path: string
 }
 
 export type FileType = 'script' | 'data' | 'input'

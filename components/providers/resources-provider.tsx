@@ -35,7 +35,7 @@ export function ResourcesProvider({
   const removeResources = (ids: string | string[]) => {
     console.log('Removing resources:', ids)
     const idsToRemove = Array.isArray(ids) ? ids : [ids]
-    
+
     // Only remove resources that exist in the current state
     setResources(prev => {
       const existingIds = new Set(prev.map(r => r.id))
@@ -59,7 +59,8 @@ export function ResourcesProvider({
       if (!existingResource) {
         // Add new resource and maintain sort order
         return [...prev, updatedResource].sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
       }
 
@@ -78,10 +79,13 @@ export function ResourcesProvider({
     } else if (updatedResource.status === 'completed') {
       // For completion, only set to success if not already set
       const currentStatus = uploadStatus.get(updatedResource.id)
-      if (currentStatus !== 'success') {
-        console.log('Setting upload status to success for', updatedResource.id)
+      if (currentStatus !== 'completed') {
+        console.log(
+          'Setting upload status to completed for',
+          updatedResource.id
+        )
         setUploadStatusMap(prev =>
-          new Map(prev).set(updatedResource.id, 'success')
+          new Map(prev).set(updatedResource.id, 'completed')
         )
       }
     }
@@ -101,7 +105,8 @@ export function ResourcesProvider({
     setResources(prev => {
       // Add new resources immediately to the state and maintain sort order
       const updatedResources = [...prev, ...newResources].sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       )
 
       // Remove duplicates while maintaining sort order
@@ -128,15 +133,15 @@ export function ResourcesProvider({
           // Always set error status
           newStatusMap.set(resource.id, 'error')
         } else if (resource.status === 'completed') {
-          // Always set completed resources to success
-          newStatusMap.set(resource.id, 'success')
+          // Always set completed resources to completed
+          newStatusMap.set(resource.id, 'completed')
         } else if (
           (resource.status === 'pending' || resource.status === 'processing') &&
-          currentStatus !== 'success'
+          currentStatus !== 'completed'
         ) {
-          // Only set to loading if current status is not success
-          // This prevents downgrading from success to loading
-          newStatusMap.set(resource.id, 'loading')
+          // Only set to loading if current status is not completed
+          // This prevents downgrading from completed to loading
+          newStatusMap.set(resource.id, 'processing')
         }
 
         console.log(
@@ -150,10 +155,7 @@ export function ResourcesProvider({
     })
   }
 
-  const setUploadStatus = (
-    id: string,
-    status: ResourceStatus
-  ) => {
+  const setUploadStatus = (id: string, status: ResourceStatus) => {
     // Update only the upload status, not the resource status
     console.log(`Setting upload status for ${id} to ${status}`)
 

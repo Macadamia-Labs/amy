@@ -1,6 +1,6 @@
 'use client'
 
-import { Chat } from '@/components/chat'
+import { SimpleChat } from '@/components/chat/simple-chat'
 import { useToolChat } from '@/hooks/use-tool-chat'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { useChats } from '@/lib/providers/chats-provider'
@@ -94,7 +94,7 @@ export function IssueChat({ id, initialMessages }: IssueChatProps) {
   }
 
   return (
-    <Chat
+    <SimpleChat
       id={id}
       data={{
         issue: issue

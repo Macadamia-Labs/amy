@@ -104,7 +104,8 @@ export const defaultFolders: Resource[] = [
     user_id: '',
     created_at: new Date().toISOString(),
     is_folder: true,
-    origin: 'system'
+    origin: 'system',
+    file_type: 'pdf'
   },
   {
     id: 'example-folder',
@@ -115,7 +116,8 @@ export const defaultFolders: Resource[] = [
     user_id: '',
     created_at: new Date().toISOString(),
     is_folder: true,
-    origin: 'system'
+    origin: 'system',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-folder',
@@ -126,7 +128,8 @@ export const defaultFolders: Resource[] = [
     user_id: '',
     created_at: new Date().toISOString(),
     is_folder: true,
-    origin: 'system'
+    origin: 'system',
+    file_type: 'pdf'
   },
   {
     id: 'asce-folder',
@@ -137,7 +140,8 @@ export const defaultFolders: Resource[] = [
     user_id: '',
     created_at: new Date().toISOString(),
     is_folder: true,
-    origin: 'system'
+    origin: 'system',
+    file_type: 'pdf'
   },
   {
     id: 'pip-folder',
@@ -148,7 +152,8 @@ export const defaultFolders: Resource[] = [
     user_id: '',
     created_at: new Date().toISOString(),
     is_folder: true,
-    origin: 'system'
+    origin: 'system',
+    file_type: 'pdf'
   }
 ]
 
@@ -163,7 +168,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'technical-drawing',
@@ -175,7 +181,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'datasheet-upw',
@@ -187,7 +194,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'manual-micro-saw',
@@ -199,7 +207,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'email-micro-saw',
@@ -211,7 +220,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'outlook'
+    origin: 'outlook',
+    file_type: 'html'
   },
   {
     id: 'example-file-3',
@@ -223,7 +233,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pressure-vessel-folder',
-    origin: 'confluence'
+    origin: 'confluence',
+    file_type: 'xlsx'
   },
   {
     id: 'asme-b16-5',
@@ -235,7 +246,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-b31-1',
@@ -247,7 +259,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-b31-3',
@@ -259,7 +272,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-i',
@@ -271,7 +285,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-ii-d',
@@ -283,7 +298,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-iv',
@@ -295,7 +311,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-v',
@@ -307,7 +324,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-vi',
@@ -319,7 +337,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-vii',
@@ -331,7 +350,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-ix',
@@ -343,7 +363,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-viii-div-1',
@@ -355,7 +376,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-bpvc-viii-div-2',
@@ -367,7 +389,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-csd-i',
@@ -379,7 +402,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asme-y14-5',
@@ -391,7 +415,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'example-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-7-22',
@@ -404,7 +429,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aci-318-19',
@@ -416,7 +442,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-360-16',
@@ -428,7 +455,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-341-16',
@@ -440,7 +468,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-303-16',
@@ -452,7 +481,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-1',
@@ -464,7 +494,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-4',
@@ -476,7 +507,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-24-14',
@@ -488,7 +520,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-41-17',
@@ -500,7 +533,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-37-14',
@@ -512,7 +546,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnsc001',
@@ -524,7 +559,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnsl001',
@@ -536,7 +572,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnss001',
@@ -548,7 +585,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-vesv1001',
@@ -560,7 +598,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-reie001',
@@ -572,7 +611,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-9',
@@ -584,7 +624,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-11',
@@ -596,7 +637,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-13',
@@ -608,7 +650,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-16',
@@ -620,7 +663,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-21',
@@ -632,7 +676,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-24',
@@ -644,7 +689,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-27',
@@ -656,7 +702,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-29',
@@ -668,7 +715,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-31',
@@ -680,7 +728,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-design-guide-33',
@@ -692,7 +741,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-325-17',
@@ -704,7 +754,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-358-16',
@@ -717,7 +768,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-327-12',
@@ -729,7 +781,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-326-13',
@@ -741,7 +794,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'aisc-ansi-n690-18',
@@ -754,7 +808,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'aisc-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-10-15',
@@ -766,7 +821,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-11-22',
@@ -779,7 +835,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-20-20',
@@ -792,7 +849,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-25-16',
@@ -804,7 +862,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-48-19',
@@ -816,7 +875,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-49-21',
@@ -828,7 +888,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-55-16',
@@ -840,7 +901,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'asce-59-19',
@@ -852,7 +914,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'asce-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-stf05121',
@@ -864,7 +927,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-stf05130',
@@ -876,7 +940,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pneu0001',
@@ -888,7 +953,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnva0001',
@@ -900,7 +966,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnvd0001',
@@ -912,7 +979,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnrf0001',
@@ -924,7 +992,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnst0001',
@@ -936,7 +1005,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pncw0001',
@@ -948,7 +1018,8 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   },
   {
     id: 'pip-pnfw0001',
@@ -960,6 +1031,7 @@ export const defaultResources: Resource[] = [
     created_at: new Date().toISOString(),
     status: 'completed',
     parent_id: 'pip-folder',
-    origin: 'gdrive'
+    origin: 'gdrive',
+    file_type: 'pdf'
   }
 ]

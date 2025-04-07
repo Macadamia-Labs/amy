@@ -23,7 +23,8 @@ export const sampleIssues: Issue[] = [
         file_path: '/resources/secondary-loop-flow.pdf',
         user_id: '1',
         created_at: '2024-03-10',
-        origin: 'drive'
+        origin: 'drive',
+        file_type: 'pdf'
       }
     ],
     standards: [

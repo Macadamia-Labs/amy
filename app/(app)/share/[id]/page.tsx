@@ -1,7 +1,7 @@
-import { notFound } from 'next/navigation'
 import { Chat } from '@/components/chat'
 import { getSharedChat } from '@/lib/actions/chat'
 import { convertToUIMessages } from '@/lib/utils'
+import { notFound } from 'next/navigation'
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>
@@ -9,7 +9,7 @@ export async function generateMetadata(props: {
   const { id } = await props.params
   const chat = await getSharedChat(id)
 
-  if (!chat || !chat.sharePath) {
+  if (!chat || !chat.share_path) {
     return notFound()
   }
 
@@ -26,7 +26,7 @@ export default async function SharePage(props: {
   // convertToUIMessages for useChat hook
   const messages = convertToUIMessages(chat?.messages || [])
 
-  if (!chat || !chat.sharePath) {
+  if (!chat || !chat.share_path) {
     notFound()
   }
 

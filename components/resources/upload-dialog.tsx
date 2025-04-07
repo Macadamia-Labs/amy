@@ -60,7 +60,7 @@ export function UploadDialog() {
 
     // Set initial status for all files
     uploadItems.forEach(item => {
-      setUploadStatus(item.id, 'loading')
+      setUploadStatus(item.id, 'processing')
     })
 
     // Process all files
@@ -88,7 +88,7 @@ export function UploadDialog() {
           // Handle zip file response
           if (file.type === 'application/zip' && data.resources) {
             // Update the folder status
-            setUploadStatus(id, 'success')
+            setUploadStatus(id, 'completed')
 
             // Add all extracted resources to the context
             const extractedResources = data.resources.filter(r => r.id !== id)
@@ -96,7 +96,7 @@ export function UploadDialog() {
               // Set initial status for all extracted files before adding them
               extractedResources.forEach(resource => {
                 if (resource.status === 'pending') {
-                  setUploadStatus(resource.id, 'loading')
+                  setUploadStatus(resource.id, 'processing')
                 }
               })
 
@@ -112,8 +112,8 @@ export function UploadDialog() {
             // Update with server-provided resource data if available
             console.log('Server returned resource data:', data.resource)
 
-            // Set upload status to success because upload is complete
-            setUploadStatus(id, 'success')
+            // Set upload status to completed because upload is complete
+            setUploadStatus(id, 'completed')
 
             // Add resource with its current status (could be 'processing' or 'completed')
             addResources([
@@ -125,9 +125,9 @@ export function UploadDialog() {
             successCount++
           } else {
             successCount++
-            // Set upload status to success because upload is complete
-            console.log('Setting upload status to success for', id)
-            setUploadStatus(id, 'success')
+            // Set upload status to completed because upload is complete
+            console.log('Setting upload status to completed for', id)
+            setUploadStatus(id, 'completed')
 
             // Update the resource itself to processing status
             addResources([
