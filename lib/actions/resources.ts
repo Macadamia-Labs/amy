@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { generateUUID } from '@/lib/utils/helpers'
 import { revalidatePath as nextRevalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 import { ProcessedResource } from '../processing/types'
 import { createServiceRoleClient } from '../supabase/service-role'
 import { Resource, ResourceStatus } from '../types'
@@ -215,17 +216,34 @@ export async function shareResource(id: string): Promise<string> {
 }
 
 export async function reprocessResource(id: string): Promise<void> {
-  const response = await fetch(`/api/reprocess`, {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000')
+
+  const cookieStore = await cookies()
+  const cookieHeader = cookieStore
+    .getAll()
+    .map(
+      (cookie: { name: string; value: string }) =>
+        `${cookie.name}=${cookie.value}`
+    )
+    .join('; ')
+
+  const response = await fetch(`${baseUrl}/api/reprocess`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader
     },
     body: JSON.stringify({ resourceId: id })
   })
 
   if (!response.ok) {
     const error = await response.text()
-    throw new Error(error)
+    console.error('Error response from /api/reprocess:', error)
+    throw new Error(`Failed to reprocess resource: ${response.statusText}`)
   }
 }
 

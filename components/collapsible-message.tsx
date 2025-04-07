@@ -1,11 +1,10 @@
 import { cn } from '@/lib/utils'
-import { ChevronDown, UserCircle2 } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
 } from './ui/collapsible'
-import { IconLogo } from './ui/icons'
 import { Separator } from './ui/separator'
 
 interface CollapsibleMessageProps {
@@ -33,7 +32,7 @@ export function CollapsibleMessage({
 
   return (
     <div className="flex gap-3">
-      <div className="relative flex flex-col items-center">
+      {/* <div className="relative flex flex-col items-center">
         <div className={cn('mt-[10px] w-5', role === 'assistant' && 'mt-4')}>
           {showIcon &&
             (role === 'user' ? (
@@ -42,20 +41,23 @@ export function CollapsibleMessage({
               <IconLogo className="size-5" />
             ))}
         </div>
-      </div>
+      </div> */}
 
       {isCollapsible ? (
         <div
           className={cn(
             'flex-1 rounded-2xl p-4',
             showBorder && 'border border-border/50',
-            role === 'user' && 'bg-muted/50'
+            role === 'user' && 'bg-muted ml-auto w-fit'
           )}
         >
           <Collapsible
             open={isOpen}
             onOpenChange={onOpenChange}
-            className="w-full"
+            className={cn(
+              'w-full',
+              role === 'user' && 'bg-muted ml-auto w-fit'
+            )}
           >
             <CollapsibleTrigger className="flex items-center justify-between w-full group">
               <div className="flex items-center justify-between w-full gap-2">
@@ -70,7 +72,14 @@ export function CollapsibleMessage({
           </Collapsible>
         </div>
       ) : (
-        <div className="flex-1 rounded-2xl px-4">{content}</div>
+        <div
+          className={cn(
+            'px-4 rounded-xl',
+            role === 'user' ? 'bg-muted ml-auto w-fit' : 'flex-1 '
+          )}
+        >
+          {content}
+        </div>
       )}
     </div>
   )

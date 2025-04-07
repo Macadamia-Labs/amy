@@ -1,8 +1,8 @@
 import { CoreMessage, smoothStream, streamText } from 'ai'
 import { Section } from '../providers/document-provider'
+import { formatIssuesTool } from '../tools/format-issues'
 import { retrieveTool } from '../tools/retrieve'
 import { getModel } from '../utils/registry'
-
 const SYSTEM_PROMPT = `
 Instructions:
 
@@ -13,7 +13,7 @@ When asked a question, you should:
 3. If results are not relevant or helpful, rely on your general knowledge
 4. Provide comprehensive and detailed responses based on search results, ensuring thorough coverage of the user's question
 5. Use markdown to structure your responses. Use headings to break up the content into sections.
-
+6. Use the formatIssues tool to format found issues and errors into a structured format for a bug report.
 Citation Format: 
 [number](url)
 `
@@ -75,7 +75,8 @@ ${JSON.stringify(resourcesContext)}`
       messages,
       tools: {
         // webSearch: searchTool,
-        retrieve: retrieveTool
+        retrieve: retrieveTool,
+        formatIssues: formatIssuesTool
       },
       // experimental_activeTools: searchMode
       //   ? ['search', 'retrieve']

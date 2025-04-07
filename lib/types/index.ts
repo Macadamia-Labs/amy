@@ -229,3 +229,10 @@ export interface Resource {
   parent_id?: string | null
   content_as_text?: string
 }
+
+export interface FormattedIssue {
+  title: string
+  description: string
+  type?: 'typo' | 'feature' | 'documentation' | 'calculation'
+  severity?: 'minor' | 'major' | 'critical'
+}

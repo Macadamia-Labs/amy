@@ -7,7 +7,7 @@ type UserMessageProps = {
 
 export const UserMessage: React.FC<UserMessageProps> = ({ message }) => {
   return (
-    <CollapsibleMessage role="user">
+    <CollapsibleMessage role="user" isCollapsible={false}>
       <div className="flex-1 break-words w-full">{message}</div>
     </CollapsibleMessage>
   )

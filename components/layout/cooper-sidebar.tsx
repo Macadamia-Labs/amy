@@ -4,7 +4,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarRail
 } from '@/components/ui/sidebar'
@@ -14,7 +13,6 @@ import { MacadamiaHead } from './macadamia-head'
 import { NavHome } from './nav-home'
 import { NavIntegrations } from './nav-integrations'
 import { NavIssues } from './nav-issues'
-import { NavProjects } from './nav-projects'
 import { NavResources } from './nav-resources'
 import { NavWorkflows } from './nav-workflows'
 import { SearchForm } from './search-form'
@@ -22,7 +20,7 @@ import { SearchForm } from './search-form'
 export default async function CooperSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
-  const {projects} = await getProjects()
+  const { projects } = await getProjects()
 
   return (
     <Sidebar collapsible="icon" variant="floating" {...props}>
@@ -34,10 +32,10 @@ export default async function CooperSidebar(
         <SidebarGroup>
           <SearchForm />
         </SidebarGroup>
-        <NavProjects projects={projects || []} />
+        {/* <NavProjects projects={projects || []} /> */}
 
         <SidebarGroup className="space-y-2">
-          <SidebarGroupLabel>Project</SidebarGroupLabel>
+          {/* <SidebarGroupLabel>Project</SidebarGroupLabel> */}
           <NavHome />
           <NavIssues />
           <NavResources />
