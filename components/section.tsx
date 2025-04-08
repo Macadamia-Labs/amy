@@ -13,8 +13,6 @@ import {
 } from 'lucide-react'
 import React from 'react'
 import { ToolBadge } from './tool-badge'
-import { Badge } from './ui/badge'
-import { Separator } from './ui/separator'
 import { StatusIndicator } from './ui/status-indicator'
 
 type SectionProps = {
@@ -61,14 +59,9 @@ export const Section: React.FC<SectionProps> = ({
 
   return (
     <>
-      {separator && <Separator className="my-2 bg-primary/10" />}
-      <section
-        className={cn(
-          ` ${size === 'sm' ? 'py-1' : size === 'lg' ? 'py-4' : 'py-1'}`,
-          className
-        )}
-      >
-        {title && (
+      {/* {separator && <Separator className="my-2 bg-primary/10" />} */}
+      <section className={cn(className)}>
+        {/* {title && (
           <Badge
             variant="secondary"
             className="flex items-center leading-none w-fit my-1"
@@ -77,6 +70,7 @@ export const Section: React.FC<SectionProps> = ({
             {title}
           </Badge>
         )}
+         */}
         {children}
       </section>
     </>

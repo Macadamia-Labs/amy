@@ -35,7 +35,11 @@ export function RetrieveSection({
 
   console.log('RETRIVE TOOL DATA', JSON.stringify(data, null, 2))
 
-  const header = <ToolArgsSection tool="retrieve">{url}</ToolArgsSection>
+  const header = (
+    <ToolArgsSection tool="retrieve">
+      {url || 'Retrieved Sources'}
+    </ToolArgsSection>
+  )
 
   return (
     <>

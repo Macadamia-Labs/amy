@@ -115,7 +115,7 @@ export function Chat({
             messages={messages}
             data={localData}
             onQuerySelect={onQuerySelect}
-            isLoading={status === 'streaming' || status === 'submitted'}
+            status={status}
             chatId={id}
             onResetToMessage={handleResetToMessage}
             toolInvocations={toolInvocations}

@@ -3,12 +3,13 @@ import { JSONValue, Message } from 'ai'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { RenderMessage } from './render-message'
 import { ToolSection } from './tool-section'
+import { Skeleton } from './ui/skeleton'
 
 interface ChatMessagesProps {
   messages: Message[]
   data: JSONValue[] | undefined
   onQuerySelect: (query: string) => void
-  isLoading: boolean
+  status: 'error' | 'submitted' | 'streaming' | 'ready'
   chatId?: string
   onResetToMessage?: (messageId: string) => void
   toolInvocations?: ToolInvocation[]
@@ -19,7 +20,8 @@ export function ChatMessages({
   data,
   onQuerySelect,
   chatId,
-  onResetToMessage
+  onResetToMessage,
+  status
 }: ChatMessagesProps) {
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({})
   const manualToolCallId = 'manual-tool-call'
@@ -113,6 +115,12 @@ export function ChatMessages({
           isOpen={getIsOpen(manualToolCallId)}
           onOpenChange={open => handleOpenChange(manualToolCallId, open)}
         />
+      )}
+      {status === 'submitted' && (
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-6 w-64" />
+          <Skeleton className="h-6 w-32" />
+        </div>
       )}
       <div ref={messagesEndRef} className="h-4" />{' '}
       {/* Add some padding at the bottom */}
