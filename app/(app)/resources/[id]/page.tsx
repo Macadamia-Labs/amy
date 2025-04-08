@@ -14,9 +14,9 @@ import ResourceLoading from './loading'
 export default async function ResourcePage({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const { id } = params
+  const { id } = await params
   let resource: (Resource | DatabaseResource) | null = null
 
   if (!isUUID(id)) {
