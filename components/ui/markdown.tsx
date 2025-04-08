@@ -42,6 +42,10 @@ const MarkdownImage: FC<MarkdownImageProps> = ({
   } | null>(null)
   const [error, setError] = useState(false)
 
+  // Process the src to ensure it's compatible with next/image
+  const processedSrc =
+    src && !src.startsWith('http') && !src.startsWith('/') ? `/${src}` : src
+
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const img = event.target as HTMLImageElement
     setDimensions({ width: img.naturalWidth, height: img.naturalHeight })
@@ -77,8 +81,8 @@ const MarkdownImage: FC<MarkdownImageProps> = ({
   // If there's an error loading the image, render as a link
   if (error) {
     return (
-      <a href={src} target="_blank" rel="noopener noreferrer">
-        {src}
+      <a href={processedSrc} target="_blank" rel="noopener noreferrer">
+        {processedSrc}
       </a>
     )
   }
@@ -96,7 +100,7 @@ const MarkdownImage: FC<MarkdownImageProps> = ({
         }}
       >
         <Image
-          src={src}
+          src={processedSrc}
           alt={alt || ''}
           className="rounded-md cursor-pointer hover:opacity-90 transition-opacity"
           onClick={() => setShowDialog(true)}
@@ -115,7 +119,7 @@ const MarkdownImage: FC<MarkdownImageProps> = ({
           </DialogHeader>
           <div className="relative w-full h-full">
             <Image
-              src={src}
+              src={processedSrc}
               alt={alt || 'Image preview'}
               className="rounded-md"
               fill
@@ -238,7 +242,7 @@ const MarkdownWrapper: FC<Options> = ({
           {children}
         </tr>
       ),
-      th: ({ children, ...props }) => (
+      th: ({ children, isHeader, ...props }) => (
         <th
           className="px-4 py-3 text-left font-semibold bg-muted/50"
           {...props}
