@@ -6,6 +6,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useState
 } from 'react'
 import { Resource } from '../types/database'
@@ -54,29 +55,25 @@ export function DocumentProvider({
   resource
 }: DocumentProviderProps) {
   const [currentResource, setCurrentResource] = useState(resource)
-  const [content, setContent] = useState(
-    resource?.embeddings?.map(embedding => embedding.content).join('\n') ||
-      initialContent
-  )
+  const [content, setContent] = useState(initialContent)
   const [activeSection, setActiveSection] = useState<Section | null>(null)
-  const [sections, setSections] = useState<Section[]>(
-    () =>
-      resource?.embeddings?.map(embedding => ({
-        level: 1,
-        title: embedding.content,
-        content: embedding.content,
-        imageUrl: embedding.image_url,
-        sourceUrl: embedding.source_url
-      })) || []
-  )
 
-  // Subscribe to real-time updates for this specific resource
+  // Memoize sections to prevent unnecessary recalculations
+  const sections = useMemo(() => {
+    if (resource?.processing_result?.outline?.length) {
+      return resource.processing_result.outline
+    }
+    if (content) {
+      return parseMarkdownSections(content)
+    }
+    return []
+  }, [resource?.processing_result?.outline, content])
+
+  // Only subscribe to updates if the resource is still processing
   useEffect(() => {
-    if (!resource?.id) return
+    if (!resource?.id || resource.status === 'completed') return
 
     const supabase = createClient()
-
-    // Set up real-time subscription for this resource
     const subscription = supabase
       .channel(`resource-${resource.id}`)
       .on(
@@ -88,36 +85,11 @@ export function DocumentProvider({
           filter: `id=eq.${resource.id}`
         },
         async payload => {
-          console.log('Resource updated:', payload.new)
           const updatedResource = payload.new as Resource
-
           setCurrentResource(updatedResource)
 
-          // If resource has embeddings, update the content and sections
-          if (updatedResource.embeddings) {
-            const newContent = updatedResource.embeddings
-              .map(embedding => embedding.content)
-              .join('\n')
-
-            setContent(newContent)
-
-            // Update sections based on new embeddings
-            const newSections = updatedResource.embeddings.map(embedding => ({
-              level: 1,
-              title: embedding.content,
-              content: embedding.content,
-              imageUrl: embedding.image_url,
-              sourceUrl: embedding.source_url
-            }))
-
-            setSections(newSections)
-          } else if (
-            updatedResource.content &&
-            updatedResource.content !== content
-          ) {
-            // If resource has content directly, update it
+          if (updatedResource.content && updatedResource.content !== content) {
             setContent(updatedResource.content)
-            setSections(parseMarkdownSections(updatedResource.content))
           }
         }
       )
@@ -126,78 +98,68 @@ export function DocumentProvider({
     return () => {
       subscription.unsubscribe()
     }
-  }, [resource?.id])
+  }, [resource?.id, resource?.status])
 
   function parseMarkdownSections(markdown: string): Section[] {
+    if (!markdown) return []
+
     const lines = markdown.split('\n')
     const sections: Section[] = []
-    let currentSection: Section | null = {
-      level: 1,
-      title: 'Content',
-      content: '',
-      start: 0,
-      end: 0
-    }
+    let currentSection: Section | null = null
 
-    lines.forEach((line, index) => {
-      // Handle images as sections
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+
+      // Handle images
       if (line.trim().match(/^!\[.*?\]\(.*?\)/)) {
-        if (currentSection) {
-          currentSection.end = index - 1
-          if (currentSection.content.trim()) {
+        if (currentSection?.content) {
+          sections.push(currentSection)
+        }
+        sections.push({
+          level: 2,
+          title: 'Image',
+          content: line,
+          start: i,
+          end: i
+        })
+        currentSection = null
+        continue
+      }
+
+      // Handle headers
+      if (line.startsWith('#')) {
+        const level = line.match(/^#+/)?.[0].length || 0
+        if (level <= 2) {
+          if (currentSection?.content) {
             sections.push(currentSection)
           }
+          currentSection = {
+            level,
+            title: line.replace(/^#+\s*/, ''),
+            content: line,
+            start: i,
+            end: i
+          }
+          continue
         }
+      }
 
-        currentSection = {
-          level: 2, // Treating images as level 2 sections
-          title: 'Image',
-          content: line + '\n',
-          start: index,
-          end: index
-        }
-        sections.push(currentSection)
+      // Add content to current section
+      if (currentSection) {
+        currentSection.content += '\n' + line
+        currentSection.end = i
+      } else {
         currentSection = {
           level: 1,
           title: 'Content',
-          content: '',
-          start: index + 1,
-          end: index + 1
+          content: line,
+          start: i,
+          end: i
         }
-        return
       }
+    }
 
-      if (line.startsWith('#')) {
-        const level = line.match(/^#+/)?.[0].length || 0
-        if (level > 2) {
-          if (currentSection) {
-            currentSection.content += line + '\n'
-          }
-          return
-        }
-
-        if (currentSection) {
-          currentSection.end = index - 1
-          if (currentSection.content.trim()) {
-            sections.push(currentSection)
-          }
-        }
-
-        const title = line.replace(/^#+\s*/, '')
-        currentSection = {
-          level,
-          title,
-          content: line + '\n',
-          start: index,
-          end: index
-        }
-      } else if (currentSection) {
-        currentSection.content += line + '\n'
-        currentSection.end = index
-      }
-    })
-
-    if (currentSection && currentSection.content.trim()) {
+    if (currentSection?.content) {
       sections.push(currentSection)
     }
 
@@ -209,17 +171,12 @@ export function DocumentProvider({
     activeSection
   })
 
-  const handleSetContent = (newContent: string) => {
-    setContent(newContent)
-    setSections(parseMarkdownSections(newContent))
-  }
-
   const value = {
     content,
     sections,
     activeSection,
     setActiveSection,
-    setContent: handleSetContent,
+    setContent,
     getCurrentContext,
     resource: currentResource
   }

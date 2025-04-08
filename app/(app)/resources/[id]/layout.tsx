@@ -33,11 +33,15 @@ export default async function ResourceLayout({
   // For database resources, content comes from embeddings or the content field
   // For local resources, content might be directly available
   const content =
-    'content' in resource && resource.content
-      ? resource.content
+    'content_as_text' in resource && resource.content_as_text
+      ? resource.content_as_text
+      : 'content' in resource && resource.content.pages
+      ? resource.content.pages.map(page => page.markdown).join('\n')
       : 'embeddings' in resource && resource.embeddings
       ? resource.embeddings.map(embedding => embedding.content).join('\n')
       : 'No Content in Resource'
+
+  console.log('[ResourceLayout] Resource:', resource)
 
   return (
     <DocumentProvider initialContent={content} resource={resource as any}>

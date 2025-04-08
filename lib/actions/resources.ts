@@ -1,17 +1,16 @@
 'use server'
-import { createClient } from '@/lib/supabase/server'
 import { generateUUID } from '@/lib/utils/helpers'
 import { revalidatePath as nextRevalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { ProcessedResource } from '../processing/types'
-import { createServiceRoleClient } from '../supabase/service-role'
+import { createClient } from '../supabase/server'
 import { Resource, ResourceStatus } from '../types'
 
 export const handleResourceSuccess = async (
   resourceId: string,
   result: ProcessedResource
 ) => {
-  const supabase = await createServiceRoleClient()
+  const supabase = await createClient()
   console.log('[handleResourceSuccess] Saving result:', result)
   const { error: updateError } = await supabase
     .from('resources')
@@ -32,7 +31,7 @@ export const handleResourceSuccess = async (
 }
 
 export const handleResourceProcessing = async (resourceId: string) => {
-  const supabase = await createServiceRoleClient()
+  const supabase = await createClient()
   const { error: updateError } = await supabase
     .from('resources')
     .update({ status: 'processing' })
@@ -44,7 +43,7 @@ export const handleResourceProcessing = async (resourceId: string) => {
 }
 
 export const handleResourceError = async (resourceId: string, error: Error) => {
-  const supabase = await createServiceRoleClient()
+  const supabase = await createClient()
   const { error: updateError } = await supabase
     .from('resources')
     .update({
@@ -63,7 +62,7 @@ export const createPdfPages = async (
   resourceId: string,
   filePaths: string[]
 ) => {
-  const supabase = await createServiceRoleClient()
+  const supabase = await createClient()
   const pageEntries = filePaths.map((filePath, index) => {
     const {
       data: { publicUrl: pageUrl }
@@ -91,7 +90,7 @@ export const setResourcesStatus = async (
   resource_id: string,
   status: ResourceStatus
 ) => {
-  const supabase = await createServiceRoleClient()
+  const supabase = await createClient()
   const { error: updateError } = await supabase
     .from('resources')
     .update({ status })
@@ -299,13 +298,79 @@ export async function getResourceEmbeddings(resourceId: string) {
 
 export async function getResourceEnriched(resourceId: string) {
   const supabase = await createClient()
-  const resource = await getResource(resourceId)
-  if (!resource) return null
-  const { data } = await supabase.storage
-    .from('resources')
-    .createSignedUrl(resource.file_path, 60 * 60 * 24 * 30)
+  console.log('[getResourceEnriched] Getting resource:', resourceId)
 
-  return { ...resource, file_url: data?.signedUrl }
+  try {
+    // Get the resource
+    const { data: resource, error } = await supabase
+      .from('resources')
+      .select('*')
+      .eq('id', resourceId)
+      .single()
+
+    console.log('[getResourceEnriched] Fetched Resource:', resource)
+
+    if (error) throw error
+    if (!resource) return null
+
+    // Ensure file_path exists before attempting to get signed URL
+    if (!resource.file_path) {
+      console.error(
+        '[getResourceEnriched] Resource exists but file_path is missing for resource ID:',
+        resourceId
+      )
+      // Return resource without file_url or throw an error, depending on desired behavior
+      return {
+        ...resource,
+        file_url: null // Or handle as an error state
+      }
+    }
+
+    console.log(
+      '[getResourceEnriched] Getting signed url for resource:',
+      resourceId,
+      'with file_path:',
+      resource.file_path
+    )
+
+    let signedUrl = null
+    try {
+      // Get the signed URL
+      const { data: signedUrlData, error: signedUrlError } =
+        await supabase.storage
+          .from('resources')
+          .createSignedUrl(resource.file_path, 60 * 60) // Reduced expiry to 1 hour for testing
+
+      if (signedUrlError) {
+        console.error(
+          '[getResourceEnriched] Error creating signed URL:',
+          signedUrlError
+        )
+        // Decide how to handle: return partial data, throw, etc.
+        // For now, returning null for file_url
+      } else {
+        signedUrl = signedUrlData?.signedUrl
+        console.log(
+          '[getResourceEnriched] Successfully created signed url:',
+          signedUrl
+        )
+      }
+    } catch (e) {
+      console.error(
+        '[getResourceEnriched] Exception during createSignedUrl:',
+        e
+      )
+      // Handle exception, e.g., return partial data
+    }
+
+    return {
+      ...resource,
+      file_url: signedUrl // Use the obtained signedUrl (which might be null if an error occurred)
+    }
+  } catch (error) {
+    console.error('[getResourceEnriched] Error fetching resource:', error)
+    return null
+  }
 }
 
 export async function updateResource(
