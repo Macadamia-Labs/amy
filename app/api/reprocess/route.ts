@@ -25,7 +25,8 @@ export async function POST(request: Request) {
     const resource = await getResource(resourceId)
 
     await updateResource(resourceId, {
-      status: 'processing'
+      status: 'processing',
+      category: 'uncategorized'
     })
 
     // Trigger inngest event for reprocessing

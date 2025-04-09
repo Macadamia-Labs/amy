@@ -19,6 +19,8 @@ interface AuthContextProps {
   signInWithGoogle: () => Promise<void>
   signInWithOtp: (email: string) => Promise<void>
   verifyOtpCode: (email: string, token: string) => Promise<void>
+  signInWithPassword: (email: string, password: string) => Promise<void>
+  signUpWithPassword: (email: string, password: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -35,6 +37,12 @@ const AuthContext = createContext<AuthContextProps>({
   },
   verifyOtpCode: async (email: string, token: string) => {
     console.log('verifyOtpCode', email, token)
+  },
+  signInWithPassword: async (email: string, password: string) => {
+    console.log('signInWithPassword', email)
+  },
+  signUpWithPassword: async (email: string, password: string) => {
+    console.log('signUpWithPassword', email)
   }
 })
 
@@ -169,6 +177,70 @@ export default function AuthProvider({
     }
   }
 
+  // Sign in with password
+  const signInWithPassword = async (email: string, password: string) => {
+    posthog.capture('sign_in', { method: 'password' })
+    setEmailLoading(true)
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+
+      if (error) throw error
+
+      if (data.user) {
+        setUser(data.user)
+        setSession(data.session)
+        toast.success('Successfully signed in!')
+        router.replace('/')
+      }
+    } catch (error) {
+      console.error('Error signing in with password:', error)
+      toast.error('Invalid email or password')
+    } finally {
+      setEmailLoading(false)
+    }
+  }
+
+  // Sign up with password
+  const signUpWithPassword = async (email: string, password: string) => {
+    posthog.capture('sign_up', { method: 'password' })
+    setEmailLoading(true)
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: getURL() + '/'
+        }
+      })
+
+      if (error) throw error
+
+      if (data.user) {
+        if (data.user.identities?.length === 0) {
+          toast.error('Email already exists')
+          return
+        }
+
+        if (data.session) {
+          setUser(data.user)
+          setSession(data.session)
+          toast.success('Successfully signed up!')
+          router.replace('/')
+        } else {
+          toast.success('Please check your email to confirm your account')
+        }
+      }
+    } catch (error) {
+      console.error('Error signing up with password:', error)
+      toast.error('Error creating account')
+    } finally {
+      setEmailLoading(false)
+    }
+  }
+
   // Handle Auth State Changes and Initial Session
   useEffect(() => {
     // Get initial user state securely
@@ -235,7 +307,9 @@ export default function AuthProvider({
     signOut,
     signInWithGoogle,
     signInWithOtp,
-    verifyOtpCode
+    verifyOtpCode,
+    signInWithPassword,
+    signUpWithPassword
   }
 
   return <AuthContext.Provider value={exposed}>{children}</AuthContext.Provider>

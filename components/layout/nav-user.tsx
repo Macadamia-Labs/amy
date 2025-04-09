@@ -157,7 +157,12 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={signOut}>
+            <DropdownMenuItem
+              onClick={() => {
+                console.log('Log out button clicked in NavUser')
+                signOut()
+              }}
+            >
               <LogOutIcon className="mr-2 size-4" />
               Log out
             </DropdownMenuItem>
