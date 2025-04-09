@@ -1,7 +1,6 @@
 'use client'
 
 import { Toggle } from '@/components/ui/toggle'
-import { cn } from '@/lib/utils'
 import { useState } from 'react'
 
 interface ThinkingToggleProps {
@@ -22,12 +21,7 @@ export function ThinkingToggle({ onModelChange }: ThinkingToggleProps) {
         pressed={isOn}
         onPressedChange={handleToggle}
         variant="outline"
-        className={cn(
-          'border rounded',
-          isOn
-            ? 'bg-blue-200/50 text-blue-500'
-            : 'bg-muted text-muted-foreground'
-        )}
+        className="border rounded-2xl"
       >
         Think
       </Toggle>
