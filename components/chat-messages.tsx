@@ -122,6 +122,11 @@ export function ChatMessages({
           <Skeleton className="h-6 w-32" />
         </div>
       )}
+      {status === 'error' && (
+        <p className="text-sm w-full bg-red-50 text-red-500 p-4 rounded-xl dark:bg-red-900/30">
+          Something went wrong. Please try again.
+        </p>
+      )}
       <div ref={messagesEndRef} className="h-4" />{' '}
       {/* Add some padding at the bottom */}
     </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { ToolInvocation } from 'ai'
+import FindOptionsSection from './find-options-section'
 import IssuesSection from './issues-section'
 import RetrieveSection from './retrieve-section'
 import { SearchSection } from './search-section'
@@ -41,6 +42,14 @@ export function ToolSection({ tool, isOpen, onOpenChange }: ToolSectionProps) {
     case 'formatIssues':
       return (
         <IssuesSection
+          tool={tool}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        />
+      )
+    case 'findOptions':
+      return (
+        <FindOptionsSection
           tool={tool}
           isOpen={isOpen}
           onOpenChange={onOpenChange}
