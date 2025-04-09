@@ -443,7 +443,22 @@ export function ResourcesTable() {
             )}
           </TableCell>
           <TableCell>
-            {!isFolder && <Badge variant="outline">{resource.category}</Badge>}
+            {!isFolder && (
+              <Badge variant="secondary">
+                {categoryIcons[
+                  resource.category as keyof typeof categoryIcons
+                ] &&
+                  React.createElement(
+                    categoryIcons[
+                      resource.category as keyof typeof categoryIcons
+                    ],
+                    {
+                      className: 'h-4 w-4 mr-1'
+                    }
+                  )}
+                {resource.category}
+              </Badge>
+            )}
           </TableCell>
           <TableCell>
             {!isFolder && <ResourceSourceCell resource={resource} />}
@@ -584,7 +599,6 @@ export function ResourcesTable() {
                   <TableHead>Resource</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Category</TableHead>
-                  <TableHead>From</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead className="w-[50px]">Actions</TableHead>
                   <TableHead className="w-[50px]">

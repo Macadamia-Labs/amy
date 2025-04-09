@@ -14,8 +14,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/dialog'
 import {
   Popover,
@@ -25,9 +24,8 @@ import {
 import { Resource } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { getResourceSourceIcon } from '@/lib/utils/resource-helpers'
-import { Check, ChevronsUpDown, FileText } from 'lucide-react'
+import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
-import { Badge } from '../ui/badge'
 
 interface ResourcesSelectorProps {
   selectedIds: Set<string>
@@ -94,9 +92,7 @@ export function ResourcesSelector({
             className="justify-between rounded-full"
           >
             {selectedIds.size > 0 ? (
-              <Badge variant="secondary" className="rounded-full">
-                {selectedIds.size} selected
-              </Badge>
+              <p>{selectedIds.size} selected</p>
             ) : (
               'Select resources'
             )}
@@ -122,6 +118,13 @@ export function ResourcesSelector({
                     />
                   </div>
                 </CommandItem>
+                {selectedIds.size > 0 && (
+                  <CommandItem onSelect={() => setShowContentDialog(true)}>
+                    <div className="flex items-center justify-between w-full">
+                      <span>View content</span>
+                    </div>
+                  </CommandItem>
+                )}
               </CommandGroup>
               {Object.entries(groupedResources).map(([category, resources]) => (
                 <CommandGroup key={category} heading={category}>
@@ -161,16 +164,6 @@ export function ResourcesSelector({
 
       {selectedIds.size > 0 && (
         <Dialog open={showContentDialog} onOpenChange={setShowContentDialog}>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full"
-              title="View selected content"
-            >
-              <FileText className="h-4 w-4" />
-            </Button>
-          </DialogTrigger>
           <DialogContent className="max-w-4xl max-h-[80vh]">
             <DialogHeader>
               <DialogTitle>Selected Resources Content</DialogTitle>

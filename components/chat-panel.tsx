@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import Textarea from 'react-textarea-autosize'
 import { EmptyScreen } from './empty-screen'
-import { ModelSelector } from './model-selector'
 import { ResourcesSelector } from './resources/resources-selector'
+import { ThinkingToggle } from './thinking-toggle'
 import { Button } from './ui/button'
 
 interface ChatPanelProps {
@@ -126,12 +126,10 @@ export function ChatPanel({
               selectedIds={selectedResourceIds}
               onSelect={setSelectedResourceIds}
             />
-            <ModelSelector
-              selectedModel={selectedModel}
-              onModelChange={onModelChange}
-            />
           </div>
           <div className="flex items-center gap-2">
+            <ThinkingToggle onModelChange={onModelChange} />
+
             {messages.length > 0 && (
               <Button
                 variant="outline"

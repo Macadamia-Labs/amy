@@ -9,14 +9,6 @@ import React, { useEffect, useState } from 'react'
 import { CHAT_ID } from '../lib/constants'
 import { ChatMessages } from './chat-messages'
 import { ChatPanel } from './chat-panel'
-import { Button } from './ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from './ui/dialog'
 import { ScrollArea } from './ui/scroll-area'
 
 export function Chat({
@@ -89,8 +81,7 @@ export function Chat({
 
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto justify-center">
-      <p>STATUS: {status}</p>
-      <div className="flex justify-end p-2">
+      {/* <div className="flex justify-end p-2">
         <Dialog open={debugOpen} onOpenChange={setDebugOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" size="sm">
@@ -108,7 +99,7 @@ export function Chat({
             </ScrollArea>
           </DialogContent>
         </Dialog>
-      </div>
+      </div> */}
       {messages.length > 0 && (
         <ScrollArea className="flex-1">
           <ChatMessages
