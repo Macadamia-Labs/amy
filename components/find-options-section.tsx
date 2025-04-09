@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { RetrieveResults } from '@/lib/types'
 import { CheckCircleIcon, SearchIcon } from '@/lib/utils/icons'
 import { ToolInvocation } from 'ai'
 import { useState } from 'react'
@@ -29,8 +28,7 @@ export function RetrieveSection({
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const isLoading = tool.state === 'call'
-  const data: RetrieveResults =
-    tool.state === 'result' ? tool.result : undefined
+  const data: any = tool.state === 'result' ? tool.result : undefined
   const query = tool.args.query as string
 
   console.log('RETRIVE TOOL DATA', JSON.stringify(data, null, 2))
@@ -73,7 +71,7 @@ export function RetrieveSection({
       >
         {!isLoading && data ? (
           <div className="flex flex-col gap-2">
-            {data.map(result => (
+            {data.map((result: any) => (
               <div
                 key={result.id}
                 className="w-full p-2 rounded bg-muted px-4 text-sm"

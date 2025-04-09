@@ -3,8 +3,7 @@
 import { useResources } from '@/components/providers/resources-provider'
 import { useToolChat } from '@/hooks/use-tool-chat'
 import { generateUUID } from '@/lib/utils/helpers'
-import { JSONValue } from 'ai'
-import { Message } from 'ai/react'
+import { JSONValue, Message } from 'ai'
 import React, { useEffect, useState } from 'react'
 import { CHAT_ID } from '../lib/constants'
 import { ChatMessages } from './chat-messages'
@@ -25,7 +24,6 @@ export function Chat({
   )
   const { resources } = useResources()
   const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
-  const [debugOpen, setDebugOpen] = useState(false)
 
   const selectedResourcesContent = React.useMemo(() => {
     const selectedResources = resources.filter(r =>
@@ -103,7 +101,7 @@ export function Chat({
       {messages.length > 0 && (
         <ScrollArea className="flex-1">
           <ChatMessages
-            messages={messages}
+            messages={messages as Message[]}
             data={localData}
             onQuerySelect={onQuerySelect}
             status={status}
@@ -119,8 +117,8 @@ export function Chat({
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
           isLoading={status === 'streaming' || status === 'submitted'}
-          messages={messages}
-          setMessages={setMessages}
+          messages={messages as Message[]}
+          setMessages={setMessages as any}
           stop={stop}
           query={query}
           append={append}

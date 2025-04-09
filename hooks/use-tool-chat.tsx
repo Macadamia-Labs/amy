@@ -2,8 +2,7 @@
 
 import { useAuth } from '@/lib/providers/auth-provider'
 import { useChat } from '@ai-sdk/react'
-import { ChatRequestOptions, CoreMessage } from 'ai'
-import { CreateMessage, Message } from 'ai/react'
+import { ChatRequestOptions, CoreMessage, Message } from 'ai'
 import { toast } from 'sonner'
 // import { useAuth } from '../providers/auth-provider'
 // import { useCooper } from '../providers/cooper-provider'
@@ -58,7 +57,7 @@ export function useToolChat({
     headers: {
       Authorization: `Bearer ${token}`
     },
-    initialMessages: (initialMessages as Message[]) || [],
+    initialMessages: (initialMessages as any[]) || [],
     id,
     body: {
       id,
@@ -89,10 +88,10 @@ export function useToolChat({
   })
 
   async function appendWithMetadata(
-    message: Message | CreateMessage,
+    message: Message,
     chatRequestOptions?: ChatRequestOptions
   ) {
-    return originalAppend(message, {
+    return originalAppend(message as any, {
       ...chatRequestOptions,
       body: {
         ...chatRequestOptions?.body,

@@ -109,8 +109,8 @@ export function IssueChat({ id, initialMessages }: IssueChatProps) {
             }
           : null
       }}
-      messages={messages}
-      setMessages={setMessages}
+      messages={messages as Message[]}
+      setMessages={setMessages as any}
       append={appendWithContext}
       addToolResult={addToolResult}
       isLoading={status === 'streaming' || status === 'submitted'}

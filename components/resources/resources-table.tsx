@@ -461,9 +461,6 @@ export function ResourcesTable() {
             )}
           </TableCell>
           <TableCell>
-            {!isFolder && <ResourceSourceCell resource={resource} />}
-          </TableCell>
-          <TableCell>
             {new Date(resource.created_at).toLocaleDateString()}
           </TableCell>
           <TableCell onClick={e => e.stopPropagation()}>

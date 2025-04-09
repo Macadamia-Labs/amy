@@ -95,8 +95,8 @@ export function DocumentChat({ id, initialMessages }: DocumentChatProps) {
     <SimpleChat
       id={id}
       data={data}
-      messages={messages}
-      setMessages={setMessages}
+      messages={messages as Message[]}
+      setMessages={setMessages as any}
       append={appendWithContext}
       addToolResult={addToolResult}
       isLoading={status === 'streaming' || status === 'submitted'}
