@@ -4,25 +4,32 @@ const issueSchema = z.object({
   issues: z
     .array(
       z.object({
-        title: z.string().describe('Title of the issue'),
-        description: z.string().describe('Detailed description of the issue'),
-        type: z
-          .enum(['typo', 'feature', 'documentation', 'calculation'])
-          .describe('Type of the issue'),
-        severity: z
-          .enum(['minor', 'major', 'critical'])
-          .describe('Severity level of the issue')
+        resource_id: z.string().describe('Resource ID of the issue'),
+        implementation_steps: z
+          .any()
+          .describe('Implementation steps for the issue'),
+        user_id: z.string().describe('User ID associated with the issue'),
+        severity: z.string().describe('Severity level of the issue'),
+        category: z.string().describe('Category of the issue'),
+        impact: z.string().describe('Impact of the issue'),
+        overall_assessment: z
+          .string()
+          .describe('Overall assessment of the issue'),
+        issue: z.string().describe('Description of the issue'),
+        resolution: z.string().describe('Resolution of the issue'),
+        estimated_impact: z.string().describe('Estimated impact of the issue')
       })
     )
     .describe('Array of issue objects to format')
 })
 
-export const formatIssuesTool = tool({
+export const formatAndSaveIssuesTool = tool({
   description:
-    'Based on an analysis of issues, format them into a structured format for a bug report.',
+    'Formats the issues into a structured format compatible with the Supabase issues table.',
   parameters: issueSchema,
   execute: async ({ issues }) => {
     console.log('Formatting issues:', issues)
+
     return issues
   }
 })

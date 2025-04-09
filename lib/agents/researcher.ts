@@ -1,6 +1,6 @@
 import { CoreMessage, smoothStream, streamText } from 'ai'
 import { Section } from '../providers/document-provider'
-import { formatIssuesTool } from '../tools/find-issues'
+import { formatAndSaveIssuesTool } from '../tools/find-issues'
 import { findOptionsTool } from '../tools/find-options'
 import { retrieveTool } from '../tools/retrieve'
 import { getModel } from '../utils/registry'
@@ -77,7 +77,7 @@ ${JSON.stringify(resourcesContext)}`
       tools: {
         // webSearch: searchTool,
         retrieve: retrieveTool,
-        formatIssues: formatIssuesTool,
+        formatAndSaveIssuesTool: formatAndSaveIssuesTool,
         findOptions: findOptionsTool
       },
       // experimental_activeTools: searchMode
