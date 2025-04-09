@@ -7,7 +7,13 @@ import { processResource } from '../processing/process-resource'
 import { inngest } from './client'
 
 export const processFile = inngest.createFunction(
-  { name: 'Process Uploaded File', id: 'process-file' },
+  {
+    name: 'Process Uploaded File',
+    id: 'process-file',
+    timeouts: {
+      finish: '5m' // 5 minute execution timeout
+    }
+  },
   { event: 'file.uploaded' },
   async ({ event }) => {
     const { resource, userId } = event.data
