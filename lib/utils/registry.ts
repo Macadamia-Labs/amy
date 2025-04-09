@@ -37,7 +37,7 @@ export const registry = createProviderRegistry({
   })
 })
 
-export function getModel(model: string) {
+export function getModel(model: any) {
   const [provider, ...modelNameParts] = model.split(':') ?? []
   const modelName = modelNameParts.join(':')
   if (model.includes('ollama')) {
