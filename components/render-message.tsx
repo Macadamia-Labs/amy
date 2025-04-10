@@ -148,7 +148,6 @@ export function RenderMessage({
       <ContextMenu>
         <ContextMenuTrigger>
           <>
-            <BotMessage message={message.content} />
             {toolInvocations.map(tool => (
               <ToolSection
                 key={tool.toolCallId}
@@ -158,6 +157,7 @@ export function RenderMessage({
                 onOpenChange={open => onOpenChange(messageId, open)}
               />
             ))}
+            <BotMessage message={message.content} />
           </>
         </ContextMenuTrigger>
         <ContextMenuContent>
