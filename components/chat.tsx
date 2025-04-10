@@ -44,7 +44,8 @@ export function Chat({
     setMessages,
     stop,
     append,
-    toolInvocations
+    toolInvocations,
+    error
   } = useToolChat({
     id: CHAT_ID,
     initialMessages: savedMessages as any,
@@ -108,6 +109,7 @@ export function Chat({
             chatId={id}
             onResetToMessage={handleResetToMessage}
             toolInvocations={toolInvocations}
+            error={error}
           />
         </ScrollArea>
       )}

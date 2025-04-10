@@ -386,3 +386,14 @@ export async function updateResource(
   if (error) throw error
   nextRevalidatePath('/(app)/resources')
 }
+
+export async function getResourcesByIds(resourceIds: string[]) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('resources')
+    .select('*')
+    .in('id', resourceIds)
+
+  if (error) throw error
+  return data
+}

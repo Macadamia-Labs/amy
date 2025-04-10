@@ -13,6 +13,7 @@ interface ChatMessagesProps {
   chatId?: string
   onResetToMessage?: (messageId: string) => void
   toolInvocations?: ToolInvocation[]
+  error?: Error
 }
 
 export function ChatMessages({
@@ -21,7 +22,8 @@ export function ChatMessages({
   onQuerySelect,
   chatId,
   onResetToMessage,
-  status
+  status,
+  error
 }: ChatMessagesProps) {
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({})
   const manualToolCallId = 'manual-tool-call'
@@ -124,7 +126,8 @@ export function ChatMessages({
       )}
       {status === 'error' && (
         <p className="text-sm w-full bg-red-50 text-red-500 p-4 rounded-xl dark:bg-red-900/30">
-          Something went wrong. Please try again.
+          Something went wrong. Please try again. <br />
+          {error?.message}
         </p>
       )}
       <div ref={messagesEndRef} className="h-4" />{' '}

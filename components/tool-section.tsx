@@ -1,6 +1,7 @@
 'use client'
 
-import { ToolInvocation } from 'ai'
+import { Message, ToolInvocation } from 'ai'
+import DeepSearchSection from './deep-search-section'
 import FindOptionsSection from './find-options-section'
 import IssuesSection from './issues-section'
 import RetrieveSection from './retrieve-section'
@@ -8,12 +9,18 @@ import { SearchSection } from './search-section'
 import { VideoSearchSection } from './video-search-section'
 
 interface ToolSectionProps {
+  message: Message
   tool: ToolInvocation
   isOpen: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function ToolSection({ tool, isOpen, onOpenChange }: ToolSectionProps) {
+export function ToolSection({
+  message,
+  tool,
+  isOpen,
+  onOpenChange
+}: ToolSectionProps) {
   switch (tool.toolName) {
     case 'search':
       return (
@@ -55,7 +62,20 @@ export function ToolSection({ tool, isOpen, onOpenChange }: ToolSectionProps) {
           onOpenChange={onOpenChange}
         />
       )
+    case 'deepSearch':
+      return (
+        <DeepSearchSection
+          message={message}
+          tool={tool}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        />
+      )
     default:
-      return <div>Unknown tool: {tool.toolName}</div>
+      return (
+        <div className="bg-red-100/50 p-4 rounded rounded-xl text-red-500 text-sm">
+          Unknown tool: {tool.toolName}
+        </div>
+      )
   }
 }

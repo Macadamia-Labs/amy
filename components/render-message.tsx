@@ -152,6 +152,7 @@ export function RenderMessage({
             {toolInvocations.map(tool => (
               <ToolSection
                 key={tool.toolCallId}
+                message={message}
                 tool={tool}
                 isOpen={getIsOpen(messageId)}
                 onOpenChange={open => onOpenChange(messageId, open)}

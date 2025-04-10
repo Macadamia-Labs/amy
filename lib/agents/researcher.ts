@@ -1,5 +1,6 @@
-import { CoreMessage, smoothStream, streamText } from 'ai'
+import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
 import { Section } from '../providers/document-provider'
+import { deepSearchTool } from '../tools/deep-search'
 import { formatAndSaveIssuesTool } from '../tools/find-issues'
 import { findOptionsTool } from '../tools/find-options'
 import { retrieveTool } from '../tools/retrieve'
@@ -15,6 +16,8 @@ When asked a question, you should:
 4. Provide comprehensive and detailed responses based on search results, ensuring thorough coverage of the user's question
 5. Use markdown to structure your responses. Use headings to break up the content into sections.
 6. Use the formatIssues tool to format found issues and errors into a structured format for a bug report.
+7. Use the deepSearch tool to search the knowledge base for issues based on a number of resources.
+8. Use the findOptions tool to find options for the user's question.
 Citation Format: 
 [number](url)
 `
@@ -33,6 +36,7 @@ interface ResearcherConfig {
     resourceIds: string[]
     resourcesContent: string
   }
+  dataStream?: DataStreamWriter
 }
 
 export function researcher({
@@ -40,7 +44,8 @@ export function researcher({
   model,
   searchMode,
   context,
-  resourcesContext
+  resourcesContext,
+  dataStream
 }: ResearcherConfig): ResearcherReturn {
   try {
     const currentDate = new Date().toLocaleString()
@@ -78,7 +83,8 @@ ${JSON.stringify(resourcesContext)}`
         // webSearch: searchTool,
         retrieve: retrieveTool,
         formatAndSaveIssuesTool: formatAndSaveIssuesTool,
-        findOptions: findOptionsTool
+        findOptions: findOptionsTool,
+        deepSearch: deepSearchTool(dataStream)
       },
       // experimental_activeTools: searchMode
       //   ? ['search', 'retrieve']

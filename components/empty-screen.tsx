@@ -8,7 +8,7 @@ const exampleMessages = [
   },
   {
     heading: 'What are all the standards used in this design?',
-    message: 'What are all the standards used in this design?'
+    message: 'Do a deep search to find all the standards used in this design?'
   },
   {
     heading: 'What type of material is used in this design?',

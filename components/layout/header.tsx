@@ -7,13 +7,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Plus } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { ReactNode } from 'react'
 
-export default function Header() {
+interface HeaderProps {
+  children?: ReactNode
+}
+
+export default function Header({ children }: HeaderProps) {
   const pathname = usePathname()
   const isResourcesPage = pathname.startsWith('/resources')
 
@@ -74,14 +77,7 @@ export default function Header() {
       <Breadcrumb className="mr-auto">
         <BreadcrumbList>{getBreadcrumbItems()}</BreadcrumbList>
       </Breadcrumb>
-      <div className="ml-auto flex gap-2">
-        {isResourcesPage ? (
-          <Button size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Resource
-          </Button>
-        ) : null}
-      </div>
+      <div className="ml-auto flex gap-2">{children}</div>
     </header>
   )
 }

@@ -7,7 +7,7 @@ export default function SearchLayout({
 }) {
   return (
     <div className="flex flex-col h-full">
-      <Header />
+      <Header>{/* <ActiveAgents /> */}</Header>
       <div className="flex-1 overflow-auto">{children}</div>
     </div>
   )

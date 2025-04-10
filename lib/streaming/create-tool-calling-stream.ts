@@ -27,7 +27,8 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
           model,
           searchMode,
           context,
-          resourcesContext
+          resourcesContext,
+          dataStream
         })
 
         const result = streamText({
