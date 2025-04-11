@@ -86,7 +86,7 @@ export function SearchForm({
           }
           document.removeEventListener('keydown', keydownListener)
         }
-        
+
         document.addEventListener('keydown', keydownListener, { once: true })
       }
     }
@@ -98,7 +98,10 @@ export function SearchForm({
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault()
     if (inputValue.trim()) {
-      onSearch?.(inputValue.trim())
+      // Use window.location.href for a full page refresh
+      window.location.href = `/?message=${encodeURIComponent(
+        inputValue.trim()
+      )}`
       setOpen(false)
       setInputValue('')
     }

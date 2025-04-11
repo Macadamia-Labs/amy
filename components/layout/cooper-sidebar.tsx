@@ -4,13 +4,13 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarRail
 } from '@/components/ui/sidebar'
 import { getProjects } from '@/lib/actions/projects'
 import * as React from 'react'
 import { MacadamiaHead } from './macadamia-head'
-import { NavHome } from './nav-home'
 import { NavIssues } from './nav-issues'
 import { NavProjects } from './nav-projects'
 import { NavResources } from './nav-resources'
@@ -34,8 +34,8 @@ export default async function CooperSidebar(
         <NavProjects projects={projects || []} />
 
         <SidebarGroup className="space-y-2">
-          {/* <SidebarGroupLabel>Project</SidebarGroupLabel> */}
-          <NavHome />
+          <SidebarGroupLabel>General</SidebarGroupLabel>
+          {/* <NavHome /> */}
           <NavResources />
           <NavIssues />
           {/* <NavIntegrations /> */}

@@ -163,3 +163,20 @@ export async function bulkDeleteChats(chatIds: string[]): Promise<void> {
     throw error
   }
 }
+
+export async function getProjectChats(projectId: string) {
+  const supabase = await createClient()
+  try {
+    const { data, error } = await supabase
+      .from('chats')
+      .select('*')
+      .eq('project_id', projectId)
+      .order('last_message_at', { ascending: false })
+
+    if (error) throw error
+    return data as Chat[]
+  } catch (error) {
+    console.error('Error fetching project chats:', error)
+    return []
+  }
+}

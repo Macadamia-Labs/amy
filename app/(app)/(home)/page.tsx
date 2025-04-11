@@ -2,11 +2,27 @@
 
 import { Chat } from '@/components/chat'
 import { useChatId } from '@/lib/hooks/use-chat-id'
+import { Message } from 'ai'
 import { useSearchParams } from 'next/navigation'
 
 export default function AppPage() {
   const searchParams = useSearchParams()
   const { chatId } = useChatId()
+  const initialMessage = searchParams.get('message')
+  const projectId = searchParams.get('projectId')
+
+  let savedMessages: Message[] = []
+  if (initialMessage) {
+    savedMessages = [
+      {
+        id: 'initial-message',
+        role: 'user',
+        content: initialMessage
+      }
+    ]
+  }
+
+  const newConversation = initialMessage !== null ? true : false
 
   return (
     <div className="p-4 w-full overflow-auto h-full">
@@ -56,12 +72,13 @@ export default function AppPage() {
             )
           })}
         </div> */}
-      {/* <div className="mt-4 w-full">
-        <ActivityView changes={exampleChanges} />
-      </div> */}
-      {/* </div> */}
 
-      <Chat id={searchParams.get('chat') || chatId} />
+      <Chat
+        id={searchParams.get('chat') || chatId}
+        savedMessages={savedMessages}
+        projectId={projectId || undefined}
+        newConversation={newConversation}
+      />
     </div>
   )
 }

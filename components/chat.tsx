@@ -13,11 +13,15 @@ import { ScrollArea } from './ui/scroll-area'
 export function Chat({
   id,
   savedMessages = [],
-  query
+  query,
+  projectId,
+  newConversation
 }: {
   id: string
   savedMessages?: Message[]
   query?: string
+  projectId?: string
+  newConversation?: boolean
 }) {
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
     new Set()
@@ -45,7 +49,8 @@ export function Chat({
     stop,
     append,
     toolInvocations,
-    error
+    error,
+    reload
   } = useToolChat({
     id: chatId,
     initialMessages: savedMessages as any,
@@ -53,14 +58,24 @@ export function Chat({
       resourceIds: Array.from(selectedResourceIds),
       resourcesContent: selectedResourcesContent
     },
-    selectedModel
+    selectedModel,
+    projectId
   })
 
   const [localData, setLocalData] = useState<JSONValue[] | undefined>()
 
   useEffect(() => {
-    setMessages(savedMessages as any)
+    if (newConversation) {
+      reload()
+    }
   }, [id])
+
+  useEffect(() => {
+    // Automatically submit if there's an initial message
+    if (savedMessages.length > 0 && messages.length === savedMessages.length) {
+      handleSubmit()
+    }
+  }, [savedMessages, messages, handleSubmit])
 
   useEffect(() => {
     // Save messages to local storage whenever they change
@@ -93,6 +108,7 @@ export function Chat({
 
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto justify-center">
+      {/* <p>New Conversation: {newConversation ? 'true' : 'false'}</p> */}
       {/* <div className="flex justify-end p-2">
         <Dialog open={debugOpen} onOpenChange={setDebugOpen}>
           <DialogTrigger asChild>

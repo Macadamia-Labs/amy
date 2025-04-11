@@ -30,13 +30,15 @@ interface UseToolChatProps {
     resourcesContent: string
   }
   selectedModel?: string
+  projectId?: string
 }
 
 export function useToolChat({
   id,
   initialMessages,
   resourcesContext,
-  selectedModel
+  selectedModel,
+  projectId
 }: UseToolChatProps) {
   // const handleToolCall = useToolCallHandler()
   // const { requirements, simulationSteps } = useCooper()
@@ -64,7 +66,8 @@ export function useToolChat({
       id,
       resourcesContext,
       model: selectedModel,
-      userId
+      userId,
+      projectId
     },
     onResponse(response) {
       if (response.status === 401) {
