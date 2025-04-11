@@ -1,28 +1,27 @@
 'use client'
 
+import { useChatId } from '@/lib/hooks/use-chat-id'
 import { useChat } from 'ai/react'
 import { Copy } from 'lucide-react'
 import { toast } from 'sonner'
-import { CHAT_ID } from '../lib/constants'
 import { cn } from '../lib/utils'
 import { ChatShare } from './chat-share'
 import { Button } from './ui/button'
 
 interface MessageActionsProps {
   message: string
-  chatId?: string
   enableShare?: boolean
   className?: string
 }
 
 export function MessageActions({
   message,
-  chatId,
   enableShare,
   className
 }: MessageActionsProps) {
+  const { chatId } = useChatId()
   const { isLoading } = useChat({
-    id: CHAT_ID
+    id: chatId
   })
   async function handleCopy() {
     await navigator.clipboard.writeText(message)

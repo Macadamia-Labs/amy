@@ -12,6 +12,7 @@ interface HandleStreamFinishParams {
   dataStream: DataStreamWriter
   skipRelatedQuestions?: boolean
   annotations?: ExtendedCoreMessage[]
+  userId: string
 }
 
 export async function handleStreamFinish({
@@ -21,13 +22,11 @@ export async function handleStreamFinish({
   chatId,
   dataStream,
   skipRelatedQuestions = false,
-  annotations = []
+  annotations = [],
+  userId
 }: HandleStreamFinishParams) {
-  console.log(
-    'handleStreamFinish skipped for now',
-    JSON.stringify(responseMessages, null, 2)
-  )
-  return
+  console.log('handleStreamFinish with userId', userId)
+
   try {
     const extendedCoreMessages = convertToExtendedCoreMessages(originalMessages)
     let allAnnotations = [...annotations]
@@ -70,11 +69,11 @@ export async function handleStreamFinish({
     ] as ExtendedCoreMessage[]
 
     // Get the chat from the database if it exists, otherwise create a new one
-    const savedChat = (await getChat(chatId)) ?? {
+    const savedChat = (await getChat(chatId, userId)) ?? {
       id: chatId,
       title: originalMessages[0].content,
-      user_id: 'anonymous', // TODO: Change to user id
-      app: 'search',
+      user_id: userId,
+      app: 'chat',
       messages: [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),

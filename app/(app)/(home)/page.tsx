@@ -1,13 +1,12 @@
+'use client'
+
 import { Chat } from '@/components/chat'
-import { resources, type ResourceItem } from '@/data/resources'
-import { generateUUID } from '@/lib/utils/helpers'
+import { useChatId } from '@/lib/hooks/use-chat-id'
+import { useSearchParams } from 'next/navigation'
 
 export default function AppPage() {
-  // Hardcoded selection of resources by ID
-  const selectedResourceIds = ['1', '4', '5'] // IDs for Project Kickoff, Equipment Maintenance, and ACE Guidelines
-  const recentResources = selectedResourceIds
-    .map(id => resources.find(resource => resource.id === id))
-    .filter(resource => resource !== undefined) as ResourceItem[]
+  const searchParams = useSearchParams()
+  const { chatId } = useChatId()
 
   return (
     <div className="p-4 w-full overflow-auto h-full">
@@ -62,7 +61,7 @@ export default function AppPage() {
       </div> */}
       {/* </div> */}
 
-      <Chat id={generateUUID()} />
+      <Chat id={searchParams.get('chat') || chatId} />
     </div>
   )
 }

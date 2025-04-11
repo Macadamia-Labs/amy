@@ -1,5 +1,6 @@
 'use client'
 
+import { useChatId } from '@/lib/hooks/use-chat-id'
 import { cn } from '@/lib/utils'
 import { Message } from 'ai'
 import { ArrowUp, MessageCirclePlus, Square } from 'lucide-react'
@@ -48,6 +49,7 @@ export function ChatPanel({
   const isFirstRender = useRef(true)
   const [isComposing, setIsComposing] = useState(false)
   const [enterDisabled, setEnterDisabled] = useState(false)
+  const { createNewChat } = useChatId()
 
   const handleCompositionStart = () => setIsComposing(true)
 
@@ -60,8 +62,9 @@ export function ChatPanel({
   }
 
   const handleNewChat = () => {
+    const newChatId = createNewChat()
     setMessages([])
-    router.push('/')
+    router.push(`/?chat=${newChatId}`)
   }
 
   useEffect(() => {

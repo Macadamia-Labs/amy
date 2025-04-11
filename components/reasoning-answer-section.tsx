@@ -1,9 +1,9 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge'
+import { useChatId } from '@/lib/hooks/use-chat-id'
 import { useChat } from 'ai/react'
 import { Check, Lightbulb, Loader2 } from 'lucide-react'
-import { CHAT_ID } from '../lib/constants'
 import { CollapsibleMessage } from './collapsible-message'
 import { DefaultSkeleton } from './default-skeleton'
 import { BotMessage } from './message'
@@ -19,17 +19,16 @@ export interface ReasoningAnswerSectionProps {
   content: ReasoningAnswerContent
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  chatId?: string
 }
 
 export function ReasoningAnswerSection({
   content,
   isOpen,
-  onOpenChange,
-  chatId
+  onOpenChange
 }: ReasoningAnswerSectionProps) {
   const enableShare = process.env.NEXT_PUBLIC_ENABLE_SHARE === 'true'
-  const { isLoading } = useChat({ id: CHAT_ID })
+  const { chatId } = useChatId()
+  const { isLoading } = useChat({ id: chatId })
 
   const reasoningHeader = (
     <div className="flex items-center gap-2 w-full">

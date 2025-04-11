@@ -5,6 +5,7 @@ export interface BaseStreamConfig {
   messages: Message[]
   model: string
   chatId: string
+  userId: string
   searchMode: boolean
   context?: {
     content: string

@@ -26,7 +26,7 @@ export async function getChats(userId?: string | null) {
   }
 }
 
-export async function getChat(id: string, userId: string = 'anonymous') {
+export async function getChat(id: string, userId: string) {
   const supabase = await createClient()
   try {
     const { data, error } = await supabase
@@ -34,19 +34,16 @@ export async function getChat(id: string, userId: string = 'anonymous') {
       .select('*')
       .eq('id', id)
       .eq('user_id', userId)
-      .single()
 
     if (error) throw error
-    return data as Chat
+    return data && data.length > 0 ? data[0] : null
   } catch (error) {
     console.error('Error fetching chat:', error)
     return null
   }
 }
 
-export async function clearChats(
-  userId: string = 'anonymous'
-): Promise<{ error?: string }> {
+export async function clearChats(userId: string): Promise<{ error?: string }> {
   const supabase = await createClient()
   try {
     const { error } = await supabase
@@ -57,19 +54,17 @@ export async function clearChats(
     if (error) throw error
     revalidatePath('/')
     redirect('/')
-    return {}
   } catch (error) {
     console.error('Error clearing chats:', error)
     return { error: 'Failed to clear chats' }
   }
 }
 
-export async function saveChat(chat: Chat, userId: string = 'anonymous') {
+export async function saveChat(chat: Chat) {
   const supabase = await createClient()
   try {
     const { error } = await supabase.from('chats').upsert({
       ...chat,
-      user_id: userId,
       last_message_at: new Date().toISOString()
     })
 
@@ -99,7 +94,7 @@ export async function getSharedChat(id: string) {
   }
 }
 
-export async function shareChat(id: string, userId: string = 'anonymous') {
+export async function shareChat(id: string, userId: string) {
   const supabase = await createClient()
   try {
     const { data, error } = await supabase

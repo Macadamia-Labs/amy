@@ -1,10 +1,10 @@
 'use client'
 
+import { useChatId } from '@/lib/hooks/use-chat-id'
 import { JSONValue } from 'ai'
 import { useChat } from 'ai/react'
 import { ArrowRight, Repeat2 } from 'lucide-react'
 import React from 'react'
-import { CHAT_ID } from '../lib/constants'
 import { CollapsibleMessage } from './collapsible-message'
 import { Button } from './ui/button'
 import { Skeleton } from './ui/skeleton'
@@ -29,9 +29,11 @@ export const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
   isOpen,
   onOpenChange
 }) => {
-  const { isLoading } = useChat({
-    id: CHAT_ID
+  const { chatId } = useChatId()
+  const { status } = useChat({
+    id: chatId
   })
+  const isLoading = status === 'submitted' || status === 'streaming'
 
   if (!annotations) {
     return null

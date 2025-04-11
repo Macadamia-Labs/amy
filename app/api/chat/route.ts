@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     const {
       messages,
       id: chatId,
+      userId,
       context,
       resourcesContext,
       body,
@@ -72,7 +73,8 @@ export async function POST(req: Request) {
           chatId,
           searchMode,
           context,
-          resourcesContext
+          resourcesContext,
+          userId
         })
       : createManualToolStreamResponse({
           messages,
@@ -80,7 +82,8 @@ export async function POST(req: Request) {
           chatId,
           searchMode,
           context,
-          resourcesContext
+          resourcesContext,
+          userId
         })
   } catch (error) {
     console.error('API route error:', error)

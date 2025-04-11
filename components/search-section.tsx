@@ -1,9 +1,9 @@
 'use client'
 
+import { useChatId } from '@/lib/hooks/use-chat-id'
 import type { SearchResults as TypeSearchResults } from '@/lib/types'
 import { ToolInvocation } from 'ai'
 import { useChat } from 'ai/react'
-import { CHAT_ID } from '../lib/constants'
 import { CollapsibleMessage } from './collapsible-message'
 import { SearchSkeleton } from './default-skeleton'
 import { SearchResults } from './search-results'
@@ -21,8 +21,9 @@ export function SearchSection({
   isOpen,
   onOpenChange
 }: SearchSectionProps) {
+  const { chatId } = useChatId()
   const { isLoading } = useChat({
-    id: CHAT_ID
+    id: chatId
   })
   const isToolLoading = tool.state === 'call'
   const searchResults: TypeSearchResults =

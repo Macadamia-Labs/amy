@@ -41,7 +41,8 @@ export function useToolChat({
   // const handleToolCall = useToolCallHandler()
   // const { requirements, simulationSteps } = useCooper()
 
-  const { session } = useAuth()
+  const { session, user } = useAuth()
+  const userId = user?.id
   const token = session?.access_token
 
   const {
@@ -62,7 +63,8 @@ export function useToolChat({
     body: {
       id,
       resourcesContext,
-      model: selectedModel
+      model: selectedModel,
+      userId
     },
     onResponse(response) {
       if (response.status === 401) {

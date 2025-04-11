@@ -2,10 +2,10 @@
 
 import { useResources } from '@/components/providers/resources-provider'
 import { useToolChat } from '@/hooks/use-tool-chat'
+import { useChatId } from '@/lib/hooks/use-chat-id'
 import { generateUUID } from '@/lib/utils/helpers'
 import { JSONValue, Message } from 'ai'
 import React, { useEffect, useState } from 'react'
-import { CHAT_ID } from '../lib/constants'
 import { ChatMessages } from './chat-messages'
 import { ChatPanel } from './chat-panel'
 import { ScrollArea } from './ui/scroll-area'
@@ -24,7 +24,7 @@ export function Chat({
   )
   const { resources } = useResources()
   const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
-
+  const { chatId } = useChatId()
   const selectedResourcesContent = React.useMemo(() => {
     const selectedResources = resources.filter(r =>
       selectedResourceIds.has(r.id)
@@ -47,7 +47,7 @@ export function Chat({
     toolInvocations,
     error
   } = useToolChat({
-    id: CHAT_ID,
+    id: chatId,
     initialMessages: savedMessages as any,
     resourcesContext: {
       resourceIds: Array.from(selectedResourceIds),
