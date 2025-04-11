@@ -87,19 +87,18 @@ ${JSON.stringify(resourcesContext)}`
         retrieve: retrieveTool,
         formatAndSaveIssuesTool: formatAndSaveIssuesTool,
         findOptions: findOptionsTool,
-        deepSearch: deepSearchTool(dataStream),
-        imageAnalysis: imageAnalysisTool
         deepSearch: deepSearchTool(
           dataStream,
           resourcesContext?.resourcesContent
         ),
+        imageAnalysis: imageAnalysisTool,
         deepReasoning: deepReasoningTool(
           dataStream,
           resourcesContext?.resourcesContent
         )
       },
       // experimental_activeTools: searchMode
-      //   ? ['search', 'retrieve']
+      //   ? ['search', 'retrieve'] d
       //   : [],
       maxSteps: searchMode ? 5 : 1,
       experimental_transform: smoothStream({ chunking: 'word' })

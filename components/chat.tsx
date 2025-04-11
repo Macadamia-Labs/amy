@@ -62,6 +62,19 @@ export function Chat({
     setMessages(savedMessages as any)
   }, [id])
 
+  useEffect(() => {
+    // Save messages to local storage whenever they change
+    localStorage.setItem(`chat-messages-${id}`, JSON.stringify(messages))
+  }, [messages, id])
+
+  useEffect(() => {
+    // Load messages from local storage when the component mounts
+    const savedMessages = localStorage.getItem(`chat-messages-${id}`)
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages))
+    }
+  }, [id])
+
   const onQuerySelect = (query: string) => {
     append({
       id: generateUUID(),
