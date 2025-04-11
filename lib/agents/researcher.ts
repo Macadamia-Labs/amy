@@ -3,6 +3,7 @@ import { Section } from '../providers/document-provider'
 import { deepSearchTool } from '../tools/deep-search'
 import { formatAndSaveIssuesTool } from '../tools/find-issues'
 import { findOptionsTool } from '../tools/find-options'
+import { imageAnalysisTool } from '../tools/image-analysis'
 import { retrieveTool } from '../tools/retrieve'
 import { getModel } from '../utils/registry'
 const SYSTEM_PROMPT = `
@@ -18,6 +19,7 @@ When asked a question, you should:
 6. Use the formatIssues tool to format found issues and errors into a structured format for a bug report.
 7. Use the deepSearch tool to search the knowledge base for issues based on a number of resources.
 8. Use the findOptions tool to find options for the user's question.
+9. Use the imageAnalysis tool to analyze images in more detail and retrieve further important technical details in case not clear from the extracted initial content provided to you.
 Citation Format: 
 [number](url)
 `
@@ -84,7 +86,8 @@ ${JSON.stringify(resourcesContext)}`
         retrieve: retrieveTool,
         formatAndSaveIssuesTool: formatAndSaveIssuesTool,
         findOptions: findOptionsTool,
-        deepSearch: deepSearchTool(dataStream)
+        deepSearch: deepSearchTool(dataStream),
+        imageAnalysis: imageAnalysisTool
       },
       // experimental_activeTools: searchMode
       //   ? ['search', 'retrieve']
