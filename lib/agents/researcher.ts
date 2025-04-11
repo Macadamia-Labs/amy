@@ -1,5 +1,6 @@
 import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
 import { Section } from '../providers/document-provider'
+import { deepReasoningTool } from '../tools/deep-reasoning'
 import { deepSearchTool } from '../tools/deep-search'
 import { formatAndSaveIssuesTool } from '../tools/find-issues'
 import { findOptionsTool } from '../tools/find-options'
@@ -88,6 +89,14 @@ ${JSON.stringify(resourcesContext)}`
         findOptions: findOptionsTool,
         deepSearch: deepSearchTool(dataStream),
         imageAnalysis: imageAnalysisTool
+        deepSearch: deepSearchTool(
+          dataStream,
+          resourcesContext?.resourcesContent
+        ),
+        deepReasoning: deepReasoningTool(
+          dataStream,
+          resourcesContext?.resourcesContent
+        )
       },
       // experimental_activeTools: searchMode
       //   ? ['search', 'retrieve']

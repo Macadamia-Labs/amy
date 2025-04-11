@@ -8,7 +8,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
-import { Tabs, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import '@/lib/pdf-setup'
 import { useDocument } from '@/lib/providers/document-provider'
 import { Root } from '@unriddle-ai/lector'
@@ -60,58 +60,58 @@ export function DocsLayout() {
 
   const renderContent = () => (
     <div className="relative h-full">
-      <Tabs
-        defaultValue={isPdf ? 'pdf' : isImage ? 'image' : 'content'}
-        className="h-full"
-      >
-        <ResizablePanelGroup direction="horizontal" className="h-full">
-          {sidebarState === 'outline' && (
-            <>
-              <ResizablePanel
-                defaultSize={20}
-                minSize={15}
-                maxSize={30}
-                order={0}
-              >
-                <OutlineSidebar
-                  onClose={closeSidebar}
-                  activeSection={activeSection}
-                  onSectionSelect={setActiveSection}
-                />
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-            </>
-          )}
-          {sidebarState === 'search' && isPdf && (
-            <>
-              <ResizablePanel
-                defaultSize={20}
-                minSize={15}
-                maxSize={30}
-                order={0}
-              >
-                <SearchSidebar onClose={closeSidebar} />
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-            </>
-          )}
-          {sidebarState === 'thumbnails' && isPdf && (
-            <>
-              <ResizablePanel
-                defaultSize={20}
-                minSize={15}
-                maxSize={30}
-                order={0}
-              >
-                <ThumbnailsSidebar onClose={closeSidebar} />
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-            </>
-          )}
-          <ResizablePanel
-            defaultSize={sidebarState === 'closed' ? 65 : 45}
-            minSize={30}
-            order={1}
+      <ResizablePanelGroup direction="horizontal" className="h-full">
+        {sidebarState === 'outline' && (
+          <>
+            <ResizablePanel
+              defaultSize={20}
+              minSize={15}
+              maxSize={30}
+              order={0}
+            >
+              <OutlineSidebar
+                onClose={closeSidebar}
+                activeSection={activeSection}
+                onSectionSelect={setActiveSection}
+              />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+          </>
+        )}
+        {sidebarState === 'search' && isPdf && (
+          <>
+            <ResizablePanel
+              defaultSize={20}
+              minSize={15}
+              maxSize={30}
+              order={0}
+            >
+              <SearchSidebar onClose={closeSidebar} />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+          </>
+        )}
+        {sidebarState === 'thumbnails' && isPdf && (
+          <>
+            <ResizablePanel
+              defaultSize={20}
+              minSize={15}
+              maxSize={30}
+              order={0}
+            >
+              <ThumbnailsSidebar onClose={closeSidebar} />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+          </>
+        )}
+        <ResizablePanel
+          defaultSize={sidebarState === 'closed' ? 65 : 45}
+          minSize={30}
+          order={1}
+        >
+          <Tabs
+            defaultValue={isPdf ? 'pdf' : isImage ? 'image' : 'content'}
+            className="h-full"
           >
             <DocumentToolbar
               isPdf={isPdf}
@@ -120,6 +120,7 @@ export function DocsLayout() {
               toggleSearch={toggleSearch}
               toggleThumbnails={toggleThumbnails}
             />
+
             {isPdf && (
               <TabsContent value="pdf" className="h-full">
                 <PdfViewer resource={resource} />
@@ -175,13 +176,28 @@ export function DocsLayout() {
                   : 'No full text content available'}
               </MemoizedReactMarkdown>
             </TabsContent>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={35} minSize={30} order={2}>
-            <DocumentChat id={chatId} />
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </Tabs>
+          </Tabs>
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={35} minSize={30} order={2}>
+          <Tabs defaultValue="chat" className="h-full">
+            <TabsList>
+              <TabsTrigger value="chat">Chat</TabsTrigger>
+              <TabsTrigger value="full">Full</TabsTrigger>
+            </TabsList>
+            <TabsContent value="chat" className="h-full">
+              <DocumentChat id={chatId} />
+            </TabsContent>
+            <TabsContent value="full" className="h-full">
+              <MemoizedReactMarkdown className="h-full overflow-auto p-4 whitespace-pre-wrap font-mono text-sm">
+                {resource?.content_as_text
+                  ? cleanPageTags(resource.content_as_text)
+                  : 'No full text content available'}
+              </MemoizedReactMarkdown>
+            </TabsContent>
+          </Tabs>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   )
 

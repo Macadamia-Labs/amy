@@ -4,7 +4,10 @@ import { z } from 'zod'
 import { getResourcesByIds } from '../actions/resources'
 // import { inngest } from '../inngest/client'
 
-export const deepSearchTool = (dataStream?: DataStreamWriter) =>
+export const deepSearchTool = (
+  dataStream?: DataStreamWriter,
+  context?: string
+) =>
   tool({
     description:
       'Based on a query, find options for the query. When this tool is called, no need for sending a messsage with it.',
@@ -15,7 +18,12 @@ export const deepSearchTool = (dataStream?: DataStreamWriter) =>
         .describe('The resource ids to search in')
     }),
     execute: async ({ query, resource_ids }) => {
-      const { answer } = await deepSearch(query, resource_ids, dataStream)
+      const { answer } = await deepSearch(
+        query,
+        resource_ids,
+        dataStream,
+        context
+      )
       return `Answer:  ${answer}`
     }
   })
@@ -23,7 +31,8 @@ export const deepSearchTool = (dataStream?: DataStreamWriter) =>
 export async function deepSearch(
   query: string,
   resource_ids: string[],
-  dataStream?: DataStreamWriter
+  dataStream?: DataStreamWriter,
+  context?: string
 ) {
   if (dataStream) {
     dataStream.writeMessageAnnotation({

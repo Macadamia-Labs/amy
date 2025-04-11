@@ -1,6 +1,7 @@
 'use client'
 
 import { Message, ToolInvocation } from 'ai'
+import DeepReasoningSection from './deep-reasoning-section'
 import DeepSearchSection from './deep-search-section'
 import FindOptionsSection from './find-options-section'
 import IssuesSection from './issues-section'
@@ -65,6 +66,15 @@ export function ToolSection({
     case 'deepSearch':
       return (
         <DeepSearchSection
+          message={message}
+          tool={tool}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        />
+      )
+    case 'deepReasoning':
+      return (
+        <DeepReasoningSection
           message={message}
           tool={tool}
           isOpen={isOpen}
