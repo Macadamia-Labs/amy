@@ -1,18 +1,11 @@
 'use client'
 
-import {
-  ChevronDown,
-  ChevronUp,
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Pencil,
-  Trash2
-} from 'lucide-react'
+import { MoreHorizontalIcon, PencilIcon, TrashIcon } from '@/lib/utils/icons'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
 import { CreateProjectDialog } from '@/components/projects/create-project-dialog'
-import { RenameProjectDialog } from '@/components/projects/rename-project-dialog'
+import { EditProjectDialog } from '@/components/projects/edit-project-dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +29,7 @@ import { toast } from 'sonner'
 
 export function NavProjects({
   projects = [],
-  defaultColor = 'bg-blue-500'
+  defaultColor = 'blue'
 }: {
   projects: (Project & { color?: string })[]
   defaultColor?: string
@@ -70,16 +63,16 @@ export function NavProjects({
               }}
             >
               <div
-                className={`size-2 rounded-full opacity-80 ${
+                className={`size-2 rounded-full opacity-80 bg-${
                   item.color || defaultColor
-                }`}
+                }-500`}
               />
               <span>{item.name}</span>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction showOnHover>
-                  <MoreHorizontal />
+                  <MoreHorizontalIcon />
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
@@ -88,38 +81,30 @@ export function NavProjects({
                 side={isMobile ? 'bottom' : 'right'}
                 align={isMobile ? 'end' : 'start'}
               >
-                <DropdownMenuItem>
-                  <Folder className="text-muted-foreground" />
-                  <span>View Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Forward className="text-muted-foreground" />
-                  <span>Share Project</span>
-                </DropdownMenuItem>
-                <RenameProjectDialog 
-                  project={item} 
+                <EditProjectDialog
+                  project={item}
                   trigger={
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                      <Pencil className="text-muted-foreground" />
-                      <span>Rename Project</span>
+                    <DropdownMenuItem onSelect={e => e.preventDefault()}>
+                      <PencilIcon className="text-muted-foreground size-4 mr-2" />
+                      <span>Edit Project</span>
                     </DropdownMenuItem>
                   }
                 />
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={async () => {
-                    if (!item.id) return;
+                    if (!item.id) return
                     const result = await deleteProject(item.id)
                     if (result.error) {
                       toast.error(result.error)
                     } else {
                       toast.success('Project deleted successfully')
-                      router.refresh();
+                      router.refresh()
                     }
                   }}
                   className="text-destructive"
                 >
-                  <Trash2 className="text-destructive" />
+                  <TrashIcon className="text-destructive size-4 mr-2" />
                   <span>Delete Project</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

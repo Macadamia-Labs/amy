@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache'
 export async function createProject(data: {
   name: string
   description: string
+  color?: string
 }): Promise<{ project?: Project; error?: string }> {
   try {
     const supabase = await createClient()
@@ -27,6 +28,7 @@ export async function createProject(data: {
       .insert({
         name: data.name,
         description: data.description,
+        color: data.color,
         user_id: user.id
       })
       .select()
@@ -105,8 +107,11 @@ export async function deleteProject(
     if (error) {
       console.error('Error deleting project:', error)
       // Check for specific errors if needed, e.g., foreign key constraints
-      if (error.code === '23503') { // Foreign key violation
-        return { error: 'Cannot delete project. It might have associated resources.' }
+      if (error.code === '23503') {
+        // Foreign key violation
+        return {
+          error: 'Cannot delete project. It might have associated resources.'
+        }
       }
       return { error: 'Failed to delete project.' }
     }
@@ -125,7 +130,7 @@ export async function deleteProject(
 
 export async function updateProject(
   projectId: string,
-  data: { name?: string; description?: string }
+  data: { name?: string; description?: string; color?: string }
 ): Promise<{ success?: boolean; error?: string }> {
   try {
     const supabase = await createClient()
@@ -141,9 +146,12 @@ export async function updateProject(
     }
 
     // Only update non-null fields
-    const updateData: { name?: string; description?: string } = {}
+    const updateData: { name?: string; description?: string; color?: string } =
+      {}
     if (data.name !== undefined) updateData.name = data.name
-    if (data.description !== undefined) updateData.description = data.description
+    if (data.description !== undefined)
+      updateData.description = data.description
+    if (data.color !== undefined) updateData.color = data.color
 
     // Update the project only if the user owns it
     const { error } = await supabase
@@ -204,4 +212,4 @@ export async function getProject(
   } catch (error) {
     return { error: 'An unexpected error occurred while fetching the project' }
   }
-} 
+}

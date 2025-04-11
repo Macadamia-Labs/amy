@@ -7,13 +7,13 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,6 +24,7 @@ export function CreateProjectDialog() {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const [color, setColor] = useState('blue')
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -33,7 +34,7 @@ export function CreateProjectDialog() {
     const name = formData.get('name') as string
     const description = formData.get('description') as string
 
-    const { project, error } = await createProject({ name, description })
+    const { project, error } = await createProject({ name, description, color })
 
     setIsLoading(false)
 
@@ -88,12 +89,33 @@ export function CreateProjectDialog() {
                 required
               />
             </div>
+            <div className="space-y-2">
+              <Label>Color</Label>
+              <div className="flex gap-2">
+                {[
+                  'red',
+                  'green',
+                  'blue',
+                  'yellow',
+                  'purple',
+                  'orange',
+                  'pink',
+                  'teal'
+                ].map(c => (
+                  <button
+                    key={c}
+                    type="button"
+                    className={`w-6 h-6 rounded-full bg-${c}-500 ${
+                      color === c ? 'ring-2 ring-offset-2 ring-${c}-500' : ''
+                    }`}
+                    onClick={() => setColor(c)}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
           <DialogFooter>
-            <Button
-              type="submit"
-              disabled={isLoading}
-            >
+            <Button type="submit" disabled={isLoading}>
               {isLoading ? 'Creating...' : 'Create project'}
             </Button>
           </DialogFooter>
@@ -101,4 +123,4 @@ export function CreateProjectDialog() {
       </DialogContent>
     </Dialog>
   )
-} 
+}
