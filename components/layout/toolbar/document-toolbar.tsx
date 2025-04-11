@@ -4,6 +4,7 @@ import PageNavigationButtons from '@/components/page-navigation-buttons'
 import { Button } from '@/components/ui/button'
 import { TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SearchIcon, TextOutlineIcon, ThumbnailIcon } from '@/lib/utils/icons'
+import { LucideLayoutDashboard } from 'lucide-react'
 
 interface ToolbarProps {
   isPdf: boolean
@@ -11,6 +12,7 @@ interface ToolbarProps {
   toggleOutline: () => void
   toggleSearch: () => void
   toggleThumbnails: () => void
+  toggleSideBySide: () => void
 }
 
 export function DocumentToolbar({
@@ -18,7 +20,8 @@ export function DocumentToolbar({
   isImage,
   toggleOutline,
   toggleSearch,
-  toggleThumbnails
+  toggleThumbnails,
+  toggleSideBySide
 }: ToolbarProps) {
   return (
     <div className="h-12 w-full border-b flex gap-2 px-2">
@@ -33,6 +36,9 @@ export function DocumentToolbar({
             </Button>
             <Button variant="ghost" size="icon" onClick={toggleThumbnails}>
               <ThumbnailIcon className="size-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={toggleSideBySide}>
+              <LucideLayoutDashboard className="size-5" />
             </Button>
           </>
         )}

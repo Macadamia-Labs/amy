@@ -1,8 +1,8 @@
 import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
 import { Section } from '../providers/document-provider'
+import { deepReasoningTool } from '../tools/deep-reasoning'
 import { deepSearchTool } from '../tools/deep-search'
 import { formatAndSaveIssuesTool } from '../tools/find-issues'
-import { findOptionsTool } from '../tools/find-options'
 import { retrieveTool } from '../tools/retrieve'
 import { getModel } from '../utils/registry'
 const SYSTEM_PROMPT = `
@@ -17,7 +17,7 @@ When asked a question, you should:
 5. Use markdown to structure your responses. Use headings to break up the content into sections.
 6. Use the formatIssues tool to format found issues and errors into a structured format for a bug report.
 7. Use the deepSearch tool to search the knowledge base for issues based on a number of resources.
-8. Use the findOptions tool to find options for the user's question.
+8. Use the deepReasoning tool to reason about the user's question based on the search results.
 Citation Format: 
 [number](url)
 `
@@ -83,8 +83,14 @@ ${JSON.stringify(resourcesContext)}`
         // webSearch: searchTool,
         retrieve: retrieveTool,
         formatAndSaveIssuesTool: formatAndSaveIssuesTool,
-        findOptions: findOptionsTool,
-        deepSearch: deepSearchTool(dataStream)
+        deepSearch: deepSearchTool(
+          dataStream,
+          resourcesContext?.resourcesContent
+        ),
+        deepReasoning: deepReasoningTool(
+          dataStream,
+          resourcesContext?.resourcesContent
+        )
       },
       // experimental_activeTools: searchMode
       //   ? ['search', 'retrieve']
