@@ -1,30 +1,11 @@
 'use client'
 
+import { useResources } from '@/components/providers/resources-provider'
 import { Input } from '@/components/ui/input'
-import { Resource } from '@/lib/types'
 import { Search } from 'lucide-react'
-import { useState } from 'react'
 
-interface SearchResourcesProps {
-  resources: Resource[]
-  onFilter: (filtered: Resource[]) => void
-}
-
-export function SearchResources({ resources, onFilter }: SearchResourcesProps) {
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query)
-    const filtered = resources.filter(
-      resource =>
-        (resource.title?.toLowerCase() || '').includes(query.toLowerCase()) ||
-        (resource.description?.toLowerCase() || '').includes(
-          query.toLowerCase()
-        ) ||
-        (resource.category?.toLowerCase() || '').includes(query.toLowerCase())
-    )
-    onFilter(filtered)
-  }
+export function SearchResources() {
+  const { searchQuery, setSearchQuery } = useResources()
 
   return (
     <div className="relative w-72">
@@ -33,7 +14,7 @@ export function SearchResources({ resources, onFilter }: SearchResourcesProps) {
         placeholder="Search resources..."
         className="pl-8"
         value={searchQuery}
-        onChange={e => handleSearch(e.target.value)}
+        onChange={e => setSearchQuery(e.target.value)}
       />
     </div>
   )

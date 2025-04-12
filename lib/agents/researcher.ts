@@ -7,10 +7,27 @@ import { findOptionsTool } from '../tools/find-options'
 import { imageAnalysisTool } from '../tools/image-analysis'
 import { retrieveTool } from '../tools/retrieve'
 import { getModel } from '../utils/registry'
+
+const USER_NAME = 'Facundo'
+// Needs
+const COMPANY_PROFILE = `
+Proyectos Engineering. It is a 90-person, multi-disciplinary Architecture & Engineering Design (A/E) and Project Management firm.
+`
+
+const PROJECTS_COUNT = 1
+const PROJECTS_LIST = `
+- Project 1
+`
+
+const RESOURCES_COUNT = 1
+const RESOURCES_LIST = `
+- Resource 1
+`
 const SYSTEM_PROMPT = `
 Instructions:
 
 You are Cooper, a helpful AI assistant that helps navigate the knowledge base of an engineering firm.
+
 When asked a question, you should:
 1. Use the retrieve tool to find information in the knowledge base
 2. Always cite sources using the [number](url) format, matching the order of search results. If multiple sources are relevant, include all of them, and comma separate them. Only use information that has a URL available for citation.
@@ -46,7 +63,7 @@ export function researcher({
   messages,
   model,
   searchMode,
-  context,
+  documentContext,
   resourcesContext,
   dataStream
 }: ResearcherConfig): ResearcherReturn {
@@ -54,28 +71,39 @@ export function researcher({
     const currentDate = new Date().toLocaleString()
     let fullPrompt = `${SYSTEM_PROMPT}\nCurrent date and time: ${currentDate}`
 
-    if (context) {
+    const infoPrompt = `
+        Here is a general overview of how the platform works:
+        The user's name is ${USER_NAME} and their company is ${COMPANY_PROFILE}
+        They have ${PROJECTS_COUNT} projects on the platform:
+        ${PROJECTS_LIST}
+        They have ${RESOURCES_COUNT} resources in their knowledge base.
+
+        
+        ${
+          resourcesContext
+            ? `These are the resources they have directly attached to this conversation:
+        ${JSON.stringify(resourcesContext)}`
+            : ''
+        }
+        `
+
+    if (documentContext) {
       fullPrompt += `\n\nDocument Context:
-1. You have access to a document with the following content:
-${context.content}
+      1. You have access to a document with the following content:
+      ${documentContext.content}
 
-2. The user is currently viewing the following section:
-${
-  context.activeSection
-    ? context.activeSection.content
-    : 'No specific section selected'
-}
+      2. The user is currently viewing the following section:
+      ${
+        documentContext.activeSection
+          ? documentContext.activeSection.content
+          : 'No specific section selected'
+      }
 
-When answering questions:
-- Consider the document context when relevant to the user's question
-- If the question is about the document, focus on the content from the active section first
-- You can reference other parts of the document if needed
-- If the question is not related to the document, you can ignore the document context`
-    }
-
-    if (resourcesContext) {
-      fullPrompt += `\n\n The user attached the following resources as context:
-${JSON.stringify(resourcesContext)}`
+      When answering questions:
+      - Consider the document context when relevant to the user's question
+      - If the question is about the document, focus on the content from the active section first
+      - You can reference other parts of the document if needed
+      - If the question is not related to the document, you can ignore the document context`
     }
 
     return {

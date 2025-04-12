@@ -1,5 +1,4 @@
 'use client'
-import { useResources } from '@/components/providers/resources-provider'
 import { SearchResources } from '@/components/resources/search-resources'
 import { UploadDialog } from '@/components/resources/upload-dialog'
 import {
@@ -13,12 +12,9 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
 
 export default function ResourcesHeader() {
   const pathname = usePathname()
-  const { resources } = useResources()
-  const [filteredResources, setFilteredResources] = useState(resources)
 
   const getBreadcrumbItems = () => {
     const pathParts = pathname.split('/').filter(part => part)
@@ -78,10 +74,7 @@ export default function ResourcesHeader() {
         <BreadcrumbList>{getBreadcrumbItems()}</BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex items-center gap-4">
-        <SearchResources
-          resources={resources}
-          onFilter={setFilteredResources}
-        />
+        <SearchResources />
         <UploadDialog />
       </div>
     </header>

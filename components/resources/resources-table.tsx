@@ -47,6 +47,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import LoadingDots from '../magicui/loading-dots'
 import { Badge } from '../ui/badge'
+
 interface ResourceSourceCellProps {
   resource: Resource
 }
@@ -137,7 +138,7 @@ function ResourceIcon({ resource, isExpanded = false }: ResourceIconProps) {
 }
 
 export function ResourcesTable() {
-  const { resources, removeResources, uploadStatus, setUploadStatus } =
+  const { filteredResources, removeResources, uploadStatus, setUploadStatus } =
     useResources()
   const router = useRouter()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -153,8 +154,8 @@ export function ResourcesTable() {
   // Clear selected IDs when resources change
   useEffect(() => {
     // When resources change, check if selected IDs are still valid
-    if (resources.length > 0) {
-      const validIds = new Set(resources.map(r => r.id))
+    if (filteredResources.length > 0) {
+      const validIds = new Set(filteredResources.map(r => r.id))
       setSelectedIds(prev => {
         const newSelected = new Set<string>()
         prev.forEach(id => {
@@ -165,10 +166,10 @@ export function ResourcesTable() {
         return newSelected
       })
     }
-  }, [resources])
+  }, [filteredResources])
 
   // Group resources by parent_id
-  const resourcesByParent = resources.reduce((acc, resource) => {
+  const resourcesByParent = filteredResources.reduce((acc, resource) => {
     const parentId = resource.parent_id || 'root'
     if (!acc[parentId]) {
       acc[parentId] = []
@@ -200,10 +201,10 @@ export function ResourcesTable() {
   }
 
   const toggleSelectAll = () => {
-    if (selectedIds.size === resources.length) {
+    if (selectedIds.size === filteredResources.length) {
       setSelectedIds(new Set())
     } else {
-      setSelectedIds(new Set(resources.map(r => r.id)))
+      setSelectedIds(new Set(filteredResources.map(r => r.id)))
     }
     setLastSelectedId(null)
   }
@@ -216,11 +217,13 @@ export function ResourcesTable() {
     const newSelected = new Set(selectedIds)
 
     if (shiftKey && lastSelectedId) {
-      const lastIndex = resources.findIndex(r => r.id === lastSelectedId)
-      const currentIndex = resources.findIndex(r => r.id === id)
+      const lastIndex = filteredResources.findIndex(
+        r => r.id === lastSelectedId
+      )
+      const currentIndex = filteredResources.findIndex(r => r.id === id)
       const [start, end] = [lastIndex, currentIndex].sort((a, b) => a - b)
 
-      resources.slice(start, end + 1).forEach(resource => {
+      filteredResources.slice(start, end + 1).forEach(resource => {
         if (checked) {
           newSelected.add(resource.id)
         } else {
@@ -581,11 +584,13 @@ export function ResourcesTable() {
       </div>
 
       <div className="border rounded-lg">
-        {resources.length === 0 ? (
+        {filteredResources.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 px-4 h-full">
             <div className="mb-2 font-medium">No resources found</div>
             <p className="text-sm text-muted-foreground text-center">
-              Get started by adding your first resource.
+              {filteredResources.length === 0
+                ? 'Get started by adding your first resource.'
+                : 'No resources match your search criteria.'}
             </p>
           </div>
         ) : (
@@ -601,8 +606,8 @@ export function ResourcesTable() {
                   <TableHead className="w-[50px]">
                     <Checkbox
                       checked={
-                        selectedIds.size === resources.length &&
-                        resources.length > 0
+                        selectedIds.size === filteredResources.length &&
+                        filteredResources.length > 0
                       }
                       onCheckedChange={toggleSelectAll}
                     />

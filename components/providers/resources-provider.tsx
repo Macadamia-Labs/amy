@@ -3,10 +3,20 @@
 import { useResourceChanges } from '@/hooks/use-resource-changes'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { Resource, ResourceStatus } from '@/lib/types'
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { searchResources } from '@/lib/utils/resource-search'
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState
+} from 'react'
 
 interface ResourcesContextType {
   resources: Resource[]
+  filteredResources: Resource[]
+  searchQuery: string
+  setSearchQuery: (query: string) => void
   addResources: (newResources: Resource[]) => void
   removeResources: (ids: string | string[]) => void
   uploadStatus: Map<string, ResourceStatus>
@@ -27,10 +37,19 @@ export function ResourcesProvider({
 }) {
   const { user } = useAuth()
   const [resources, setResources] = useState<Resource[]>(initialResources)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredResources, setFilteredResources] =
+    useState<Resource[]>(initialResources)
 
   const [uploadStatus, setUploadStatusMap] = useState<
     Map<string, ResourceStatus>
   >(new Map())
+
+  // Update filtered resources when resources or search query changes
+  useEffect(() => {
+    const filtered = searchResources(resources, searchQuery)
+    setFilteredResources(filtered)
+  }, [resources, searchQuery])
 
   const removeResources = (ids: string | string[]) => {
     console.log('Removing resources:', ids)
@@ -188,6 +207,9 @@ export function ResourcesProvider({
     <ResourcesContext.Provider
       value={{
         resources,
+        filteredResources,
+        searchQuery,
+        setSearchQuery,
         addResources,
         removeResources,
         uploadStatus,

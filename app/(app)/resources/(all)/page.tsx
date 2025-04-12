@@ -1,8 +1,8 @@
 import { ResourcesTable } from '@/components/resources/resources-table'
 
-export default async function ResourcesPage() {
+export default function ResourcesPage() {
   return (
-    <div className="p-4 w-full overflow-auto">
+    <div className="flex-1 p-4 w-full overflow-auto">
       <ResourcesTable />
     </div>
   )
