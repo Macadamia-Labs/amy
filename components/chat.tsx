@@ -108,7 +108,7 @@ export function Chat({
 
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto justify-center">
-      {/* <p>New Conversation: {newConversation ? 'true' : 'false'}</p> */}
+      {/* <p>New Conversation: { ? 'true' : 'false'}</p> */}
       {/* <div className="flex justify-end p-2">
         <Dialog open={debugOpen} onOpenChange={setDebugOpen}>
           <DialogTrigger asChild>

@@ -4,15 +4,13 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarRail
 } from '@/components/ui/sidebar'
 import { getProjects } from '@/lib/actions/projects'
 import * as React from 'react'
 import { MacadamiaHead } from './macadamia-head'
-import { NavIssues } from './nav-issues'
-import { NavProjects } from './nav-projects'
+import { NavHome } from './nav-home'
 import { NavResources } from './nav-resources'
 import { SearchForm } from './search-form'
 
@@ -31,13 +29,13 @@ export default async function CooperSidebar(
         <SidebarGroup>
           <SearchForm />
         </SidebarGroup>
-        <NavProjects projects={projects || []} />
+        {/* <NavProjects projects={projects || []} /> */}
 
         <SidebarGroup className="space-y-2">
-          <SidebarGroupLabel>General</SidebarGroupLabel>
-          {/* <NavHome /> */}
+          {/* <SidebarGroupLabel>General</SidebarGroupLabel> */}
+          <NavHome />
           <NavResources />
-          <NavIssues />
+          {/* <NavIssues /> */}
           {/* <NavIntegrations /> */}
           {/* <NavActivity /> */}
           {/* <NavWorkflows /> */}

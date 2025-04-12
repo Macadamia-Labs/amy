@@ -1,6 +1,6 @@
 'use client'
 import { SidebarMenuButton } from '@/components/ui/sidebar'
-import { HomeIcon } from '@/lib/utils/icons'
+import { ChatIcon } from '@/lib/utils/icons'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -11,8 +11,8 @@ export function NavHome() {
   return (
     <Link href="/">
       <SidebarMenuButton tooltip="Home" isActive={isActive}>
-        <HomeIcon className="size-6" />
-        Home
+        <ChatIcon className="size-6" />
+        Chat
       </SidebarMenuButton>
     </Link>
   )

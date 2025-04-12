@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/command'
 import { DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import ShortCut from '@/components/ui/shortcut'
 import { SidebarMenuButton } from '@/components/ui/sidebar'
 import { SearchIcon } from '@/lib/utils/icons'
+import ShortCut from '../ui/shortcut'
 
 const CHAT_TEMPLATES = [
   {
@@ -46,12 +46,12 @@ const CHAT_TEMPLATES = [
   }
 ]
 
-// Navigation shortcuts
+// Navigation items
 const NAVIGATION_ITEMS = [
-  { icon: '🏠', title: 'Home', path: '/', shortcut: 'gh' },
-  { icon: '📂', title: 'Resources', path: '/resources', shortcut: 'gr' },
-  { icon: '⏱️', title: 'Issues', path: '/issues', shortcut: 'gi' },
-  { icon: '🔐', title: 'Integrations', path: '/integrations', shortcut: 'gn' }
+  { icon: '🏠', title: 'Home', path: '/' },
+  { icon: '📂', title: 'Resources', path: '/resources' },
+  { icon: '⏱️', title: 'Issues', path: '/issues' },
+  { icon: '🔐', title: 'Integrations', path: '/integrations' }
 ]
 
 export function SearchForm({
@@ -60,7 +60,6 @@ export function SearchForm({
 }: React.ComponentProps<'form'> & { onSearch?: (query: string) => void }) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState('')
-  const formRef = React.useRef<HTMLFormElement>(null)
   const router = useRouter()
 
   const toggleOpen = React.useCallback(() => {
@@ -73,128 +72,133 @@ export function SearchForm({
         e.preventDefault()
         toggleOpen()
       }
-
-      // Listen for navigation shortcuts (g+key)
-      if (e.key === 'g' && !open) {
-        const keydownListener = (e2: KeyboardEvent) => {
-          const navItem = NAVIGATION_ITEMS.find(
-            item => item.shortcut === `g${e2.key}`
-          )
-          if (navItem) {
-            e2.preventDefault()
-            router.push(navItem.path)
-          }
-          document.removeEventListener('keydown', keydownListener)
-        }
-
-        document.addEventListener('keydown', keydownListener, { once: true })
-      }
     }
 
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [toggleOpen, open, router])
+  }, [toggleOpen])
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    e?.preventDefault()
-    if (inputValue.trim()) {
-      // Use window.location.href for a full page refresh
-      window.location.href = `/?message=${encodeURIComponent(
-        inputValue.trim()
-      )}`
-      setOpen(false)
-      setInputValue('')
-    }
-  }
+  const runCommand = React.useCallback(
+    (command: () => unknown) => {
+      setOpen(false) // Close the dialog
+      command()
+    },
+    [setOpen]
+  )
 
   const handleTemplateSelect = (prompt: string) => {
     setInputValue(prompt)
+    // Optionally submit immediately or just fill the input
   }
 
   const handleNewChat = () => {
     setInputValue('')
     onSearch?.('')
-    setOpen(false)
+    // Navigate to home page to start new chat
+    router.push('/')
   }
 
   const handleNavigate = (path: string) => {
     router.push(path)
-    setOpen(false)
   }
 
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      console.log('Enter key pressed')
-      formRef.current?.requestSubmit()
+  const submitChatQuery = (query: string) => {
+    window.location.href = `/?message=${encodeURIComponent(query.trim())}`
+    setOpen(false)
+    setInputValue('')
+  }
+
+  // Renamed from onKeyDown
+  const onEmptyKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Check if Enter is pressed, input has value, and cmdk isn't handling it (no item selected)
+    if (e.key === 'Enter' && !e.shiftKey && inputValue.trim()) {
+      // Check if cmdk is likely handling the event (an item might be selected)
+      // This is a bit of a heuristic: check if the default was prevented by cmdk
+      // In the context of CommandEmpty, default should not be prevented unless cmdk interferes unexpectedly.
+      // If default IS prevented, it implies cmdk is handling it, so we don't submit.
+      // If default is NOT prevented, we are safe to submit.
+      if (!e.defaultPrevented) {
+        e.preventDefault()
+        submitChatQuery(inputValue)
+      }
     }
   }
 
+  // Removed the previous onKeyDown attached to CommandInput
+
   return (
     <>
-      <form {...props}>
-        <Label htmlFor="search" className="sr-only">
-          Search
-        </Label>
-        <SidebarMenuButton
-          role="combobox"
-          aria-expanded={open}
-          onClick={e => {
-            e.preventDefault()
-            setOpen(true)
-          }}
-          className="relative flex items-center"
-        >
-          <SearchIcon className="size-4 flex-shrink-0" />
-          <div className="flex flex-1 items-center">
-            <span className="truncate">Ask copilot...</span>
-            <ShortCut className="hidden md:inline-flex ml-auto">/</ShortCut>
-          </div>
-        </SidebarMenuButton>
-      </form>
-
+      <Label htmlFor="search-button" className="sr-only">
+        Search
+      </Label>
+      <SidebarMenuButton
+        id="search-button"
+        role="combobox"
+        aria-expanded={open}
+        onClick={e => {
+          e.preventDefault()
+          setOpen(true)
+        }}
+        className="relative flex items-center"
+      >
+        <SearchIcon className="size-4 flex-shrink-0" />
+        <div className="flex flex-1 items-center">
+          <span className="truncate">Ask copilot...</span>
+        </div>
+        <ShortCut className="text-xs" key="cmd-slash">
+          /
+        </ShortCut>
+      </SidebarMenuButton>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <form ref={formRef} onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4">
-            <div className="sr-only">
-              <DialogTitle>Search or start a new chat</DialogTitle>
-              <DialogDescription>
-                Search through documentation or start a new chat conversation
-              </DialogDescription>
-            </div>
-            <div className="w-full">
-              <CommandInput
-                placeholder="Ask copilot..."
-                value={inputValue}
-                onValueChange={setInputValue}
-                onKeyDown={onKeyDown}
-                className="border-0 focus:ring-0 focus:border-0 flex-grow w-full"
-              />
-            </div>
-          </div>
-        </form>
+        {/* Removed the inner form */}
+        <div className="sr-only">
+          <DialogTitle>Search or start a new chat</DialogTitle>
+          <DialogDescription>
+            Search through documentation or start a new chat conversation
+          </DialogDescription>
+        </div>
+        <CommandInput
+          placeholder="Ask copilot..."
+          value={inputValue}
+          onValueChange={setInputValue}
+          className="border-b focus:ring-0 focus:border-0 flex-grow w-full"
+          // Removed onKeyDown from here
+        />
         <CommandList>
-          <CommandEmpty>
-            Press{' '}
-            <kbd className="pointer-events-none inline-flex h-5 mx-1 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-              Enter
-              <ArrowBigRightDash className="h-3 w-3" />
-            </kbd>{' '}
-            to send
+          {/* Attached the renamed handler here */}
+          <CommandEmpty
+            onKeyDown={onEmptyKeyDown}
+            onSelect={() => setInputValue('')}
+          >
+            {inputValue.trim() ? (
+              <span>No results found.</span>
+            ) : (
+              <span>Type to search or use a template.</span>
+            )}
+            {inputValue.trim() && (
+              <div className="mt-2">
+                Press{' '}
+                <kbd className="pointer-events-none inline-flex h-5 mx-1 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+                  Enter
+                  <ArrowBigRightDash className="h-3 w-3" />
+                </kbd>{' '}
+                to ask Copilot.
+              </div>
+            )}
           </CommandEmpty>
           <CommandGroup heading="Navigate to">
             {NAVIGATION_ITEMS.map((item, index) => (
               <CommandItem
-                key={index}
+                key={`nav-${index}`}
+                value={`nav-${item.path}`}
                 className="cursor-pointer"
-                onSelect={() => handleNavigate(item.path)}
+                onSelect={() => runCommand(() => handleNavigate(item.path))}
               >
                 <div className="flex items-center justify-between w-full">
                   <span className="flex items-center gap-2">
                     <span>{item.icon}</span>
                     <span>{item.title}</span>
                   </span>
-                  <ShortCut>{item.shortcut}</ShortCut>
                 </div>
               </CommandItem>
             ))}
@@ -202,9 +206,12 @@ export function SearchForm({
           <CommandGroup heading="Start with a template">
             {CHAT_TEMPLATES.map((template, index) => (
               <CommandItem
-                key={index}
+                key={`template-${index}`}
+                value={`template-${template.title}`}
                 className="cursor-pointer"
-                onSelect={() => handleTemplateSelect(template.prompt)}
+                onSelect={() =>
+                  runCommand(() => handleTemplateSelect(template.prompt))
+                }
               >
                 <p className="flex items-center gap-2">
                   <span>{template.icon}</span>
@@ -214,7 +221,11 @@ export function SearchForm({
             ))}
           </CommandGroup>
           <CommandGroup heading="Or start from scratch">
-            <CommandItem onSelect={handleNewChat}>
+            <CommandItem
+              key="new-chat"
+              value="new-chat"
+              onSelect={() => runCommand(handleNewChat)}
+            >
               <p className="flex items-center gap-2">
                 <span>💬</span>
                 <span>Start a new chat</span>
