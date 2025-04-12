@@ -13,12 +13,9 @@ import { executeToolCall } from './tool-execution'
 import { BaseStreamConfig } from './types'
 
 export function createManualToolStreamResponse(config: BaseStreamConfig) {
-  const { messages, model, chatId, userId } = config
-  
   return createDataStreamResponse({
     execute: async (dataStream: DataStreamWriter) => {
-      const { messages, model, chatId, searchMode, context, resourcesContext } =
-        config
+      const { messages, model, chatId, searchMode, context, resourcesContext, userId } = config
       try {
         const coreMessages = convertToCoreMessages(messages)
         const truncatedMessages = truncateMessages(
