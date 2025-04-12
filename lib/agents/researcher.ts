@@ -1,9 +1,7 @@
+import { google } from '@ai-sdk/google'
 import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
 import { Section } from '../providers/document-provider'
 import { deepReasoningTool } from '../tools/deep-reasoning'
-import { deepSearchTool } from '../tools/deep-search'
-import { formatAndSaveIssuesTool } from '../tools/find-issues'
-import { findOptionsTool } from '../tools/find-options'
 import { imageAnalysisTool } from '../tools/image-analysis'
 import { retrieveTool } from '../tools/retrieve'
 import { getModel } from '../utils/registry'
@@ -107,18 +105,19 @@ export function researcher({
     }
 
     return {
-      model: getModel(model),
+      // model: getModel(model),
+      model: google('gemini-2.0-flash'),
       system: fullPrompt,
       messages,
       tools: {
         // webSearch: searchTool,
-        retrieve: retrieveTool,
-        formatAndSaveIssuesTool: formatAndSaveIssuesTool,
-        findOptions: findOptionsTool,
-        deepSearch: deepSearchTool(
-          dataStream,
-          resourcesContext?.resourcesContent
-        ),
+        // retrieve: retrieveTool,
+        // formatAndSaveIssuesTool: formatAndSaveIssuesTool,
+        // findOptions: findOptionsTool,
+        // deepSearch: deepSearchTool(
+        //   dataStream,
+        //   resourcesContext?.resourcesContent
+        // ),
         imageAnalysis: imageAnalysisTool,
         deepReasoning: deepReasoningTool(
           dataStream,
@@ -128,7 +127,8 @@ export function researcher({
       // experimental_activeTools: searchMode
       //   ? ['search', 'retrieve'] d
       //   : [],
-      maxSteps: searchMode ? 5 : 1,
+      // maxSteps: searchMode ? 5 : 1,
+      maxSteps: 10,
       experimental_transform: smoothStream({ chunking: 'word' })
     }
   } catch (error) {
