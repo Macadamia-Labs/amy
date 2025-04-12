@@ -3,8 +3,6 @@ import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
 import { Section } from '../providers/document-provider'
 import { deepReasoningTool } from '../tools/deep-reasoning'
 import { imageAnalysisTool } from '../tools/image-analysis'
-import { retrieveTool } from '../tools/retrieve'
-import { getModel } from '../utils/registry'
 
 const USER_NAME = 'Facundo'
 // Needs
@@ -61,7 +59,7 @@ export function researcher({
   messages,
   model,
   searchMode,
-  documentContext,
+  context,
   resourcesContext,
   dataStream
 }: ResearcherConfig): ResearcherReturn {
@@ -85,15 +83,15 @@ export function researcher({
         }
         `
 
-    if (documentContext) {
+    if (context) {
       fullPrompt += `\n\nDocument Context:
       1. You have access to a document with the following content:
-      ${documentContext.content}
+      ${context.content}
 
       2. The user is currently viewing the following section:
       ${
-        documentContext.activeSection
-          ? documentContext.activeSection.content
+        context.activeSection
+          ? context.activeSection.content
           : 'No specific section selected'
       }
 

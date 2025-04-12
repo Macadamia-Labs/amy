@@ -69,7 +69,7 @@ export default function ActiveAgents() {
         <Button variant="ghost" size="sm" className="flex items-center gap-2">
           <Loader className="size-5" />
           <TextShimmer className="text-sm font-mono">
-            {agents.length} Active Agents
+            {`${agents.length} Active Agents`}
           </TextShimmer>
         </Button>
       </SheetTrigger>

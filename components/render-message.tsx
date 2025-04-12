@@ -6,10 +6,10 @@ import { ReasoningAnswerSection } from './reasoning-answer-section'
 import RelatedQuestions from './related-questions'
 import { ToolSection } from './tool-section'
 import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuTrigger
 } from './ui/context-menu'
 import { UserMessage } from './user-message'
 
@@ -177,6 +177,7 @@ export function RenderMessage({
             <ToolSection
               key={tool.toolCallId}
               tool={tool}
+              message={message}
               isOpen={getIsOpen(tool.toolCallId)}
               onOpenChange={open => onOpenChange(tool.toolCallId, open)}
             />
@@ -190,7 +191,6 @@ export function RenderMessage({
               }}
               isOpen={getIsOpen(messageId)}
               onOpenChange={open => onOpenChange(messageId, open)}
-              chatId={chatId}
             />
           ) : (
             <AnswerSection

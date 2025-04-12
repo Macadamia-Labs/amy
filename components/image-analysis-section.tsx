@@ -16,9 +16,11 @@ export function ImageAnalysisSection({
   isOpen,
   onOpenChange
 }: ImageAnalysisSectionProps) {
-  // Access parameters and output safely with type checking
-  const parameters = tool.parameters as { imageUrl: string; question: string } | undefined
-  const output = tool.output as ImageAnalysisResponse | undefined
+  // Access args safely with type checking
+  const parameters = tool.args as { imageUrl: string; question: string } | undefined
+  
+  // The output is in the tool's result property, but only if the state is 'result'
+  const output = tool.state === 'result' ? tool.result as ImageAnalysisResponse | undefined : undefined
   
   const imageUrl = parameters?.imageUrl || 'No image URL provided'
   const question = parameters?.question || 'No question provided'
@@ -26,7 +28,7 @@ export function ImageAnalysisSection({
   const analysis = output?.analysis || 'No analysis available'
 
   return (
-    <Accordion type="single" collapsible open={isOpen} onOpenChange={onOpenChange}>
+    <Accordion type="single" collapsible value={isOpen ? "image-analysis" : ""} onValueChange={(value) => onOpenChange(value === "image-analysis")}>
       <AccordionItem value="image-analysis">
         <AccordionTrigger className="text-sm font-medium">
           Image Analysis: {question}

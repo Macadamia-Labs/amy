@@ -4,9 +4,9 @@ import { DocContent } from '@/app/(app)/resources/[id]/doc-content'
 import ResourceLoading from '@/app/(app)/resources/[id]/loading'
 import { DocumentChat } from '@/components/chat/document-chat'
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup
 } from '@/components/ui/resizable'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import '@/lib/pdf-setup'
@@ -32,6 +32,7 @@ export function DocsLayout() {
   >('closed')
   const [activePage, setActivePage] = useState(0)
   const [showRawContent, setShowRawContent] = useState(false)
+  const [sideBySide, setSideBySide] = useState(false)
 
   const closeSidebar = () => setSidebarState('closed')
   const toggleOutline = () =>
@@ -40,6 +41,7 @@ export function DocsLayout() {
     setSidebarState(state => (state === 'search' ? 'closed' : 'search'))
   const toggleThumbnails = () =>
     setSidebarState(state => (state === 'thumbnails' ? 'closed' : 'thumbnails'))
+  const toggleSideBySide = () => setSideBySide(prev => !prev)
   const toggleRawContent = () => setShowRawContent(prev => !prev)
 
   const isPdf = resource?.file_type === 'pdf'
@@ -119,6 +121,7 @@ export function DocsLayout() {
               toggleOutline={toggleOutline}
               toggleSearch={toggleSearch}
               toggleThumbnails={toggleThumbnails}
+              toggleSideBySide={toggleSideBySide}
             />
 
             {isPdf && (

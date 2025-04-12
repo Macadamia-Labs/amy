@@ -114,6 +114,7 @@ export function ChatMessages({
         <ToolSection
           key={manualToolCallId}
           tool={lastToolData}
+          message={messages[messages.length - 1]}
           isOpen={getIsOpen(manualToolCallId)}
           onOpenChange={open => handleOpenChange(manualToolCallId, open)}
         />

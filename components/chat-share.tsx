@@ -2,6 +2,7 @@
 
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
 import { shareChat } from '@/lib/actions/chat'
+import { useAuth } from '@/lib/providers/auth-provider'
 import { cn } from '@/lib/utils'
 import { Share } from 'lucide-react'
 import { useState, useTransition } from 'react'
@@ -25,15 +26,21 @@ interface ChatShareProps {
 
 export function ChatShare({ chatId, className }: ChatShareProps) {
   const [open, setOpen] = useState(false)
-  const [pending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
   const { copyToClipboard } = useCopyToClipboard({ timeout: 1000 })
   const [shareUrl, setShareUrl] = useState('')
+  const { user } = useAuth()
 
   const handleShare = async () => {
+    if (!user) {
+      toast.error('You must be logged in to share chats')
+      return
+    }
+    
     startTransition(() => {
       setOpen(true)
     })
-    const result = await shareChat(chatId)
+    const result = await shareChat(chatId, user.id)
     if (!result) {
       toast.error('Failed to share chat')
       return
@@ -85,12 +92,12 @@ export function ChatShare({ chatId, className }: ChatShareProps) {
           </DialogHeader>
           <DialogFooter className="items-center">
             {!shareUrl && (
-              <Button onClick={handleShare} disabled={pending} size="sm">
-                {pending ? <Spinner /> : 'Get link'}
+              <Button onClick={handleShare} disabled={isPending} size="sm">
+                {isPending ? <Spinner /> : 'Get link'}
               </Button>
             )}
             {shareUrl && (
-              <Button onClick={handleCopy} disabled={pending} size="sm">
+              <Button onClick={handleCopy} disabled={isPending} size="sm">
                 {'Copy link'}
               </Button>
             )}
