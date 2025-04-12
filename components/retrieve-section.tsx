@@ -12,7 +12,6 @@ import { ToolInvocation } from 'ai'
 import { useState } from 'react'
 import { CollapsibleMessage } from './collapsible-message'
 import { DefaultSkeleton } from './default-skeleton'
-import { Badge } from './ui/badge'
 
 interface RetrieveSectionProps {
   tool: ToolInvocation
@@ -41,6 +40,14 @@ export function RetrieveSection({
     </ToolArgsSection>
   )
 
+  if (data && data.length === 0) {
+    return (
+      <div className="p-4 rounded bg-muted rounded-xl text-sm text-muted-foreground">
+        No relevant sources found
+      </div>
+    )
+  }
+
   return (
     <>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -62,16 +69,18 @@ export function RetrieveSection({
         {!isLoading && data ? (
           <Section title="Sources">
             {data.map(result => (
-              <Badge
+              <div
                 key={result.id}
-                className="cursor-pointer hover:bg-primary/80"
+                className="p-2 mb-2 rounded-md bg-muted hover:bg-muted/80 cursor-pointer transition-colors"
                 onClick={() => {
                   setSelectedContent(result.content)
                   setDialogOpen(true)
                 }}
               >
-                {result.id}
-              </Badge>
+                <div className="text-sm text-muted-foreground line-clamp-2">
+                  {result.content}
+                </div>
+              </div>
             ))}
           </Section>
         ) : (

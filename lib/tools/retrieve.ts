@@ -21,6 +21,9 @@ export const retrieveTool = tool({
   execute: async ({ query }) => {
     console.log('Retrieving documentation for:', query)
     const matches = await hybridSearch(query)
+    if (!matches || matches.length === 0) {
+      return []
+    }
 
     return matches.map((match: DocumentMatch) => ({
       id: match.id,

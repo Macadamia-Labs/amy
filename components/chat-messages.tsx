@@ -113,6 +113,7 @@ export function ChatMessages({
       {lastToolData && (
         <ToolSection
           key={manualToolCallId}
+          message={messages[messages.length - 1]}
           tool={lastToolData}
           message={messages[messages.length - 1]}
           isOpen={getIsOpen(manualToolCallId)}
