@@ -1,21 +1,11 @@
 import { google } from '@ai-sdk/google'
 import { generateText, tool } from 'ai'
-import { initLogger } from 'braintrust'
 import { z } from 'zod'
 
-export interface ImageAnalysisResponse {
+interface ImageAnalysisResponse {
   description: string
   analysis: string
 }
-
-// Initialize the Braintrust logger
-const logger = initLogger({
-  projectName: "image-analysis-gemini",
-  apiKey: process.env.BRAINTRUST_API_KEY,
-});
-
-// Create the Gemini model directly without Braintrust wrapping
-const geminiModel = google('gemini-2.0-flash');
 
 export const imageAnalysisTool = tool({
   description:
@@ -28,9 +18,8 @@ export const imageAnalysisTool = tool({
     try {
       console.log('Analyzing image:', imageUrl)
       
-      // Use generateText with the direct model
       const result = await generateText({
-        model: geminiModel,
+        model: google('gemini-2.0-flash-001'),
         messages: [
           {
             role: 'user',
@@ -47,14 +36,7 @@ export const imageAnalysisTool = tool({
             ]
           }
         ]
-      });
-
-      // Log the result to Braintrust separately
-      logger.log({
-        input: { imageUrl, question },
-        output: result.text,
-        metadata: { model: 'gemini-2.0-flash' }
-      });
+      })
 
       return {
         description: 'Image analysis completed successfully',
