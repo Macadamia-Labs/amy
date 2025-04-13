@@ -19,6 +19,7 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
         searchMode,
         context,
         resourcesContext,
+        templateContext,
         userId
       } = config
 
@@ -35,6 +36,7 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
           searchMode,
           context,
           resourcesContext,
+          templateContext,
           dataStream
         })
 

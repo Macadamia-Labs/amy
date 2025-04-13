@@ -15,4 +15,8 @@ export interface BaseStreamConfig {
     resourceIds: string[]
     resourcesContent: string
   }
+  templateContext?: {
+    templateId: string
+    templateContent: string
+  }
 }

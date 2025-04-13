@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react'
 import Textarea from 'react-textarea-autosize'
 import { EmptyScreen } from './empty-screen'
 import { ResourcesSelector } from './resources/resources-selector'
-import { ThinkingToggle } from './thinking-toggle'
+import { TemplateSelector } from './templates/template-selector'
 import { Button } from './ui/button'
 
 interface ChatPanelProps {
@@ -24,6 +24,8 @@ interface ChatPanelProps {
   append: (message: Message) => void
   selectedResourceIds: Set<string>
   setSelectedResourceIds: (ids: Set<string>) => void
+  selectedTemplateId: string | null
+  setSelectedTemplateId: (id: string | null) => void
   selectedModel: string
   onModelChange: (model: string) => void
 }
@@ -40,6 +42,8 @@ export function ChatPanel({
   append,
   selectedResourceIds,
   setSelectedResourceIds,
+  selectedTemplateId,
+  setSelectedTemplateId,
   selectedModel,
   onModelChange
 }: ChatPanelProps) {
@@ -129,9 +133,18 @@ export function ChatPanel({
               selectedIds={selectedResourceIds}
               onSelect={setSelectedResourceIds}
             />
+            <TemplateSelector
+              selectedIds={
+                new Set(selectedTemplateId ? [selectedTemplateId] : [])
+              }
+              onSelect={ids =>
+                setSelectedTemplateId(ids.size > 0 ? Array.from(ids)[0] : null)
+              }
+              onCreateTemplate={() => {}}
+            />
           </div>
           <div className="flex items-center gap-2">
-            <ThinkingToggle onModelChange={onModelChange} />
+            {/* <ThinkingToggle onModelChange={onModelChange} /> */}
 
             {messages.length > 0 && (
               <Button

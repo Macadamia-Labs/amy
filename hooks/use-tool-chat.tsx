@@ -29,6 +29,10 @@ interface UseToolChatProps {
     resourceIds: string[]
     resourcesContent: string
   }
+  templateContext?: {
+    templateId: string
+    templateContent: string
+  }
   selectedModel?: string
   projectId?: string
 }
@@ -37,6 +41,7 @@ export function useToolChat({
   id,
   initialMessages,
   resourcesContext,
+  templateContext,
   selectedModel,
   projectId
 }: UseToolChatProps) {
@@ -65,6 +70,7 @@ export function useToolChat({
     body: {
       id,
       resourcesContext,
+      templateContext,
       model: selectedModel,
       userId,
       projectId

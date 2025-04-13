@@ -8,7 +8,15 @@ import { JSONValue, Message } from 'ai'
 import React, { useEffect, useState } from 'react'
 import { ChatMessages } from './chat-messages'
 import { ChatPanel } from './chat-panel'
+import { DEFAULT_TEMPLATES } from './templates/template-selector'
 import { ScrollArea } from './ui/scroll-area'
+
+interface Template {
+  id: string
+  title: string
+  content: string
+  category?: string
+}
 
 export function Chat({
   id,
@@ -26,9 +34,13 @@ export function Chat({
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
     new Set()
   )
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  )
   const { resources } = useResources()
   const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
   const { chatId } = useChatId()
+
   const selectedResourcesContent = React.useMemo(() => {
     const selectedResources = resources.filter(r =>
       selectedResourceIds.has(r.id)
@@ -38,6 +50,14 @@ export function Chat({
       .filter(Boolean)
       .join('\n\n---\n\n')
   }, [resources, selectedResourceIds])
+
+  const selectedTemplateContent = React.useMemo(() => {
+    if (!selectedTemplateId) return undefined
+    const selectedTemplate = DEFAULT_TEMPLATES.find(
+      (template: Template) => template.id === selectedTemplateId
+    )
+    return selectedTemplate?.content
+  }, [selectedTemplateId])
 
   const {
     messages,
@@ -58,6 +78,12 @@ export function Chat({
       resourceIds: Array.from(selectedResourceIds),
       resourcesContent: selectedResourcesContent
     },
+    templateContext: selectedTemplateContent
+      ? {
+          templateId: selectedTemplateId!,
+          templateContent: selectedTemplateContent
+        }
+      : undefined,
     selectedModel,
     projectId
   })
@@ -155,6 +181,8 @@ export function Chat({
           append={append}
           selectedResourceIds={selectedResourceIds}
           setSelectedResourceIds={setSelectedResourceIds}
+          selectedTemplateId={selectedTemplateId}
+          setSelectedTemplateId={setSelectedTemplateId}
           selectedModel={selectedModel}
           onModelChange={setSelectedModel}
         />

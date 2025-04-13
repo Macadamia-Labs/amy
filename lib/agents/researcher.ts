@@ -56,6 +56,10 @@ interface ResearcherConfig {
     resourceIds: string[]
     resourcesContent: string
   }
+  templateContext?: {
+    templateId: string
+    templateContent: string
+  }
   dataStream?: DataStreamWriter
 }
 
@@ -65,6 +69,7 @@ export function researcher({
   searchMode,
   context,
   resourcesContext,
+  templateContext,
   dataStream
 }: ResearcherConfig): ResearcherReturn {
   try {
@@ -78,7 +83,6 @@ export function researcher({
         ${PROJECTS_LIST}
         They have ${RESOURCES_COUNT} resources in their knowledge base.
 
-        
         ${
           resourcesContext
             ? `These are the resources they have directly attached to this conversation:
@@ -88,6 +92,15 @@ export function researcher({
         `
 
     fullPrompt += infoPrompt
+
+    if (templateContext) {
+      fullPrompt += `\n\nTemplate Context:
+      The user has selected an instructions template.
+    
+      Follow these instructions to perform the desired task:
+      ${templateContext.templateContent}
+      `
+    }
 
     if (context) {
       fullPrompt += `\n\nDocument Context:
@@ -113,7 +126,6 @@ export function researcher({
       system: fullPrompt,
       messages,
       tools: {
-        // webSearch: searchTool,
         retrieve: retrieveTool,
         formatAndSaveIssuesTool: formatAndSaveIssuesTool,
         findOptions: findOptionsTool,
@@ -127,9 +139,6 @@ export function researcher({
           resourcesContext?.resourcesContent
         )
       },
-      // experimental_activeTools: searchMode
-      //   ? ['search', 'retrieve'] d
-      //   : [],
       maxSteps: searchMode ? 5 : 1,
       experimental_transform: smoothStream({ chunking: 'word' })
     }

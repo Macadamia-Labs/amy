@@ -15,11 +15,13 @@ export async function POST(req: Request) {
       userId,
       context,
       resourcesContext,
+      templateContext,
       body,
       model: requestModel
     } = await req.json()
 
     console.log('resourcesContext', resourcesContext)
+    console.log('templateContext', templateContext)
     console.log('body', body)
     console.log('requestModel from body:', requestModel)
 
@@ -74,6 +76,7 @@ export async function POST(req: Request) {
           searchMode,
           context,
           resourcesContext,
+          templateContext,
           userId
         })
       : createManualToolStreamResponse({
@@ -83,6 +86,7 @@ export async function POST(req: Request) {
           searchMode,
           context,
           resourcesContext,
+          templateContext,
           userId
         })
   } catch (error) {
