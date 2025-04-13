@@ -1,28 +1,17 @@
-import WorkflowHeader from '@/components/layout/workflow-header'
-import { WorkflowsProvider } from '@/components/providers/workflows-provider'
-import { getWorkflow } from '@/data'
-import { notFound } from 'next/navigation'
+import Header from '@/components/layout/header'
 
-export default async function WorkflowLayout({
-  children,
-  params
+export default async function SearchProjectLayout({
+  params,
+  children
 }: {
-  children: React.ReactNode
   params: Promise<{ id: string }>
+  children: React.ReactNode
 }) {
   const { id } = await params
-  const workflow = await getWorkflow(id)
-
-  if (!workflow) {
-    notFound()
-  }
-
   return (
-    <WorkflowsProvider initialWorkflows={[workflow]}>
-      <div className="flex flex-col h-full">
-        <WorkflowHeader workflow={workflow} />
-        <div className="flex-1 overflow-auto">{children}</div>
-      </div>
-    </WorkflowsProvider>
+    <div className="flex flex-col h-full">
+      <Header />
+      <div className="flex-1 overflow-auto">{children}</div>
+    </div>
   )
 }

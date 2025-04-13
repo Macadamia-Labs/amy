@@ -5,6 +5,8 @@ import { deepSearchTool } from '../tools/deep-search'
 import { formatAndSaveIssuesTool } from '../tools/find-issues'
 import { findOptionsTool } from '../tools/find-options'
 import { imageAnalysisTool } from '../tools/image-analysis'
+import { retrieveTool } from '../tools/retrieve'
+import { getModel } from '../utils/registry'
 
 const USER_NAME = 'Facundo'
 // Needs

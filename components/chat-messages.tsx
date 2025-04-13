@@ -115,7 +115,6 @@ export function ChatMessages({
           key={manualToolCallId}
           message={messages[messages.length - 1]}
           tool={lastToolData}
-          message={messages[messages.length - 1]}
           isOpen={getIsOpen(manualToolCallId)}
           onOpenChange={open => handleOpenChange(manualToolCallId, open)}
         />

@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -8,54 +10,56 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Calendar, Clock, PlayCircle } from 'lucide-react'
-import { notFound } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { ArrowLeft, Calendar, Clock, PlayCircle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Workflow } from './page'
 
-// Define the Workflow interface
-interface Workflow {
-  id: string
-  name: string
-  description: string
-  icon: string
+interface WorkflowClientProps {
+  workflow: Workflow
 }
 
-// Import the workflows data
-const workflows: Workflow[] = [
-  {
-    id: 'check-bom',
-    name: 'Check error bill of materials in drawings',
-    description:
-      'Verify and validate bill of materials in engineering drawings',
-    icon: '📋'
-  },
-  {
-    id: 'code-compliance-check',
-    name: 'Code compliance check',
-    description: 'Check code compliance of a project',
-    icon: '📂'
-  }
-]
-
-export default function WorkflowPage({ params }: { params: { id: string } }) {
-  // Find the workflow with the matching ID from the workflows array
-  const workflow = workflows.find(w => w.id === params.id)
-
-  if (!workflow) {
-    return notFound()
-  }
+export default function WorkflowClient({ workflow }: WorkflowClientProps) {
+  const router = useRouter()
 
   return (
-    <div className="container max-w-5xl py-6">
+    <>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {workflow.icon} {workflow.name}
-        </h1>
+        <Button
+          variant="ghost"
+          className="gap-2 mb-4"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </Button>
 
-        <p className="text-muted-foreground mt-1">{workflow.description}</p>
+        <motion.h1
+          className="text-3xl font-bold tracking-tight"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {workflow.icon} {workflow.name}
+        </motion.h1>
+
+        <motion.p
+          className="text-muted-foreground mt-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          {workflow.description}
+        </motion.p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
+        <motion.div
+          className="md:col-span-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
           <Card>
             <CardHeader>
               <CardTitle>Workflow Details</CardTitle>
@@ -82,18 +86,19 @@ export default function WorkflowPage({ params }: { params: { id: string } }) {
               </div>
             </CardContent>
             <CardFooter>
-              <form action="/api/run-workflow" method="POST">
-                <input type="hidden" name="workflowId" value={workflow.id} />
-                <Button type="submit" className="gap-2">
-                  <PlayCircle className="h-4 w-4" />
-                  Run Workflow
-                </Button>
-              </form>
+              <Button className="gap-2">
+                <PlayCircle className="h-4 w-4" />
+                Run Workflow
+              </Button>
             </CardFooter>
           </Card>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+        >
           <Card>
             <CardHeader>
               <CardTitle>Execution History</CardTitle>
@@ -105,8 +110,8 @@ export default function WorkflowPage({ params }: { params: { id: string } }) {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </>
   )
 }

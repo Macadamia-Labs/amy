@@ -10,6 +10,7 @@ import {
 import { getProjects } from '@/lib/actions/projects'
 import * as React from 'react'
 import { MacadamiaHead } from './macadamia-head'
+import { NavWorkflows } from './nav-actions'
 import { NavHome } from './nav-home'
 import { NavResources } from './nav-resources'
 import { SearchForm } from './search-form'
@@ -41,6 +42,7 @@ export default async function CooperSidebar(
           {/* <NavWorkflows /> */}
           {/* <NavDocs /> */}
         </SidebarGroup>
+        <NavWorkflows />
       </SidebarContent>
       <SidebarFooter>
         {/* <NavSettings /> */}
