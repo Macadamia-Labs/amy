@@ -6,9 +6,9 @@ import { google } from '@ai-sdk/google'
 import { groq } from '@ai-sdk/groq'
 import { createOpenAI, openai } from '@ai-sdk/openai'
 import {
-  experimental_createProviderRegistry as createProviderRegistry,
-  extractReasoningMiddleware,
-  wrapLanguageModel
+    experimental_createProviderRegistry as createProviderRegistry,
+    extractReasoningMiddleware,
+    wrapLanguageModel
 } from 'ai'
 import { createOllama } from 'ollama-ai-provider'
 

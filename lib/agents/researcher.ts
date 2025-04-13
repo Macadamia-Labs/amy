@@ -1,4 +1,5 @@
 import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
+import { initLogger, wrapAISDKModel } from 'braintrust'
 import { Section } from '../providers/document-provider'
 import { deepReasoningTool } from '../tools/deep-reasoning'
 import { deepSearchTool } from '../tools/deep-search'
@@ -6,7 +7,13 @@ import { formatAndSaveIssuesTool } from '../tools/find-issues'
 import { findOptionsTool } from '../tools/find-options'
 import { imageAnalysisTool } from '../tools/image-analysis'
 import { retrieveTool } from '../tools/retrieve'
+import { retrieveCodesTool } from '../tools/retrieve-codes'
 import { getModel } from '../utils/registry'
+
+const logger = initLogger({
+  projectName: 'Amy AI',
+  apiKey: process.env.BRAINTRUST_API_KEY,
+});
 
 const USER_NAME = 'Facundo'
 // Needs
@@ -121,12 +128,16 @@ export function researcher({
       - If the question is not related to the document, you can ignore the document context`
     }
 
+    const baseModel = getModel(model)
+    const wrappedModel = process.env.BRAINTRUST_API_KEY ? wrapAISDKModel(baseModel) : baseModel
+
     return {
-      model: getModel(model),
+      model: wrappedModel,
       system: fullPrompt,
       messages,
       tools: {
         retrieve: retrieveTool,
+        retrieveCodes: retrieveCodesTool,
         formatAndSaveIssuesTool: formatAndSaveIssuesTool,
         findOptions: findOptionsTool,
         deepSearch: deepSearchTool(
@@ -140,7 +151,17 @@ export function researcher({
         )
       },
       maxSteps: searchMode ? 5 : 1,
-      experimental_transform: smoothStream({ chunking: 'word' })
+      experimental_transform: smoothStream({ chunking: 'word' }),
+      experimental_telemetry: {
+        isEnabled: true,
+        metadata: {
+          searchMode,
+          hasContext: !!context,
+          hasResourcesContext: !!resourcesContext,
+          messageCount: messages.length,
+          toolsEnabled: ['retrieve', 'retrieveCodes', 'formatAndSaveIssuesTool', 'findOptions', 'deepSearch', 'imageAnalysis', 'deepReasoning']
+        }
+      }
     }
   } catch (error) {
     console.error('Error in chatResearcher:', error)
