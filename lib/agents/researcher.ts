@@ -87,6 +87,8 @@ export function researcher({
         }
         `
 
+    fullPrompt += infoPrompt
+
     if (context) {
       fullPrompt += `\n\nDocument Context:
       1. You have access to a document with the following content:
