@@ -61,8 +61,7 @@ export function NavWorkflows() {
           <SidebarMenuItem key={workflow.id}>
             <SidebarMenuButton
               onClick={() => {
-                // Add your workflow handler here
-                console.log(`Executing workflow: ${workflow.name}`)
+                router.push(`/workflows/${workflow.id}`)
               }}
             >
               <span className="text-lg">{workflow.icon}</span>

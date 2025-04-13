@@ -1,32 +1,40 @@
 'use client'
 
 import { generateUUID } from '@/lib/utils/helpers'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const CHAT_ID_KEY = generateUUID()
 
 export function useChatId() {
-  const [chatId, setChatId] = useState<string>('')
+  const [chatId, setChatId] = useState<string>(() => {
+    // Initialize with existing chatId or generate new one
+    if (typeof window !== 'undefined') {
+      const savedChatId = localStorage.getItem(CHAT_ID_KEY)
+      return savedChatId || generateUUID()
+    }
+    return generateUUID()
+  })
 
-  useEffect(() => {
-    // Load chat ID from localStorage on mount
-    const savedChatId = localStorage.getItem(CHAT_ID_KEY)
-    if (savedChatId) {
-      setChatId(savedChatId)
-    } else {
-      // Generate a new chat ID if none exists
+  // Memoize the createNewChat function
+  const createNewChat = useMemo(() => {
+    return () => {
       const newChatId = generateUUID()
-      localStorage.setItem(CHAT_ID_KEY, newChatId)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(CHAT_ID_KEY, newChatId)
+      }
       setChatId(newChatId)
+      return newChatId
     }
   }, [])
 
-  const createNewChat = () => {
-    const newChatId = generateUUID()
-    localStorage.setItem(CHAT_ID_KEY, newChatId)
-    setChatId(newChatId)
-    return newChatId
-  }
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Ensure chatId is saved to localStorage
+      if (!localStorage.getItem(CHAT_ID_KEY)) {
+        localStorage.setItem(CHAT_ID_KEY, chatId)
+      }
+    }
+  }, [chatId])
 
   return {
     chatId,
