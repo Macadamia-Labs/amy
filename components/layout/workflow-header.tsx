@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip'
-import { Workflow } from '@/lib/types/workflow'
+import { GraphWorkflow } from '@/lib/types/workflow'
 import { LightningIcon } from '@/lib/utils/icons'
 import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
@@ -24,7 +24,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 interface WorkflowHeaderProps {
-  workflow: Workflow
+  workflow: GraphWorkflow
 }
 
 export default function WorkflowHeader({ workflow }: WorkflowHeaderProps) {

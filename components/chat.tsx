@@ -23,13 +23,15 @@ export function Chat({
   savedMessages = [],
   query,
   projectId,
-  newConversation
+  newConversation,
+  showSuggestions = true
 }: {
   id: string
   savedMessages?: Message[]
   query?: string
   projectId?: string
   newConversation?: boolean
+  showSuggestions?: boolean
 }) {
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
     new Set()
@@ -185,6 +187,7 @@ export function Chat({
           setSelectedTemplateId={setSelectedTemplateId}
           selectedModel={selectedModel}
           onModelChange={setSelectedModel}
+          showSuggestions={showSuggestions}
         />
       </div>
     </div>

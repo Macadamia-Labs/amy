@@ -11,7 +11,7 @@ import {
 } from '@/lib/services/workflow-execution'
 import { createClient } from '@/lib/supabase/client'
 import { CADNode } from '@/lib/types/node-types'
-import { Workflow } from '@/lib/types/workflow'
+import { GraphWorkflow } from '@/lib/types/workflow'
 import {
   createContext,
   ReactNode,
@@ -21,9 +21,9 @@ import {
 } from 'react'
 
 interface WorkflowsContextType {
-  workflows: Workflow[]
-  addWorkflow: (workflow: Workflow) => void
-  updateWorkflow: (id: string, updates: Partial<Workflow>) => void
+  workflows: GraphWorkflow[]
+  addWorkflow: (workflow: GraphWorkflow) => void
+  updateWorkflow: (id: string, updates: Partial<GraphWorkflow>) => void
   removeWorkflow: (id: string) => void
   executeWorkflow: (id: string) => Promise<void>
   runningWorkflows: Set<string>
@@ -41,10 +41,10 @@ export function WorkflowsProvider({
   initialWorkflows = []
 }: {
   children: ReactNode
-  initialWorkflows?: Workflow[]
+  initialWorkflows?: GraphWorkflow[]
 }) {
   const { user } = useAuth()
-  const [workflows, setWorkflows] = useState<Workflow[]>([
+  const [workflows, setWorkflows] = useState<GraphWorkflow[]>([
     ...sampleWorkflows,
     ...initialWorkflows
   ])
@@ -83,10 +83,10 @@ export function WorkflowsProvider({
         },
         payload => {
           if (payload.eventType === 'INSERT') {
-            const newWorkflow = payload.new as Workflow
+            const newWorkflow = payload.new as GraphWorkflow
             setWorkflows(prev => [...prev, newWorkflow])
           } else if (payload.eventType === 'UPDATE') {
-            const updatedWorkflow = payload.new as Workflow
+            const updatedWorkflow = payload.new as GraphWorkflow
             setWorkflows(prev =>
               prev.map(workflow =>
                 workflow.id === updatedWorkflow.id ? updatedWorkflow : workflow
@@ -102,7 +102,7 @@ export function WorkflowsProvider({
               })
             }
           } else if (payload.eventType === 'DELETE') {
-            const deletedWorkflow = payload.old as Workflow
+            const deletedWorkflow = payload.old as GraphWorkflow
             setWorkflows(prev =>
               prev.filter(workflow => workflow.id !== deletedWorkflow.id)
             )
@@ -116,11 +116,11 @@ export function WorkflowsProvider({
     }
   }, [user?.id])
 
-  const addWorkflow = (workflow: Workflow) => {
+  const addWorkflow = (workflow: GraphWorkflow) => {
     setWorkflows(prev => [...prev, workflow])
   }
 
-  const updateWorkflow = (id: string, updates: Partial<Workflow>) => {
+  const updateWorkflow = (id: string, updates: Partial<GraphWorkflow>) => {
     setWorkflows(prev =>
       prev.map(workflow =>
         workflow.id === id ? { ...workflow, ...updates } : workflow
@@ -316,7 +316,7 @@ export function WorkflowsProvider({
 
   // Simulate execution of workflow nodes
   const simulateExecution = async (
-    workflow: Workflow,
+    workflow: GraphWorkflow,
     dependencyMap: Record<string, string[]>,
     nodeDurations: Record<string, number>
   ) => {
@@ -458,7 +458,7 @@ export function WorkflowsProvider({
 
   // Execute a single node with progress updates
   const executeNode = async (
-    workflow: Workflow,
+    workflow: GraphWorkflow,
     nodeId: string,
     duration: number,
     localCompletedNodeIds: Set<string>,

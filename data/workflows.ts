@@ -1,5 +1,5 @@
 import { CADNode } from '@/lib/types/node-types'
-import { Workflow } from '@/lib/types/workflow'
+import { GraphWorkflow } from '@/lib/types/workflow'
 import { Edge } from '@xyflow/react'
 
 // Sample workflow nodes based on the BuildGrid component
@@ -200,12 +200,11 @@ const pressureVesselEdges: Edge[] = [
 ]
 
 // Sample workflows data
-export const workflows: Workflow[] = [
+export const workflows: GraphWorkflow[] = [
   {
     id: 'workflow-1',
     title: 'Pressure Vessel Design',
-    description:
-      'Pressure vessel design according to ASME standards',
+    description: 'Pressure vessel design according to ASME standards',
     status: 'active',
     nodes: pressureVesselNodes,
     edges: pressureVesselEdges,
@@ -240,11 +239,11 @@ export const workflows: Workflow[] = [
 ]
 
 // Helper function to get a workflow by ID
-export function getWorkflow(id: string): Workflow | undefined {
+export function getWorkflow(id: string): GraphWorkflow | undefined {
   return workflows.find(workflow => workflow.id === id)
 }
 
 // Helper function to get all workflows
-export function getAllWorkflows(): Workflow[] {
+export function getAllWorkflows(): GraphWorkflow[] {
   return workflows
 }

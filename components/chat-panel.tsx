@@ -28,6 +28,7 @@ interface ChatPanelProps {
   setSelectedTemplateId: (id: string | null) => void
   selectedModel: string
   onModelChange: (model: string) => void
+  showSuggestions: boolean
 }
 
 export function ChatPanel({
@@ -45,7 +46,8 @@ export function ChatPanel({
   selectedTemplateId,
   setSelectedTemplateId,
   selectedModel,
-  onModelChange
+  onModelChange,
+  showSuggestions
 }: ChatPanelProps) {
   const [showEmptyScreen, setShowEmptyScreen] = useState(false)
   const router = useRouter()
@@ -172,7 +174,7 @@ export function ChatPanel({
         </div>
       </div>
 
-      {messages.length === 0 && (
+      {showSuggestions && messages.length === 0 && (
         <EmptyScreen
           submitMessage={message => {
             handleInputChange({

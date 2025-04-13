@@ -1,6 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Chat } from '@/components/chat'
 import { notFound } from 'next/navigation'
 import { InstructionsCard } from './instructions-card'
+import { ResourcesCard } from './resources-card'
 
 // Define the Workflow interface
 interface Workflow {
@@ -41,11 +42,6 @@ export default async function WorkflowPage({
     return notFound()
   }
 
-  const handleInstructionsChange = (instructions: string) => {
-    // Here you can handle the instructions change, e.g., save to database
-    console.log('Instructions changed:', instructions)
-  }
-
   return (
     <div className="p-8">
       <div className="mb-6">
@@ -58,20 +54,12 @@ export default async function WorkflowPage({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
-          <InstructionsCard onInstructionsChange={handleInstructionsChange} />
+          <InstructionsCard />
+          <Chat id={id} showSuggestions={false} />
         </div>
 
         <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Attached Resources</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-6 text-muted-foreground">
-                <p>No execution history yet</p>
-              </div>
-            </CardContent>
-          </Card>
+          <ResourcesCard />
         </div>
       </div>
     </div>

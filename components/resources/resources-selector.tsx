@@ -30,11 +30,13 @@ import * as React from 'react'
 interface ResourcesSelectorProps {
   selectedIds: Set<string>
   onSelect: (ids: Set<string>) => void
+  trigger?: React.ReactNode
 }
 
 export function ResourcesSelector({
   selectedIds,
-  onSelect
+  onSelect,
+  trigger
 }: ResourcesSelectorProps) {
   const [open, setOpen] = React.useState(false)
   const [showContentDialog, setShowContentDialog] = React.useState(false)
@@ -81,24 +83,26 @@ export function ResourcesSelector({
       .join('\n\n---\n\n')
   }, [selectedResources])
 
+  const defaultTrigger = (
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      className="justify-between rounded-full"
+    >
+      {selectedIds.size > 0 ? (
+        <p>{selectedIds.size} selected</p>
+      ) : (
+        'Select resources'
+      )}
+      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  )
+
   return (
     <div className="flex items-center gap-2">
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="justify-between rounded-full"
-          >
-            {selectedIds.size > 0 ? (
-              <p>{selectedIds.size} selected</p>
-            ) : (
-              'Select resources'
-            )}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
+        <PopoverTrigger asChild>{trigger || defaultTrigger}</PopoverTrigger>
         <PopoverContent className="w-[400px] p-0" align="start">
           <Command>
             <CommandInput placeholder="Search resources..." />

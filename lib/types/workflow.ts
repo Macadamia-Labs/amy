@@ -2,18 +2,24 @@ import { Edge } from '@xyflow/react'
 import { Engineer, Resource } from '.'
 import { CADNode } from './node-types'
 
-export type WorkflowStatus =
+export interface Workflow {
+  id: string
+  title: string
+  instructions: string
+}
+
+export type GraphWorkflowStatus =
   | 'draft'
   | 'active'
   | 'completed'
   | 'failed'
   | 'running'
 
-export interface Workflow {
+export interface GraphWorkflow {
   id: string
   title: string
   description: string
-  status: WorkflowStatus
+  status: GraphWorkflowStatus
   nodes: CADNode[]
   edges: Edge[]
   created_at: string
@@ -22,10 +28,10 @@ export interface Workflow {
   creator?: Engineer
   resources?: Resource[]
   last_run?: string
-  execution_history?: WorkflowExecution[]
+  execution_history?: GraphWorkflowExecution[]
 }
 
-export interface WorkflowExecution {
+export interface GraphWorkflowExecution {
   id: string
   workflow_id: string
   status: 'success' | 'failed' | 'running'

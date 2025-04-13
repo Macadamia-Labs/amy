@@ -1,5 +1,5 @@
 import { CADNode } from '@/lib/types/node-types'
-import { Workflow } from '@/lib/types/workflow'
+import { GraphWorkflow } from '@/lib/types/workflow'
 
 export type NodeStatus = 'pending' | 'running' | 'completed' | 'failed'
 
@@ -21,7 +21,7 @@ interface NodeDurations {
  * Maps node IDs to arrays of dependency node IDs
  */
 export function buildDependencyMap(
-  workflow: Workflow
+  workflow: GraphWorkflow
 ): Record<string, string[]> {
   const dependencyMap: Record<string, string[]> = {}
 
@@ -94,7 +94,7 @@ export function buildDependencyMap(
  * Gets node durations from workflow nodes
  * Ensures each node has a duration (defaults to random between 3-7 seconds)
  */
-export function getNodeDurations(workflow: Workflow): NodeDurations {
+export function getNodeDurations(workflow: GraphWorkflow): NodeDurations {
   const durations: NodeDurations = {}
 
   workflow.nodes.forEach(node => {
@@ -110,7 +110,7 @@ export function getNodeDurations(workflow: Workflow): NodeDurations {
  * Find nodes that can be executed now (all dependencies are met)
  */
 export function findExecutableNodes(
-  workflow: Workflow,
+  workflow: GraphWorkflow,
   dependencyMap: Record<string, string[]>,
   nodeStatus: Record<string, NodeStatus>
 ): string[] {
@@ -132,7 +132,7 @@ export function findExecutableNodes(
  * Updates a single node in the workflow with new status and progress
  */
 export function updateWorkflowNode(
-  workflow: Workflow,
+  workflow: GraphWorkflow,
   nodeId: string,
   updates: {
     status?: NodeStatus
