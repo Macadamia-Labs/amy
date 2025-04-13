@@ -36,9 +36,15 @@ const workflows: Workflow[] = [
   }
 ]
 
-export default function WorkflowPage({ params }: { params: { id: string } }) {
+export default async function WorkflowPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+
   // Find the workflow with the matching ID from the workflows array
-  const workflow = workflows.find(w => w.id === params.id)
+  const workflow = workflows.find(w => w.id === id)
 
   if (!workflow) {
     return notFound()
