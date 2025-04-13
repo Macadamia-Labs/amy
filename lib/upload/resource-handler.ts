@@ -51,7 +51,7 @@ export async function uploadFile(
     id: resourceId,
     title: file.name,
     description: '',
-    category: '',
+    category: 'uncategorized',
     file_path: filePath,
     file_type: fileExt,
     user_id: userId,

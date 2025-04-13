@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Resource, ResourceStatus } from '@/lib/types'
 import { UploadResource } from '@/lib/upload/resource-handler'
 import { generateUUID } from '@/lib/utils/helpers'
+import { PlusIcon } from 'lucide-react'
 import * as React from 'react'
 import { toast } from 'sonner'
 
@@ -193,7 +194,8 @@ export function UploadDialog() {
         accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.heic,.zip"
         multiple
       />
-      <Button disabled={uploading}>
+      <Button disabled={uploading} size="sm">
+        <PlusIcon className="size-4" />
         {uploading ? 'Uploading...' : 'Upload'}
       </Button>
     </div>

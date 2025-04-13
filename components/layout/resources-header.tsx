@@ -1,5 +1,4 @@
 'use client'
-import { SearchResources } from '@/components/resources/search-resources'
 import { UploadDialog } from '@/components/resources/upload-dialog'
 import {
   Breadcrumb,
@@ -74,7 +73,7 @@ export default function ResourcesHeader() {
         <BreadcrumbList>{getBreadcrumbItems()}</BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex items-center gap-4">
-        <SearchResources />
+        {/* <SearchResources /> */}
         <UploadDialog />
       </div>
     </header>

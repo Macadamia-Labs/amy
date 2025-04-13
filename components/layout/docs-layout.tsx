@@ -4,11 +4,11 @@ import { DocContent } from '@/app/(app)/resources/[id]/doc-content'
 import ResourceLoading from '@/app/(app)/resources/[id]/loading'
 import { DocumentChat } from '@/components/chat/document-chat'
 import {
-    ResizableHandle,
-    ResizablePanel,
-    ResizablePanelGroup
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup
 } from '@/components/ui/resizable'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
 import '@/lib/pdf-setup'
 import { useDocument } from '@/lib/providers/document-provider'
 import { Root } from '@unriddle-ai/lector'
@@ -32,7 +32,6 @@ export function DocsLayout() {
   >('closed')
   const [activePage, setActivePage] = useState(0)
   const [showRawContent, setShowRawContent] = useState(false)
-  const [sideBySide, setSideBySide] = useState(false)
 
   const closeSidebar = () => setSidebarState('closed')
   const toggleOutline = () =>
@@ -41,12 +40,13 @@ export function DocsLayout() {
     setSidebarState(state => (state === 'search' ? 'closed' : 'search'))
   const toggleThumbnails = () =>
     setSidebarState(state => (state === 'thumbnails' ? 'closed' : 'thumbnails'))
-  const toggleSideBySide = () => setSideBySide(prev => !prev)
   const toggleRawContent = () => setShowRawContent(prev => !prev)
 
   const isPdf = resource?.file_type === 'pdf'
   const isImage = ['png', 'jpg', 'jpeg'].includes(resource?.file_type || '')
-
+  const isSinglePage =
+    resource?.file_type === 'image' ||
+    (resource?.content as any).pages.length === 1
   // Clean up page tags from content
   const cleanPageTags = (content: string) => {
     return content.replace(/<page number='\d+'>/g, '').replace(/<\/page>/g, '')
@@ -116,12 +116,12 @@ export function DocsLayout() {
             className="h-full"
           >
             <DocumentToolbar
+              isSinglePage={isSinglePage}
               isPdf={isPdf}
               isImage={isImage}
               toggleOutline={toggleOutline}
               toggleSearch={toggleSearch}
               toggleThumbnails={toggleThumbnails}
-              toggleSideBySide={toggleSideBySide}
             />
 
             {isPdf && (
@@ -184,10 +184,10 @@ export function DocsLayout() {
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={35} minSize={30} order={2}>
           <Tabs defaultValue="chat" className="h-full">
-            <TabsList>
+            {/* <TabsList>
               <TabsTrigger value="chat">Chat</TabsTrigger>
               <TabsTrigger value="full">Full</TabsTrigger>
-            </TabsList>
+            </TabsList> */}
             <TabsContent value="chat" className="h-full">
               <DocumentChat id={chatId} />
             </TabsContent>

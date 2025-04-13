@@ -1,59 +1,59 @@
-'use client';
+'use client'
 
-import * as pdfjsLib from 'pdfjs-dist';
-import 'pdfjs-dist/web/pdf_viewer.css';
-import { useEffect, useRef, useState } from 'react';
+import * as pdfjsLib from 'pdfjs-dist'
+import 'pdfjs-dist/web/pdf_viewer.css'
+import { useEffect, useRef, useState } from 'react'
 
 // Initialize PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
 
 interface PDFViewerProps {
-  url?: string;
+  url?: string
 }
 
 export default function PDFViewer({ url = '/sample.pdf' }: PDFViewerProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [pageNum, setPageNum] = useState(1);
-  const [numPages, setNumPages] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [pageNum, setPageNum] = useState(1)
+  const [numPages, setNumPages] = useState(0)
 
   useEffect(() => {
     const loadPDF = async () => {
       try {
-        const loadingTask = pdfjsLib.getDocument(url);
-        const pdf = await loadingTask.promise;
-        setNumPages(pdf.numPages);
+        const loadingTask = pdfjsLib.getDocument(url)
+        const pdf = await loadingTask.promise
+        setNumPages(pdf.numPages)
 
         // Render first page
-        const page = await pdf.getPage(pageNum);
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+        const page = await pdf.getPage(pageNum)
+        const canvas = canvasRef.current
+        if (!canvas) return
 
-        const viewport = page.getViewport({ scale: 1.5 });
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        const viewport = page.getViewport({ scale: 1.5 })
+        const context = canvas.getContext('2d')
+        canvas.height = viewport.height
+        canvas.width = viewport.width
 
         if (context) {
           const renderContext = {
             canvasContext: context,
-            viewport: viewport,
-          };
-          await page.render(renderContext);
+            viewport: viewport
+          }
+          await page.render(renderContext)
         }
       } catch (error) {
-        console.error('Error loading PDF:', error);
+        console.error('Error loading PDF:', error)
       }
-    };
+    }
 
-    loadPDF();
-  }, [url, pageNum]);
+    loadPDF()
+  }, [url, pageNum])
 
   const changePage = (offset: number) => {
-    setPageNum((prevPageNum) => {
-      const newPageNum = prevPageNum + offset;
-      return Math.min(Math.max(1, newPageNum), numPages);
-    });
-  };
+    setPageNum(prevPageNum => {
+      const newPageNum = prevPageNum + offset
+      return Math.min(Math.max(1, newPageNum), numPages)
+    })
+  }
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
@@ -80,5 +80,5 @@ export default function PDFViewer({ url = '/sample.pdf' }: PDFViewerProps) {
         </button>
       </div>
     </div>
-  );
-} 
+  )
+}

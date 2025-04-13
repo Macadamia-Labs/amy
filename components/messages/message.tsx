@@ -74,7 +74,7 @@ const PurePreviewMessage = ({
         <ContextMenuTrigger>
           <div
             className={cn(
-              'flex gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl'
+              'flex gap-4  w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl'
             )}
           >
             <div className="flex flex-col gap-2 w-full">

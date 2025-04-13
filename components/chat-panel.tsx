@@ -166,7 +166,7 @@ export function ChatPanel({
               target: { value: message }
             } as React.ChangeEvent<HTMLTextAreaElement>)
           }}
-          className={cn(showEmptyScreen ? 'visible' : 'invisible')}
+          // className={cn(showEmptyScreen ? 'visible' : 'invisible')}
         />
       )}
     </form>

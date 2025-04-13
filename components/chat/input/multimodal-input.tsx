@@ -162,7 +162,7 @@ function PureMultimodalInput({
   )
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto flex flex-col gap-2">
+    <div className="relative w-full max-w-3xl mx-auto flex flex-col gap-2 px-2 pb-2">
       <input
         type="file"
         className="fixed -top-4 -left-4 size-0.5 opacity-0 pointer-events-none"
@@ -206,7 +206,7 @@ function PureMultimodalInput({
         value={input}
         onChange={handleInput}
         className={cn(
-          'min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none !text-base bg-background pt-4 pb-10 font-medium'
+          'min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none !text-base bg-muted rounded-2xl pt-4 pb-10 font-medium'
         )}
         rows={2}
         autoFocus
@@ -223,7 +223,7 @@ function PureMultimodalInput({
         }}
       />
 
-      <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end gap-2 items-center">
+      <div className="absolute bottom-2 right-2 p-2 w-fit flex flex-row justify-end gap-2 items-center">
         {isLoading ? (
           <StopButton stop={stop} setMessages={setMessages} />
         ) : (

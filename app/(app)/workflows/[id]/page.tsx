@@ -64,7 +64,7 @@ export default async function WorkflowPage({
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Workflow Details</CardTitle>
+              <CardTitle>Instructions</CardTitle>
               <CardDescription>Configure and run this workflow</CardDescription>
             </CardHeader>
             <CardContent>

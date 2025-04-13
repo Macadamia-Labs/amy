@@ -447,7 +447,7 @@ export function ResourcesTable() {
           </TableCell>
           <TableCell>
             {!isFolder && (
-              <Badge variant="secondary">
+              <Badge variant="secondary" className="pl-1 pr-2">
                 {categoryIcons[
                   resource.category as keyof typeof categoryIcons
                 ] &&
@@ -456,7 +456,7 @@ export function ResourcesTable() {
                       resource.category as keyof typeof categoryIcons
                     ],
                     {
-                      className: 'h-4 w-4 mr-1'
+                      className: 'h-4 w-4 mr-2'
                     }
                   )}
                 {resource.category}

@@ -3,6 +3,8 @@ import {
   BoxIcon,
   ChartColumnIcon,
   ConvoIcon,
+  FileCheckIcon,
+  FileSignatureIcon,
   ImageIcon,
   NotesIcon,
   TextFileIcon
@@ -91,7 +93,11 @@ export const categoryIcons = {
   'Technical Document': TextFileIcon,
   pdf: TextFileIcon,
   image: ImageIcon,
-  uncategorized: BoxIcon
+  uncategorized: BoxIcon,
+  'technical drawing': FileSignatureIcon,
+  'process flow diagram': FileCheckIcon,
+  'data sheet': TextFileIcon,
+  report: TextFileIcon
 }
 
 export const defaultFolders: Resource[] = [
