@@ -7,32 +7,34 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip'
-import { GraphWorkflowStatus } from '@/lib/types/workflow'
+import { useAuth } from '@/lib/providers/auth-provider'
+import { GraphWorkflowStatus, Workflow } from '@/lib/types/workflow'
 import { LightningIcon } from '@/lib/utils/icons'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { useWorkflows } from '../providers/workflows-provider'
 
 interface ExecuteWorkflowButtonProps {
-  workflowId: string
+  workflow: Workflow
   status?: GraphWorkflowStatus
 }
 
 export function ExecuteWorkflowButton({
-  workflowId,
+  workflow,
   status
 }: ExecuteWorkflowButtonProps) {
   const [isExecuting, setIsExecuting] = useState(false)
-  const { executeWorkflow, runningWorkflows } = useWorkflows()
 
-  // Check if this workflow is currently running
-  const isWorkflowRunning = runningWorkflows.has(workflowId)
+  const { user } = useAuth()
 
   const handleExecute = async () => {
     try {
       setIsExecuting(true)
-      await executeWorkflow(workflowId)
+
+      await fetch('/api/execute-workflow', {
+        method: 'POST',
+        body: JSON.stringify({ workflow, userId: user?.id })
+      })
       toast.success('Workflow executed successfully')
     } catch (error) {
       console.error('Error executing workflow:', error)
@@ -42,7 +44,7 @@ export function ExecuteWorkflowButton({
     }
   }
 
-  if (isWorkflowRunning || isExecuting) {
+  if (isExecuting) {
     return (
       <Button disabled variant={'secondary'} className="gap-2">
         <Loader2 className="h-4 w-4 animate-spin" />

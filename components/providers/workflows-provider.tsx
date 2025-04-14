@@ -1,21 +1,11 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/lib/providers/auth-provider'
 import { Workflow } from '@/lib/types/workflow'
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState
-} from 'react'
+import { createContext, ReactNode, useContext, useState } from 'react'
 import { toast } from 'sonner'
-
 interface WorkflowsContextType {
   workflows: Workflow[]
-  addWorkflow: (workflow: Workflow) => void
-  updateWorkflow: (id: string, updates: Partial<Workflow>) => void
-  removeWorkflow: (id: string) => void
   executeWorkflow: (id: string) => Promise<void>
   runningWorkflows: Set<string>
 }
@@ -26,70 +16,16 @@ const WorkflowsContext = createContext<WorkflowsContextType | undefined>(
 
 export function WorkflowsProvider({
   children,
-  initialWorkflows = []
+  workflows = []
 }: {
   children: ReactNode
-  initialWorkflows?: Workflow[]
+  workflows?: Workflow[]
 }) {
-  const [workflows, setWorkflows] = useState<Workflow[]>(initialWorkflows)
   const [runningWorkflows, setRunningWorkflows] = useState<Set<string>>(
     new Set()
   )
 
-  useEffect(() => {
-    const supabase = createClient()
-
-    // Subscribe to workflow updates
-    const subscription = supabase
-      .channel('workflows')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'workflows'
-        },
-        payload => {
-          if (payload.eventType === 'INSERT') {
-            const newWorkflow = payload.new as Workflow
-            setWorkflows(prev => [...prev, newWorkflow])
-          } else if (payload.eventType === 'UPDATE') {
-            const updatedWorkflow = payload.new as Workflow
-            setWorkflows(prev =>
-              prev.map(workflow =>
-                workflow.id === updatedWorkflow.id ? updatedWorkflow : workflow
-              )
-            )
-          } else if (payload.eventType === 'DELETE') {
-            const deletedWorkflow = payload.old as Workflow
-            setWorkflows(prev =>
-              prev.filter(workflow => workflow.id !== deletedWorkflow.id)
-            )
-          }
-        }
-      )
-      .subscribe()
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [])
-
-  const addWorkflow = (workflow: Workflow) => {
-    setWorkflows(prev => [...prev, workflow])
-  }
-
-  const updateWorkflow = (id: string, updates: Partial<Workflow>) => {
-    setWorkflows(prev =>
-      prev.map(workflow =>
-        workflow.id === id ? { ...workflow, ...updates } : workflow
-      )
-    )
-  }
-
-  const removeWorkflow = (id: string) => {
-    setWorkflows(prev => prev.filter(workflow => workflow.id !== id))
-  }
+  const { user } = useAuth()
 
   const executeWorkflow = async (id: string) => {
     // Prevent executing a workflow that's already running
@@ -109,6 +45,10 @@ export function WorkflowsProvider({
       }
 
       // TODO: Add your execution logic here
+      await fetch('/api/execute-workflow', {
+        method: 'POST',
+        body: JSON.stringify({ workflow, userId: user?.id })
+      })
     } catch (error) {
       console.error('Error executing workflow:', error)
       toast.error('Failed to execute workflow')
@@ -127,9 +67,6 @@ export function WorkflowsProvider({
     <WorkflowsContext.Provider
       value={{
         workflows,
-        addWorkflow,
-        updateWorkflow,
-        removeWorkflow,
         executeWorkflow,
         runningWorkflows
       }}
