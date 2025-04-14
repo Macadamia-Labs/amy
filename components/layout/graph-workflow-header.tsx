@@ -27,7 +27,7 @@ interface WorkflowHeaderProps {
   workflow: GraphWorkflow
 }
 
-export default function WorkflowHeader({ workflow }: WorkflowHeaderProps) {
+export default function GraphWorkflowHeader({ workflow }: WorkflowHeaderProps) {
   const [isExecuting, setIsExecuting] = useState(false)
   const { executeWorkflow, runningWorkflows } = useWorkflows()
   const params = useParams()

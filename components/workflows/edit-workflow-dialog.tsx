@@ -15,6 +15,8 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { updateWorkflow } from '@/lib/actions/workflows'
 import { Workflow } from '@/lib/types/workflow'
 import { PencilIcon } from '@/lib/utils/icons'
@@ -31,6 +33,8 @@ export function EditWorkflowDialog({
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState(workflow.title)
+  const [description, setDescription] = useState(workflow.description)
+  const [instructions, setInstructions] = useState(workflow.instructions)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,12 +48,19 @@ export function EditWorkflowDialog({
     setLoading(true)
 
     try {
-      await updateWorkflow(workflow.id, { title })
+      await updateWorkflow(workflow.id, {
+        title,
+        description,
+        instructions
+      })
+
       toast.success('Workflow updated successfully')
       router.refresh()
       setOpen(false)
     } catch (error) {
-      toast.error('Failed to update workflow')
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to update workflow'
+      )
     } finally {
       setLoading(false)
     }
@@ -68,18 +79,40 @@ export function EditWorkflowDialog({
         <DialogHeader>
           <DialogTitle>Edit Workflow</DialogTitle>
           <DialogDescription>
-            Change the name of your workflow.
+            Make changes to your workflow here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                placeholder="Workflow title"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                autoFocus
+                placeholder="Enter workflow title"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                placeholder="Enter workflow description"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="instructions">Instructions</Label>
+              <Textarea
+                id="instructions"
+                value={instructions}
+                onChange={e => setInstructions(e.target.value)}
+                placeholder="Enter workflow instructions"
+                required
+                className="min-h-[100px]"
               />
             </div>
           </div>

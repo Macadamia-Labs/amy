@@ -1,4 +1,4 @@
-import WorkflowHeader from '@/components/layout/workflow-header'
+import GraphWorkflowHeader from '@/components/layout/graph-workflow-header'
 import { WorkflowsProvider } from '@/components/providers/workflows-provider'
 import { getWorkflow } from '@/data'
 import { notFound } from 'next/navigation'
@@ -20,7 +20,7 @@ export default async function WorkflowLayout({
   return (
     <WorkflowsProvider initialWorkflows={[workflow]}>
       <div className="flex flex-col h-full">
-        <WorkflowHeader workflow={workflow} />
+        <GraphWorkflowHeader workflow={workflow} />
         <div className="flex-1 overflow-auto">{children}</div>
       </div>
     </WorkflowsProvider>

@@ -1,21 +1,22 @@
-'use client'
-import { useWorkflows } from '@/components/providers/workflows-provider'
 import {
   Breadcrumb,
   BreadcrumbItem,
+  BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage
+  BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { PlusIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { EditWorkflowDialog } from '@/components/workflows/edit-workflow-dialog'
+import { Workflow } from '@/lib/types/workflow'
 
-export default function WorkflowsHeader() {
-  const router = useRouter()
-  const { workflows } = useWorkflows()
+interface WorkflowHeaderProps {
+  workflow: Workflow
+}
 
+export default async function WorkflowHeader({
+  workflow
+}: WorkflowHeaderProps) {
   return (
     <header className="flex h-16 items-center gap-2 p-4 w-full">
       <SidebarTrigger className="-ml-1" />
@@ -23,19 +24,16 @@ export default function WorkflowsHeader() {
       <Breadcrumb className="mr-auto">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbPage>Workflows</BreadcrumbPage>
+            <BreadcrumbLink href="/workflows">Workflows </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem className="text-primary">
+            {workflow.title}
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex items-center gap-4">
-        <Button
-          onClick={() => router.push('/workflows/new')}
-          size="sm"
-          className="gap-2"
-        >
-          <PlusIcon className="h-4 w-4" />
-          New Workflow
-        </Button>
+        {workflow && <EditWorkflowDialog workflow={workflow} />}
       </div>
     </header>
   )
