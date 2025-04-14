@@ -55,10 +55,12 @@ export function WorkflowsProvider({
         throw new Error('Workflow not found')
       }
 
-      // TODO: Add your execution logic here
+      console.log('[executeWorkflow] workflow', workflow)
+
+      // Only pass workflowId and userId to the API
       await fetch('/api/execute-workflow', {
         method: 'POST',
-        body: JSON.stringify({ workflow, userId: user?.id })
+        body: JSON.stringify({ workflowId: id, userId: user?.id })
       })
     } catch (error) {
       console.error('Error executing workflow:', error)

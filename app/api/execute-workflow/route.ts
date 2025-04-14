@@ -6,20 +6,62 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const { workflow, userId } = await request.json()
+    const { workflowId, userId } = await request.json()
 
-    if (!workflow || !userId) {
+    console.log('[execute-workflow] workflowId', workflowId)
+    console.log('[execute-workflow] userId', userId)
+
+    if (!workflowId || !userId) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       )
     }
 
-    console.log('[execute-workflow] workflow', workflow)
-
-    const workflowId = workflow.id
-
     const supabase = await createClient()
+
+    // Fetch the complete workflow with its attached resources
+    const { data: workflowData, error: workflowError } = await supabase
+      .from('workflows')
+      .select(
+        `
+        *,
+        workflows_resources!inner (
+          resource_id,
+          resources!inner (
+            id,
+            title,
+            description,
+            content,
+            content_as_text,
+            file_type,
+            created_at,
+            updated_at
+          )
+        )
+      `
+      )
+      .eq('id', workflowId)
+      .single()
+
+    if (workflowError || !workflowData) {
+      return NextResponse.json({ error: 'Workflow not found' }, { status: 404 })
+    }
+
+    // Transform the data to match the Workflow type
+    const workflow = {
+      ...workflowData,
+      resourceIds:
+        workflowData.workflows_resources?.map(
+          (wr: { resource_id: string }) => wr.resource_id
+        ) || [],
+      resources:
+        workflowData.workflows_resources?.map(
+          (wr: { resources: any }) => wr.resources
+        ) || []
+    }
+
+    console.log('[execute-workflow] workflow', workflow)
 
     // Update workflow status to running
     await supabase
@@ -40,7 +82,13 @@ export async function POST(request: NextRequest) {
         ],
         model: 'openai:gpt-4o',
         workflow,
-        userProfile
+        userProfile,
+        resourcesContext: {
+          resourceIds: workflow.resourceIds,
+          resourcesContent: workflow.resources
+            .map((r: any) => r.content_as_text)
+            .join('\n')
+        }
       })
 
       console.log(
