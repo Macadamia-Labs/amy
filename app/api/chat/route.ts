@@ -1,4 +1,3 @@
-import { createManualToolStreamResponse } from '@/lib/streaming/create-manual-tool-stream'
 import { createToolCallingStreamResponse } from '@/lib/streaming/create-tool-calling-stream'
 import { isProviderEnabled, isToolCallSupported } from '@/lib/utils/registry'
 import { cookies } from 'next/headers'
@@ -39,8 +38,6 @@ export async function POST(req: Request) {
     const modelFromCookie = cookieStore.get('selected-model')?.value
     console.log('modelFromCookie:', modelFromCookie)
 
-    const searchMode = true
-
     let model: string
     if (requestModel && typeof requestModel === 'string') {
       model = requestModel
@@ -68,27 +65,15 @@ export async function POST(req: Request) {
       `Model '${model}' supports tool calling: ${supportsToolCalling}`
     )
 
-    return supportsToolCalling
-      ? createToolCallingStreamResponse({
-          messages,
-          model,
-          chatId,
-          searchMode,
-          context,
-          resourcesContext,
-          templateContext,
-          userId
-        })
-      : createManualToolStreamResponse({
-          messages,
-          model,
-          chatId,
-          searchMode,
-          context,
-          resourcesContext,
-          templateContext,
-          userId
-        })
+    return createToolCallingStreamResponse({
+      messages,
+      model,
+      chatId,
+      context,
+      resourcesContext,
+      templateContext,
+      userId
+    })
   } catch (error) {
     console.error('API route error:', error)
     const errorMessage =

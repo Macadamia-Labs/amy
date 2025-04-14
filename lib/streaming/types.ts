@@ -6,7 +6,6 @@ export interface BaseStreamConfig {
   model: string
   chatId: string
   userId: string
-  searchMode: boolean
   context?: {
     content: string
     activeSection: Section | null

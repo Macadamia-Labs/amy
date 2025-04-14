@@ -12,8 +12,8 @@ import { getModel } from '../utils/registry'
 
 const logger = initLogger({
   projectName: 'Amy AI',
-  apiKey: process.env.BRAINTRUST_API_KEY,
-});
+  apiKey: process.env.BRAINTRUST_API_KEY
+})
 
 const USER_NAME = 'Facundo'
 // Needs
@@ -54,7 +54,6 @@ type ResearcherReturn = Parameters<typeof streamText>[0]
 interface ResearcherConfig {
   messages: CoreMessage[]
   model: string
-  searchMode: boolean
   context?: {
     content: string
     activeSection: Section | null
@@ -73,7 +72,6 @@ interface ResearcherConfig {
 export function researcher({
   messages,
   model,
-  searchMode,
   context,
   resourcesContext,
   templateContext,
@@ -129,7 +127,9 @@ export function researcher({
     }
 
     const baseModel = getModel(model)
-    const wrappedModel = process.env.BRAINTRUST_API_KEY ? wrapAISDKModel(baseModel) : baseModel
+    const wrappedModel = process.env.BRAINTRUST_API_KEY
+      ? wrapAISDKModel(baseModel)
+      : baseModel
 
     return {
       model: wrappedModel,
@@ -150,16 +150,23 @@ export function researcher({
           resourcesContext?.resourcesContent
         )
       },
-      maxSteps: searchMode ? 5 : 1,
+      maxSteps: 10,
       experimental_transform: smoothStream({ chunking: 'word' }),
       experimental_telemetry: {
         isEnabled: true,
         metadata: {
-          searchMode,
           hasContext: !!context,
           hasResourcesContext: !!resourcesContext,
           messageCount: messages.length,
-          toolsEnabled: ['retrieve', 'retrieveCodes', 'formatAndSaveIssuesTool', 'findOptions', 'deepSearch', 'imageAnalysis', 'deepReasoning']
+          toolsEnabled: [
+            'retrieve',
+            'retrieveCodes',
+            'formatAndSaveIssuesTool',
+            'findOptions',
+            'deepSearch',
+            'imageAnalysis',
+            'deepReasoning'
+          ]
         }
       }
     }
