@@ -17,7 +17,7 @@ import {
   TableRow,
   Table as UITable
 } from '@/components/ui/table'
-import { WorkflowStatus } from '@/lib/types/workflow'
+import { GraphWorkflowStatus } from '@/lib/types/workflow'
 import { CheckedState } from '@radix-ui/react-checkbox'
 import {
   CheckCircle2,
@@ -33,7 +33,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-const getStatusIcon = (status: WorkflowStatus, isRunning: boolean) => {
+const getStatusIcon = (status: GraphWorkflowStatus, isRunning: boolean) => {
   if (isRunning)
     return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
 
@@ -53,7 +53,7 @@ const getStatusIcon = (status: WorkflowStatus, isRunning: boolean) => {
   }
 }
 
-const getStatusText = (status: WorkflowStatus, isRunning: boolean) => {
+const getStatusText = (status: GraphWorkflowStatus, isRunning: boolean) => {
   if (isRunning) return 'Running'
 
   switch (status) {
@@ -72,7 +72,7 @@ const getStatusText = (status: WorkflowStatus, isRunning: boolean) => {
   }
 }
 
-export function WorkflowsTable() {
+export function GraphWorkflowsTable() {
   const { workflows, removeWorkflow, executeWorkflow, runningWorkflows } =
     useWorkflows()
   const router = useRouter()

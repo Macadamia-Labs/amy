@@ -79,7 +79,7 @@ export function EditWorkflowDialog({
         <DialogHeader>
           <DialogTitle>Edit Workflow</DialogTitle>
           <DialogDescription>
-            Make changes to your workflow here. Click save when you're done.
+            {"Make changes to your workflow here. Click save when you're done."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

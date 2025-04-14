@@ -19,6 +19,9 @@ export function ProjectChats({ projectId }: ProjectChatsProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  )
   const router = useRouter()
   const { createNewChat } = useChatId()
 
@@ -60,8 +63,11 @@ export function ProjectChats({ projectId }: ProjectChatsProps) {
         append={() => Promise.resolve()}
         selectedResourceIds={new Set()}
         setSelectedResourceIds={() => {}}
+        selectedTemplateId={selectedTemplateId}
+        setSelectedTemplateId={setSelectedTemplateId}
         selectedModel=""
         onModelChange={() => {}}
+        isWorkflow={false}
       />
 
       {isLoading ? (

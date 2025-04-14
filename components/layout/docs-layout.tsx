@@ -47,6 +47,7 @@ export function DocsLayout() {
   const isSinglePage =
     resource?.file_type === 'image' ||
     (resource?.content as any).pages.length === 1
+
   // Clean up page tags from content
   const cleanPageTags = (content: string) => {
     return content.replace(/<page number='\d+'>/g, '').replace(/<\/page>/g, '')
