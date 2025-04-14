@@ -6,7 +6,7 @@ const issueSchema = z.object({
       z.object({
         resource_id: z.string().describe('Resource ID of the issue'),
         implementation_steps: z
-          .any()
+          .array(z.string())
           .describe('Implementation steps for the issue'),
         user_id: z.string().describe('User ID associated with the issue'),
         severity: z.string().describe('Severity level of the issue'),

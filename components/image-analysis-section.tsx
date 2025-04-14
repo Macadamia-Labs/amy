@@ -1,6 +1,7 @@
 'use client'
 
 import { ToolInvocation } from 'ai'
+import { useEffect, useState } from 'react'
 import {
   Accordion,
   AccordionContent,
@@ -25,6 +26,23 @@ export function ImageAnalysisSection({
   isOpen,
   onOpenChange
 }: ImageAnalysisSectionProps) {
+  // Sync external state to internal state
+  useEffect(() => {
+    setInternalOpen(isOpen);
+  }, [isOpen]);
+  
+  // Internal state to control accordion
+  const [internalOpen, setInternalOpen] = useState(isOpen);
+  
+  // Handle internal state changes and propagate to parent
+  const handleOpenChange = (value: string) => {
+    const newIsOpen = value === 'image-analysis';
+    setInternalOpen(newIsOpen);
+    if (newIsOpen !== isOpen) {
+      onOpenChange(newIsOpen);
+    }
+  };
+
   // Access args safely with type checking
   const parameters = tool.args as
     | { imageUrl: string; question: string }
@@ -45,8 +63,8 @@ export function ImageAnalysisSection({
     <Accordion
       type="single"
       collapsible
-      value={isOpen ? 'image-analysis' : ''}
-      onValueChange={value => onOpenChange(value === 'image-analysis')}
+      value={internalOpen ? 'image-analysis' : ''}
+      onValueChange={handleOpenChange}
     >
       <AccordionItem value="image-analysis">
         <AccordionTrigger className="text-sm font-medium">

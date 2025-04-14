@@ -4,11 +4,11 @@ import { Message, ToolInvocation } from 'ai'
 import DeepReasoningSection from './deep-reasoning-section'
 import DeepSearchSection from './deep-search-section'
 import FindOptionsSection from './find-options-section'
+import { ImageAnalysisSection } from './image-analysis-section'
 import IssuesSection from './issues-section'
 import RetrieveSection from './retrieve-section'
 import { SearchSection } from './search-section'
 import { VideoSearchSection } from './video-search-section'
-
 interface ToolSectionProps {
   message: Message
   tool: ToolInvocation
@@ -76,6 +76,14 @@ export function ToolSection({
       return (
         <DeepReasoningSection
           message={message}
+          tool={tool}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        />
+      )
+    case 'imageAnalysis':
+      return (
+        <ImageAnalysisSection
           tool={tool}
           isOpen={isOpen}
           onOpenChange={onOpenChange}
