@@ -4,11 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Textarea } from '@/components/ui/textarea'
 import { Toggle } from '@/components/ui/toggle'
+import { updateWorkflow } from '@/lib/actions/workflows'
 import { CheckIcon, PencilIcon, TextFileIcon } from '@/lib/utils/icons'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
-export function InstructionsCard() {
-  const [instructions, setInstructions] = useState('')
+interface InstructionsCardProps {
+  workflowId: string
+  initialInstructions: string
+}
+
+export function InstructionsCard({
+  workflowId,
+  initialInstructions
+}: InstructionsCardProps) {
+  const [instructions, setInstructions] = useState(initialInstructions)
   const [isEditMode, setIsEditMode] = useState(false)
 
   const handleInstructionsChange = (
@@ -18,10 +28,21 @@ export function InstructionsCard() {
     setInstructions(newInstructions)
   }
 
+  const handleSave = async () => {
+    try {
+      await updateWorkflow(workflowId, { instructions })
+      setIsEditMode(false)
+    } catch (error) {
+      toast.error('Error', {
+        description: 'Failed to update instructions'
+      })
+    }
+  }
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      setIsEditMode(false)
+      handleSave()
     }
   }
 
@@ -33,7 +54,13 @@ export function InstructionsCard() {
         </CardTitle>
         <Toggle
           pressed={isEditMode}
-          onPressedChange={setIsEditMode}
+          onPressedChange={pressed => {
+            if (!pressed) {
+              handleSave()
+            } else {
+              setIsEditMode(true)
+            }
+          }}
           className="bg-transparent top-2 right-4 absolute"
         >
           {isEditMode ? <CheckIcon /> : <PencilIcon />}

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import { SmallResourceCard } from '@/app/(app)/workflows/[id]/resources-card'
+import { ResourcesSelector } from '@/components/resources/resources-selector'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -18,31 +20,21 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  attachResourceToWorkflow,
-  createWorkflow
-} from '@/lib/actions/workflows'
+import { createWorkflow } from '@/lib/actions/workflows'
 import { useAuth } from '@/lib/providers/auth-provider'
-import { Workflow } from '@/lib/types/workflow'
-
-interface Resource {
-  id: string
-  name: string
-  type: string
-}
-
+import { useResources } from '../providers/resources-provider'
 export function CreateWorkflowDialog() {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedResources, setSelectedResources] = useState<string[]>([])
+  const { resources } = useResources()
+  const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
+    new Set()
+  )
+  const selectedResources = resources.filter(resource =>
+    selectedResourceIds.has(resource.id)
+  )
   const router = useRouter()
   const { user } = useAuth()
-
-  // TODO: Fetch resources from your data source
-  const resources: Resource[] = [
-    { id: '1', name: 'Project A', type: 'project' },
-    { id: '2', name: 'Document B', type: 'document' }
-  ]
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -56,15 +48,13 @@ export function CreateWorkflowDialog() {
     try {
       if (!user) throw new Error('User not authorized')
 
-      const workflowData = await createWorkflow(title, instructions, user.id)
-      if (!workflowData || !workflowData[0])
-        throw new Error('Failed to create workflow')
-      const workflow = workflowData[0] as Workflow
-
-      // Attach selected resources
-      for (const resourceId of selectedResources) {
-        await attachResourceToWorkflow(workflow.id, resourceId)
-      }
+      const workflow = await createWorkflow(
+        title,
+        description,
+        instructions,
+        user.id,
+        Array.from(selectedResourceIds)
+      )
 
       setOpen(false)
       toast.success('Success', {
@@ -129,39 +119,26 @@ export function CreateWorkflowDialog() {
             </div>
             <div className="space-y-2">
               <Label>Linked Resources</Label>
-              <div className="space-y-2">
-                {resources.map(resource => (
-                  <div
-                    key={resource.id}
-                    className="flex items-center space-x-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id={`resource-${resource.id}`}
-                      checked={selectedResources.includes(resource.id)}
-                      onChange={e => {
-                        if (e.target.checked) {
-                          setSelectedResources([
-                            ...selectedResources,
-                            resource.id
-                          ])
-                        } else {
-                          setSelectedResources(
-                            selectedResources.filter(id => id !== resource.id)
-                          )
-                        }
-                      }}
-                    />
-                    <Label htmlFor={`resource-${resource.id}`}>
-                      {resource.name} ({resource.type})
-                    </Label>
-                  </div>
-                ))}
-              </div>
+              {selectedResources.map((resource: any) => (
+                <SmallResourceCard key={resource.id} resource={resource} />
+              ))}
+              <ResourcesSelector
+                selectedIds={selectedResourceIds}
+                onSelect={setSelectedResourceIds}
+                trigger={
+                  <Button variant="secondary" className="w-full rounded-lg">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                }
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="rounded-lg w-full"
+            >
               {isLoading ? 'Creating...' : 'Create workflow'}
             </Button>
           </DialogFooter>

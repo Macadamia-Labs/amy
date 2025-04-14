@@ -1,6 +1,6 @@
 'use client'
 
-import { MoreHorizontalIcon } from '@/lib/utils/icons'
+import { LightningIcon, MoreHorizontalIcon } from '@/lib/utils/icons'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
@@ -20,32 +20,32 @@ import {
   useSidebar
 } from '@/components/ui/sidebar'
 import { CreateWorkflowDialog } from '@/components/workflows/create-workflow-dialog'
+import { Workflow } from '@/lib/types/workflow'
 import { useRouter } from 'next/navigation'
 
-interface Workflow {
-  id: string
-  name: string
-  description: string
-  icon: string
-}
-
-const workflows: Workflow[] = [
+const defaultWorkflows: Workflow[] = [
   {
     id: 'check-bom',
-    name: 'Check error bill of materials in drawings',
+    title: 'Check error bill of materials in drawings',
     description:
       'Verify and validate bill of materials in engineering drawings',
-    icon: '📋'
+    icon: '📋',
+    instructions: 'Check the bill of materials for errors'
   },
   {
     id: 'code-compliance-check',
-    name: 'Code compliance check',
+    title: 'Code compliance check',
     description: 'Check code compliance of a project',
-    icon: '📂'
+    icon: '📂',
+    instructions: 'Check the code compliance of a project'
   }
 ]
 
-export function NavWorkflows() {
+export function NavWorkflows({
+  workflows = defaultWorkflows
+}: {
+  workflows?: Workflow[]
+}) {
   const { isMobile } = useSidebar()
   const router = useRouter()
   const [showAll, setShowAll] = useState(false)
@@ -66,8 +66,10 @@ export function NavWorkflows() {
                 router.push(`/workflows/${workflow.id}`)
               }}
             >
-              <span className="text-lg">{workflow.icon}</span>
-              <span>{workflow.name}</span>
+              <span className="text-lg">
+                {workflow.icon || <LightningIcon className="size-4" />}{' '}
+              </span>
+              <span>{workflow.title || 'Untitled'}</span>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

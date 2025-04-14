@@ -4,23 +4,83 @@ import { useResources } from '@/components/providers/resources-provider'
 import { ResourcesSelector } from '@/components/resources/resources-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  attachResourceToWorkflow,
+  detachResourceFromWorkflow
+} from '@/lib/actions/workflows'
+import { Resource } from '@/lib/types/resource'
 import { BoxIcon } from '@/lib/utils/icons'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
-export function ResourcesCard() {
+export const SmallResourceCard = ({ resource }: { resource: Resource }) => {
+  return (
+    <div
+      key={resource.id}
+      className="flex items-center justify-between p-2 bg-muted  rounded-lg"
+    >
+      <div>
+        <p className="font-medium">{resource.title}</p>
+        <p className="text-sm text-muted-foreground line-clamp-1">
+          {resource.description}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+interface ResourcesCardProps {
+  workflowId: string
+  initialResourceIds: string[]
+}
+
+export function ResourcesCard({
+  workflowId,
+  initialResourceIds
+}: ResourcesCardProps) {
   const { resources } = useResources()
-
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
-    new Set()
+    new Set(initialResourceIds)
   )
   const attachedResources = resources.filter(resource =>
     selectedResourceIds.has(resource.id)
   )
 
-  const handleResourceSelect = (ids: Set<string>) => {
+  const handleResourceSelect = async (ids: Set<string>) => {
+    // Find resources to add and remove
+    const resourcesToAdd = Array.from(ids).filter(
+      id => !selectedResourceIds.has(id)
+    )
+    const resourcesToRemove = Array.from(selectedResourceIds).filter(
+      id => !ids.has(id)
+    )
+
+    // Update local state
     setSelectedResourceIds(ids)
-    const selectedResources = resources.filter(resource => ids.has(resource.id))
+
+    // Update in Supabase
+    try {
+      // Attach new resources
+      await Promise.all(
+        resourcesToAdd.map(resourceId =>
+          attachResourceToWorkflow(workflowId, resourceId)
+        )
+      )
+
+      // Detach removed resources
+      await Promise.all(
+        resourcesToRemove.map(resourceId =>
+          detachResourceFromWorkflow(workflowId, resourceId)
+        )
+      )
+    } catch (error) {
+      toast.error('Error', {
+        description: 'Failed to update resources'
+      })
+      // Revert local state on error
+      setSelectedResourceIds(selectedResourceIds)
+    }
   }
 
   const ghostTrigger = (
@@ -50,18 +110,8 @@ export function ResourcesCard() {
           </div>
         ) : (
           <div className="space-y-4">
-            {attachedResources.map(resource => (
-              <div
-                key={resource.id}
-                className="flex items-center justify-between p-2 bg-muted  rounded-lg"
-              >
-                <div>
-                  <p className="font-medium">{resource.title}</p>
-                  <p className="text-sm text-muted-foreground line-clamp-1">
-                    {resource.description}
-                  </p>
-                </div>
-              </div>
+            {attachedResources.map((resource: any) => (
+              <SmallResourceCard key={resource.id} resource={resource} />
             ))}
           </div>
         )}

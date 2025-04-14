@@ -6,16 +6,37 @@ import { Workflow } from '../types/workflow'
 
 export async function createWorkflow(
   title: string,
+  description: string,
   instructions: string,
-  userId: string
+  userId: string,
+  resourceIds?: string[]
 ) {
   const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('workflows')
-    .insert({ title, instructions, user_id: userId })
 
-  if (error) throw error
-  return data
+  // Start a transaction
+  const { data: workflow, error: workflowError } = await supabase
+    .from('workflows')
+    .insert({ title, description, instructions, user_id: userId })
+    .select()
+    .single()
+
+  if (workflowError) throw workflowError
+
+  // If resourceIds are provided, attach them
+  if (resourceIds && resourceIds.length > 0) {
+    const { error: attachError } = await supabase
+      .from('workflows_resources')
+      .insert(
+        resourceIds.map(resourceId => ({
+          workflow_id: workflow.id,
+          resource_id: resourceId
+        }))
+      )
+
+    if (attachError) throw attachError
+  }
+
+  return workflow
 }
 
 export async function attachResourceToWorkflow(
@@ -23,12 +44,11 @@ export async function attachResourceToWorkflow(
   resourceId: string
 ) {
   const supabase = await createClient()
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('workflows_resources')
     .insert({ workflow_id: workflowId, resource_id: resourceId })
 
   if (error) throw error
-  return data
 }
 
 export async function detachResourceFromWorkflow(
@@ -59,12 +79,27 @@ export async function fetchWorkflow(id: string) {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('workflows')
-    .select('*')
+    .select(
+      `
+      *,
+      workflows_resources (
+        resource_id
+      )
+    `
+    )
     .eq('id', id)
     .maybeSingle()
 
   if (error) throw error
+
+  // Transform the data to include resourceIds
   return data
+    ? {
+        ...data,
+        resourceIds:
+          data.workflows_resources?.map((wr: any) => wr.resource_id) || []
+      }
+    : null
 }
 
 export async function fetchWorkflows() {

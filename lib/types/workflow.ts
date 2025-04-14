@@ -5,7 +5,9 @@ import { CADNode } from './node-types'
 export interface Workflow {
   id: string
   title: string
+  description: string
   instructions: string
+  icon?: string
 }
 
 export type GraphWorkflowStatus =
