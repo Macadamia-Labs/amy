@@ -1,5 +1,6 @@
 'use client'
 
+import { useWorkflows } from '@/components/providers/workflows-provider'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Textarea } from '@/components/ui/textarea'
@@ -18,6 +19,7 @@ export function InstructionsCard({
   workflowId,
   initialInstructions
 }: InstructionsCardProps) {
+  const { updateWorkflow: updateWorkflowInContext } = useWorkflows()
   const [instructions, setInstructions] = useState(initialInstructions)
   const [isEditMode, setIsEditMode] = useState(false)
 
@@ -31,6 +33,7 @@ export function InstructionsCard({
   const handleSave = async () => {
     try {
       await updateWorkflow(workflowId, { instructions })
+      updateWorkflowInContext(workflowId, { instructions })
       setIsEditMode(false)
     } catch (error) {
       toast.error('Error', {

@@ -15,5 +15,5 @@ export interface BaseStreamConfig {
     resourceIds: string[]
     resourcesContent: string
   }
-  workflowContext?: any
+  workflow?: any
 }

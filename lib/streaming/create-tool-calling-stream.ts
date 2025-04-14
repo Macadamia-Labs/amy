@@ -18,7 +18,7 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
         chatId,
         context,
         resourcesContext,
-        workflowContext,
+        workflow,
         userId,
         userProfile
       } = config
@@ -35,7 +35,7 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
           model,
           context,
           resourcesContext,
-          workflowContext,
+          workflow,
           dataStream,
           userProfile
         })

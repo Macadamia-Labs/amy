@@ -4,9 +4,11 @@ import { useAuth } from '@/lib/providers/auth-provider'
 import { Workflow } from '@/lib/types/workflow'
 import { createContext, ReactNode, useContext, useState } from 'react'
 import { toast } from 'sonner'
+
 interface WorkflowsContextType {
   workflows: Workflow[]
   executeWorkflow: (id: string) => Promise<void>
+  updateWorkflow: (id: string, updates: Partial<Workflow>) => void
   runningWorkflows: Set<string>
 }
 
@@ -21,11 +23,20 @@ export function WorkflowsProvider({
   children: ReactNode
   workflows?: Workflow[]
 }) {
+  const [workflowsState, setWorkflowsState] = useState<Workflow[]>(workflows)
   const [runningWorkflows, setRunningWorkflows] = useState<Set<string>>(
     new Set()
   )
 
   const { user } = useAuth()
+
+  const updateWorkflow = (id: string, updates: Partial<Workflow>) => {
+    setWorkflowsState(prev =>
+      prev.map(workflow =>
+        workflow.id === id ? { ...workflow, ...updates } : workflow
+      )
+    )
+  }
 
   const executeWorkflow = async (id: string) => {
     // Prevent executing a workflow that's already running
@@ -39,7 +50,7 @@ export function WorkflowsProvider({
       setRunningWorkflows(prev => new Set([...prev, id]))
 
       // Get the workflow
-      const workflow = workflows.find(w => w.id === id)
+      const workflow = workflowsState.find(w => w.id === id)
       if (!workflow) {
         throw new Error('Workflow not found')
       }
@@ -66,8 +77,9 @@ export function WorkflowsProvider({
   return (
     <WorkflowsContext.Provider
       value={{
-        workflows,
+        workflows: workflowsState,
         executeWorkflow,
+        updateWorkflow,
         runningWorkflows
       }}
     >

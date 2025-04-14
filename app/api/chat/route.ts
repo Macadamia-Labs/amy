@@ -17,6 +17,7 @@ export async function POST(req: Request) {
       context,
       resourcesContext,
       templateContext,
+      workflow,
       workflowContext,
       body,
       model: requestModel
@@ -24,6 +25,8 @@ export async function POST(req: Request) {
 
     console.log('resourcesContext', resourcesContext)
     console.log('templateContext', templateContext)
+    console.log('workflow', workflow)
+    console.log('workflowContext', workflowContext)
     console.log('body', body)
     console.log('requestModel from body:', requestModel)
 
@@ -76,7 +79,7 @@ export async function POST(req: Request) {
       chatId,
       context,
       resourcesContext,
-      workflowContext,
+      workflow,
       userId,
       userProfile
     })

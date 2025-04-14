@@ -1,9 +1,15 @@
 'use client'
 
 import { useResources } from '@/components/providers/resources-provider'
+import { useWorkflows } from '@/components/providers/workflows-provider'
 import { ResourcesSelector } from '@/components/resources/resources-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
 import {
   attachResourceToWorkflow,
   detachResourceFromWorkflow
@@ -11,22 +17,35 @@ import {
 import { Resource } from '@/lib/types/resource'
 import { BoxIcon } from '@/lib/utils/icons'
 import { Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 export const SmallResourceCard = ({ resource }: { resource: Resource }) => {
+  const router = useRouter()
+
   return (
-    <div
-      key={resource.id}
-      className="flex items-center justify-between p-2 bg-muted  rounded-lg"
-    >
-      <div>
-        <p className="font-medium">{resource.title}</p>
-        <p className="text-sm text-muted-foreground line-clamp-1">
-          {resource.description}
-        </p>
-      </div>
-    </div>
+    <Popover>
+      <PopoverTrigger asChild>
+        <div className="flex items-center justify-between p-2 bg-muted rounded-lg cursor-pointer hover:bg-primary/5 transition-colors">
+          <div>
+            <p className="font-medium">{resource.title}</p>
+            <p className="text-sm text-muted-foreground line-clamp-1">
+              {resource.description}
+            </p>
+          </div>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-1 rounded-xl">
+        <Button
+          variant="ghost"
+          className="w-full"
+          onClick={() => router.push(`/resources/${resource.id}`)}
+        >
+          Inspect Resource
+        </Button>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -40,6 +59,7 @@ export function ResourcesCard({
   initialResourceIds
 }: ResourcesCardProps) {
   const { resources } = useResources()
+  const { updateWorkflow } = useWorkflows()
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
     new Set(initialResourceIds)
   )
@@ -74,6 +94,11 @@ export function ResourcesCard({
           detachResourceFromWorkflow(workflowId, resourceId)
         )
       )
+
+      // Update workflow in context
+      updateWorkflow(workflowId, {
+        resourceIds: Array.from(ids)
+      })
     } catch (error) {
       toast.error('Error', {
         description: 'Failed to update resources'

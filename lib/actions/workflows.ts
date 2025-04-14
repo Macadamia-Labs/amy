@@ -92,14 +92,13 @@ export async function fetchWorkflow(id: string) {
 
   if (error) throw error
 
-  // Transform the data to include resourceIds
-  return data
-    ? {
-        ...data,
-        resourceIds:
-          data.workflows_resources?.map((wr: any) => wr.resource_id) || []
-      }
-    : null
+  if (!data) return null
+
+  const { workflows_resources, ...workflowData } = data
+  return {
+    ...workflowData,
+    resourceIds: workflows_resources?.map((wr: any) => wr.resource_id) || []
+  }
 }
 
 export async function fetchWorkflows() {

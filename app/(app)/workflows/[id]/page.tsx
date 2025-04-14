@@ -16,7 +16,7 @@ const defaultWorkflows: Workflow[] = [
     instructions:
       '1. Open the drawing\n2. Check the BOM section\n3. Verify all components are listed\n4. Cross-reference with the parts list',
     resourceIds: [],
-    status: 'active'
+    status: 'draft'
   },
   {
     id: 'code-compliance-check',
@@ -26,7 +26,7 @@ const defaultWorkflows: Workflow[] = [
     instructions:
       '1. Review applicable codes\n2. Check design against code requirements\n3. Document any non-compliance\n4. Suggest corrective actions',
     resourceIds: [],
-    status: 'active'
+    status: 'draft'
   }
 ]
 
@@ -72,7 +72,7 @@ export default async function WorkflowPage({
             initialInstructions={workflow.instructions}
           />
           <div>
-            <Chat id={id} isWorkflow={true} />
+            <Chat id={id} isWorkflow={true} workflowContext={workflow} />
           </div>
         </div>
 

@@ -39,12 +39,7 @@ export async function POST(request: NextRequest) {
           }
         ],
         model: 'openai:gpt-4o',
-        workflowContext: {
-          title: workflow.title,
-          description: workflow.description,
-          instructions: workflow.instructions,
-          resources: workflow.resources
-        },
+        workflow,
         userProfile
       })
 
@@ -52,12 +47,14 @@ export async function POST(request: NextRequest) {
         '[execute-workflow] researcherConfig messages',
         researcherConfig.messages
       )
-      const result = await generateText(researcherConfig)
+      const { text } = await generateText(researcherConfig)
+
+      console.log('[execute-workflow] result', text)
 
       // Store execution results
       await supabase.from('workflow_executions').insert({
         workflow_id: workflowId,
-        result: result,
+        result: text,
         status: 'completed'
       })
 
@@ -73,7 +70,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         status: 'completed',
         message: 'Workflow executed successfully',
-        result
+        result: text
       })
     } catch (error) {
       // Update workflow status to failed

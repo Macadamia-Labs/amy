@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/lib/providers/auth-provider'
+import { Workflow } from '@/lib/types/workflow'
 import { useChat } from '@ai-sdk/react'
 import { ChatRequestOptions, CoreMessage, Message } from 'ai'
 import { toast } from 'sonner'
@@ -29,10 +30,7 @@ interface UseToolChatProps {
     resourceIds: string[]
     resourcesContent: string
   }
-  workflowContext?: {
-    workflowId: string
-    workflow: any
-  }
+  workflow?: Workflow
   selectedModel?: string
   projectId?: string
 }
@@ -41,7 +39,7 @@ export function useToolChat({
   id,
   initialMessages,
   resourcesContext,
-  workflowContext,
+  workflow,
   selectedModel,
   projectId
 }: UseToolChatProps) {
@@ -70,7 +68,7 @@ export function useToolChat({
     body: {
       id,
       resourcesContext,
-      workflowContext,
+      workflow,
       model: selectedModel,
       userId,
       projectId

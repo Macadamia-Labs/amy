@@ -3,6 +3,7 @@
 import { useResources } from '@/components/providers/resources-provider'
 import { useToolChat } from '@/hooks/use-tool-chat'
 import { useChatId } from '@/lib/hooks/use-chat-id'
+import { Workflow } from '@/lib/types/workflow'
 import { cn, generateUUID } from '@/lib/utils/helpers'
 import { JSONValue, Message } from 'ai'
 import React, { useEffect, useState } from 'react'
@@ -25,13 +26,18 @@ export function Chat({
   projectId?: string
   newConversation?: boolean
   isWorkflow?: boolean
-  workflowContext?: any
+  workflowContext?: Workflow
 }) {
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
-    new Set()
+    () => {
+      if (workflowContext?.resourceIds) {
+        return new Set(workflowContext.resourceIds)
+      }
+      return new Set<string>()
+    }
   )
   const [selectedWorkflowId, setSelectedWorkflowId] = useState<string | null>(
-    null
+    workflowContext ? workflowContext.id : null
   )
   const { resources } = useResources()
   const { chatId } = useChatId()
@@ -45,11 +51,6 @@ export function Chat({
       .filter(Boolean)
       .join('\n\n---\n\n')
   }, [resources, selectedResourceIds])
-
-  const selectedWorkflowContent = React.useMemo(() => {
-    if (!selectedWorkflowId) return undefined
-    return workflowContext
-  }, [selectedWorkflowId, workflowContext])
 
   const {
     messages,
@@ -70,12 +71,7 @@ export function Chat({
       resourceIds: Array.from(selectedResourceIds),
       resourcesContent: selectedResourcesContent
     },
-    workflowContext: selectedWorkflowContent
-      ? {
-          workflowId: selectedWorkflowId!,
-          workflow: selectedWorkflowContent
-        }
-      : undefined,
+    workflow: workflowContext,
     projectId,
     selectedModel: 'google:gemini-2.0-flash-001'
   })
