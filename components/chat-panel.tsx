@@ -93,7 +93,7 @@ export function ChatPanel({
         <Textarea
           ref={inputRef}
           name="input"
-          rows={2}
+          rows={1}
           maxRows={5}
           tabIndex={0}
           onCompositionStart={handleCompositionStart}
@@ -101,7 +101,7 @@ export function ChatPanel({
           placeholder="Ask a question..."
           spellCheck={false}
           value={input}
-          className="resize-none w-full min-h-12 bg-transparent border-0 p-5 text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="resize-none w-full bg-transparent border-0 p-5 text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           onChange={e => {
             handleInputChange(e)
             setShowEmptyScreen(e.target.value.length === 0)
