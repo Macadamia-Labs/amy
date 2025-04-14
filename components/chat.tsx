@@ -40,7 +40,8 @@ export function Chat({
     null
   )
   const { resources } = useResources()
-  const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
+  // const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
+  const [selectedModel, setSelectedModel] = useState('google:gemini-2.0-flash-001')
   const { chatId } = useChatId()
 
   const selectedResourcesContent = React.useMemo(() => {

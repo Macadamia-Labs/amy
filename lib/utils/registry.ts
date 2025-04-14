@@ -6,9 +6,9 @@ import { google } from '@ai-sdk/google'
 import { groq } from '@ai-sdk/groq'
 import { createOpenAI, openai } from '@ai-sdk/openai'
 import {
-    experimental_createProviderRegistry as createProviderRegistry,
-    extractReasoningMiddleware,
-    wrapLanguageModel
+  experimental_createProviderRegistry as createProviderRegistry,
+  extractReasoningMiddleware,
+  wrapLanguageModel
 } from 'ai'
 import { createOllama } from 'ollama-ai-provider'
 
@@ -130,7 +130,7 @@ export function getToolCallModel(model?: string) {
         process.env.NEXT_PUBLIC_OLLAMA_TOOL_CALL_MODEL || modelName
       return getModel(`ollama:${ollamaModel}`)
     case 'google':
-      return getModel('google:gemini-2.0-flash')
+      return getModel('google:gemini-2.0-flash-001')
     default:
       return getModel('openai:gpt-4o-mini')
   }
@@ -145,7 +145,10 @@ export function isToolCallSupported(model?: string) {
   }
 
   if (provider === 'google') {
-    return false
+    return (
+      modelName?.includes('gemini-2.0-flash-001') ||
+      modelName?.includes('gemini-2.5-pro-exp-03-25')
+    )
   }
 
   if (provider === 'openai') {

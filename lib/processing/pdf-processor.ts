@@ -16,7 +16,7 @@ export async function processPDF(
   console.log('[process-pdf] User ID:', userId)
 
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 300000) // 5 minute timeout
+  const timeoutId = setTimeout(() => controller.abort(), 3000000) // 50 minute timeout
 
   try {
     const response = await fetch(processingEndpoint, {

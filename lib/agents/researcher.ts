@@ -1,14 +1,7 @@
-import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
-import { initLogger, wrapAISDKModel } from 'braintrust'
-import { Section } from '../providers/document-provider'
-import { deepReasoningTool } from '../tools/deep-reasoning'
-import { deepSearchTool } from '../tools/deep-search'
-import { formatAndSaveIssuesTool } from '../tools/find-issues'
-import { findOptionsTool } from '../tools/find-options'
-import { imageAnalysisTool } from '../tools/image-analysis'
-import { retrieveTool } from '../tools/retrieve'
-import { retrieveCodesTool } from '../tools/retrieve-codes'
-import { getModel } from '../utils/registry'
+import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai';
+import { initLogger, wrapAISDKModel } from 'braintrust';
+import { Section } from '../providers/document-provider';
+import { getModel } from '../utils/registry';
 
 const logger = initLogger({
   projectName: 'Amy AI',
@@ -33,20 +26,8 @@ const RESOURCES_LIST = `
 const SYSTEM_PROMPT = `
 Instructions:
 
-You are Cooper, a helpful AI assistant that helps navigate the knowledge base of an engineering firm.
-
-When asked a question, you should:
-1. Use the retrieve tool to find information in the knowledge base
-2. Always cite sources using the [number](url) format, matching the order of search results. If multiple sources are relevant, include all of them, and comma separate them. Only use information that has a URL available for citation.
-3. If results are not relevant or helpful, rely on your general knowledge
-4. Provide comprehensive and detailed responses based on search results, ensuring thorough coverage of the user's question
-5. Use markdown to structure your responses. Use headings to break up the content into sections.
-6. Use the formatIssues tool to format found issues and errors into a structured format for a bug report.
-7. Use the deepSearch tool to search the knowledge base for issues based on a number of resources.
-8. Use the findOptions tool to find options for the user's question.
+You are Cooper, an expert mechanical engineer. You are given documents to analyze and answer user questions about them. 
 9. Use the imageAnalysis tool to analyze images in more detail and retrieve further important technical details in case not clear from the extracted initial content provided to you.
-Citation Format: 
-[number](url)
 `
 
 type ResearcherReturn = Parameters<typeof streamText>[0]
@@ -136,19 +117,19 @@ export function researcher({
       system: fullPrompt,
       messages,
       tools: {
-        retrieve: retrieveTool,
-        retrieveCodes: retrieveCodesTool,
-        formatAndSaveIssuesTool: formatAndSaveIssuesTool,
-        findOptions: findOptionsTool,
-        deepSearch: deepSearchTool(
-          dataStream,
-          resourcesContext?.resourcesContent
-        ),
-        imageAnalysis: imageAnalysisTool,
-        deepReasoning: deepReasoningTool(
-          dataStream,
-          resourcesContext?.resourcesContent
-        )
+        // retrieve: retrieveTool,
+        // retrieveCodes: retrieveCodesTool,
+        // formatAndSaveIssuesTool: formatAndSaveIssuesTool,
+        // findOptions: findOptionsTool,
+        // deepSearch: deepSearchTool(
+        //   dataStream,
+        //   resourcesContext?.resourcesContent
+        // ),
+        // imageAnalysis: imageAnalysisTool,
+        // deepReasoning: deepReasoningTool(
+        //   dataStream,
+        //   resourcesContext?.resourcesContent
+        // )
       },
       maxSteps: 10,
       experimental_transform: smoothStream({ chunking: 'word' }),
