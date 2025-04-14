@@ -18,11 +18,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { updateWorkflow } from '@/lib/actions/workflows'
-import { Workflow } from '@/lib/types/workflow'
+import { GraphWorkflow } from '@/lib/types/workflow'
 import { PencilIcon } from '@/lib/utils/icons'
 
 interface EditWorkflowDialogProps {
-  workflow: Workflow
+  workflow: GraphWorkflow
   trigger?: React.ReactNode
 }
 
@@ -34,7 +34,6 @@ export function EditWorkflowDialog({
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState(workflow.title)
   const [description, setDescription] = useState(workflow.description)
-  const [instructions, setInstructions] = useState(workflow.instructions)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,8 +49,7 @@ export function EditWorkflowDialog({
     try {
       await updateWorkflow(workflow.id, {
         title,
-        description,
-        instructions
+        description
       })
 
       toast.success('Workflow updated successfully')
@@ -102,17 +100,6 @@ export function EditWorkflowDialog({
                 onChange={e => setDescription(e.target.value)}
                 placeholder="Enter workflow description"
                 required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="instructions">Instructions</Label>
-              <Textarea
-                id="instructions"
-                value={instructions}
-                onChange={e => setInstructions(e.target.value)}
-                placeholder="Enter workflow instructions"
-                required
-                className="min-h-[100px]"
               />
             </div>
           </div>

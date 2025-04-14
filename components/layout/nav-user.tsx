@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/sidebar'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { useTheme } from 'next-themes'
+import Link from 'next/link'
 
 export function NavUser() {
   const { isMobile } = useSidebar()
@@ -113,9 +114,11 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserIcon className="size-4 mr-2" />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="/account">
+                  <UserIcon className="size-4 mr-2" />
+                  Account
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <BellIcon className="size-4 mr-2" />

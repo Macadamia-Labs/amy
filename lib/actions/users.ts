@@ -22,3 +22,16 @@ export async function getUserProfile(userId: string) {
   if (error) throw error
   return data
 }
+
+export async function updateUserProfile(
+  userId: string,
+  data: { name: string; company: string }
+) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('user_profiles')
+    .update({ name: data.name, company: data.company })
+    .eq('user_id', userId)
+
+  if (error) throw error
+}

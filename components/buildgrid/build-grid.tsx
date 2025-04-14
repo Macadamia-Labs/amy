@@ -25,7 +25,7 @@ import {
 } from '@/components/nodes/resource-node'
 import { SimulationNode } from '@/components/nodes/simulation-node'
 import { SpecsNode } from '@/components/nodes/specs-node'
-import { useWorkflows } from '@/components/providers/workflows-provider'
+import { useWorkflows } from '@/components/providers/graph-workflows-provider'
 import { CADNode } from '@/lib/types/node-types'
 
 // Define a more flexible type for node types to accommodate type checking

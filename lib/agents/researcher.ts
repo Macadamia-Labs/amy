@@ -1,18 +1,12 @@
-import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai';
-import { initLogger, wrapAISDKModel } from 'braintrust';
-import { Section } from '../providers/document-provider';
-import { getModel } from '../utils/registry';
+import { CoreMessage, DataStreamWriter, smoothStream, streamText } from 'ai'
+import { initLogger, wrapAISDKModel } from 'braintrust'
+import { Section } from '../providers/document-provider'
+import { getModel } from '../utils/registry'
 
 const logger = initLogger({
   projectName: 'Amy AI',
   apiKey: process.env.BRAINTRUST_API_KEY
 })
-
-const USER_NAME = 'Facundo'
-// Needs
-const COMPANY_PROFILE = `
-Proyectos Engineering. It is a 90-person, multi-disciplinary Architecture & Engineering Design (A/E) and Project Management firm.
-`
 
 const PROJECTS_COUNT = 1
 const PROJECTS_LIST = `
@@ -35,6 +29,7 @@ type ResearcherReturn = Parameters<typeof streamText>[0]
 interface ResearcherConfig {
   messages: CoreMessage[]
   model: string
+  userProfile: any
   context?: {
     content: string
     activeSection: Section | null
@@ -43,19 +38,17 @@ interface ResearcherConfig {
     resourceIds: string[]
     resourcesContent: string
   }
-  templateContext?: {
-    templateId: string
-    templateContent: string
-  }
+  workflowContext?: any
   dataStream?: DataStreamWriter
 }
 
 export function researcher({
   messages,
   model,
+  userProfile,
   context,
   resourcesContext,
-  templateContext,
+  workflowContext,
   dataStream
 }: ResearcherConfig): ResearcherReturn {
   try {
@@ -64,7 +57,9 @@ export function researcher({
 
     const infoPrompt = `
         Here is a general overview of how the platform works:
-        The user's name is ${USER_NAME} and their company is ${COMPANY_PROFILE}
+        The user's name is ${userProfile.name} and their company is ${
+      userProfile.company
+    }
         They have ${PROJECTS_COUNT} projects on the platform:
         ${PROJECTS_LIST}
         They have ${RESOURCES_COUNT} resources in their knowledge base.
@@ -79,12 +74,12 @@ export function researcher({
 
     fullPrompt += infoPrompt
 
-    if (templateContext) {
-      fullPrompt += `\n\nTemplate Context:
-      The user has selected an instructions template.
+    if (workflowContext) {
+      fullPrompt += `\n\nWorkflow Context:
+      The user has selected a workflow to perform.
     
       Follow these instructions to perform the desired task:
-      ${templateContext.templateContent}
+      ${JSON.stringify(workflowContext)}
       `
     }
 

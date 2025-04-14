@@ -1,5 +1,5 @@
 'use client'
-import { useWorkflows } from '@/components/providers/workflows-provider'
+import { useWorkflows } from '@/components/providers/graph-workflows-provider'
 import {
   Breadcrumb,
   BreadcrumbItem,

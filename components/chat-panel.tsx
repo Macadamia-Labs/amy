@@ -1,5 +1,7 @@
 'use client'
 
+import { WorkflowSelector } from '@/components/templates/workflow-selector'
+import { Button } from '@/components/ui/button'
 import { useChatId } from '@/lib/hooks/use-chat-id'
 import { cn } from '@/lib/utils'
 import { Message } from 'ai'
@@ -9,8 +11,6 @@ import { useEffect, useRef, useState } from 'react'
 import Textarea from 'react-textarea-autosize'
 import { EmptyScreen } from './empty-screen'
 import { ResourcesSelector } from './resources/resources-selector'
-import { TemplateSelector } from './templates/template-selector'
-import { Button } from './ui/button'
 
 interface ChatPanelProps {
   input: string
@@ -24,10 +24,8 @@ interface ChatPanelProps {
   append: (message: Message) => void
   selectedResourceIds: Set<string>
   setSelectedResourceIds: (ids: Set<string>) => void
-  selectedTemplateId: string | null
-  setSelectedTemplateId: (id: string | null) => void
-  selectedModel: string
-  onModelChange: (model: string) => void
+  selectedWorkflowId: string | null
+  setSelectedWorkflowId: (id: string | null) => void
   isWorkflow: boolean
 }
 
@@ -43,10 +41,8 @@ export function ChatPanel({
   append,
   selectedResourceIds,
   setSelectedResourceIds,
-  selectedTemplateId,
-  setSelectedTemplateId,
-  selectedModel,
-  onModelChange,
+  selectedWorkflowId,
+  setSelectedWorkflowId,
   isWorkflow
 }: ChatPanelProps) {
   const [showEmptyScreen, setShowEmptyScreen] = useState(false)
@@ -137,16 +133,15 @@ export function ChatPanel({
                 selectedIds={selectedResourceIds}
                 onSelect={setSelectedResourceIds}
               />
-              <TemplateSelector
+              <WorkflowSelector
                 selectedIds={
-                  new Set(selectedTemplateId ? [selectedTemplateId] : [])
+                  new Set(selectedWorkflowId ? [selectedWorkflowId] : [])
                 }
                 onSelect={ids =>
-                  setSelectedTemplateId(
+                  setSelectedWorkflowId(
                     ids.size > 0 ? Array.from(ids)[0] : null
                   )
                 }
-                onCreateTemplate={() => {}}
               />
             </div>
           )}
@@ -179,7 +174,7 @@ export function ChatPanel({
         </div>
       </div>
 
-      {!isWorkflow && messages.length === 0 && (
+      {!isWorkflow && messages.length === 0 && showEmptyScreen && (
         <EmptyScreen
           submitMessage={message => {
             handleInputChange({

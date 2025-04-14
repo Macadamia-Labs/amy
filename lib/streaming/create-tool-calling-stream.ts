@@ -18,8 +18,9 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
         chatId,
         context,
         resourcesContext,
-        templateContext,
-        userId
+        workflowContext,
+        userId,
+        userProfile
       } = config
 
       try {
@@ -29,13 +30,14 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
           getMaxAllowedTokens(model)
         )
 
-        let researcherConfig = await researcher({
+        let researcherConfig = researcher({
           messages: truncatedMessages,
           model,
           context,
           resourcesContext,
-          templateContext,
-          dataStream
+          workflowContext,
+          dataStream,
+          userProfile
         })
 
         const result = streamText({

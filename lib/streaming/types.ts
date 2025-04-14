@@ -6,6 +6,7 @@ export interface BaseStreamConfig {
   model: string
   chatId: string
   userId: string
+  userProfile: any
   context?: {
     content: string
     activeSection: Section | null
@@ -14,8 +15,5 @@ export interface BaseStreamConfig {
     resourceIds: string[]
     resourcesContent: string
   }
-  templateContext?: {
-    templateId: string
-    templateContent: string
-  }
+  workflowContext?: any
 }

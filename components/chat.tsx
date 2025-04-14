@@ -8,15 +8,7 @@ import { JSONValue, Message } from 'ai'
 import React, { useEffect, useState } from 'react'
 import { ChatMessages } from './chat-messages'
 import { ChatPanel } from './chat-panel'
-import { DEFAULT_TEMPLATES } from './templates/template-selector'
 import { ScrollArea } from './ui/scroll-area'
-
-interface Template {
-  id: string
-  title: string
-  content: string
-  category?: string
-}
 
 export function Chat({
   id,
@@ -24,7 +16,8 @@ export function Chat({
   query,
   projectId,
   newConversation,
-  isWorkflow = false
+  isWorkflow = false,
+  workflowContext
 }: {
   id: string
   savedMessages?: Message[]
@@ -32,16 +25,15 @@ export function Chat({
   projectId?: string
   newConversation?: boolean
   isWorkflow?: boolean
+  workflowContext?: any
 }) {
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
     new Set()
   )
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+  const [selectedWorkflowId, setSelectedWorkflowId] = useState<string | null>(
     null
   )
   const { resources } = useResources()
-  // const [selectedModel, setSelectedModel] = useState('openai:gpt-4o')
-  const [selectedModel, setSelectedModel] = useState('google:gemini-2.0-flash-001')
   const { chatId } = useChatId()
 
   const selectedResourcesContent = React.useMemo(() => {
@@ -54,13 +46,10 @@ export function Chat({
       .join('\n\n---\n\n')
   }, [resources, selectedResourceIds])
 
-  const selectedTemplateContent = React.useMemo(() => {
-    if (!selectedTemplateId) return undefined
-    const selectedTemplate = DEFAULT_TEMPLATES.find(
-      (template: Template) => template.id === selectedTemplateId
-    )
-    return selectedTemplate?.content
-  }, [selectedTemplateId])
+  const selectedWorkflowContent = React.useMemo(() => {
+    if (!selectedWorkflowId) return undefined
+    return workflowContext
+  }, [selectedWorkflowId, workflowContext])
 
   const {
     messages,
@@ -81,14 +70,14 @@ export function Chat({
       resourceIds: Array.from(selectedResourceIds),
       resourcesContent: selectedResourcesContent
     },
-    templateContext: selectedTemplateContent
+    workflowContext: selectedWorkflowContent
       ? {
-          templateId: selectedTemplateId!,
-          templateContent: selectedTemplateContent
+          workflowId: selectedWorkflowId!,
+          workflow: selectedWorkflowContent
         }
       : undefined,
-    selectedModel,
-    projectId
+    projectId,
+    selectedModel: 'google:gemini-2.0-flash-001'
   })
 
   const [localData, setLocalData] = useState<JSONValue[] | undefined>()
@@ -189,10 +178,8 @@ export function Chat({
           append={append}
           selectedResourceIds={selectedResourceIds}
           setSelectedResourceIds={setSelectedResourceIds}
-          selectedTemplateId={selectedTemplateId}
-          setSelectedTemplateId={setSelectedTemplateId}
-          selectedModel={selectedModel}
-          onModelChange={setSelectedModel}
+          selectedWorkflowId={selectedWorkflowId}
+          setSelectedWorkflowId={setSelectedWorkflowId}
           isWorkflow={isWorkflow}
         />
       </div>

@@ -1,3 +1,4 @@
+import { getUserProfile } from '@/lib/actions/users'
 import { createToolCallingStreamResponse } from '@/lib/streaming/create-tool-calling-stream'
 import { isProviderEnabled, isToolCallSupported } from '@/lib/utils/registry'
 import { cookies } from 'next/headers'
@@ -67,14 +68,17 @@ export async function POST(req: Request) {
       `Model '${model}' supports tool calling: ${supportsToolCalling}`
     )
 
+    const userProfile = await getUserProfile(userId)
+
     return createToolCallingStreamResponse({
       messages,
       model,
       chatId,
       context,
       resourcesContext,
-      templateContext,
-      userId
+      workflowContext,
+      userId,
+      userProfile
     })
   } catch (error) {
     console.error('API route error:', error)

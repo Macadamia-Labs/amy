@@ -1,6 +1,6 @@
 'use client'
 
-import { useWorkflows } from '@/components/providers/workflows-provider'
+import { useWorkflows } from '@/components/providers/graph-workflows-provider'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ChevronDown, ChevronUp, Terminal } from 'lucide-react'

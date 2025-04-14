@@ -1,7 +1,7 @@
 'use client'
 
 import { BuildGrid } from '@/components/buildgrid/build-grid'
-import { useWorkflows } from '@/components/providers/workflows-provider'
+import { useWorkflows } from '@/components/providers/graph-workflows-provider'
 import { ExecutionLog } from '@/components/ui/execution-log'
 import { useParams } from 'next/navigation'
 
