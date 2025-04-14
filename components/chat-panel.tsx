@@ -28,7 +28,7 @@ interface ChatPanelProps {
   setSelectedTemplateId: (id: string | null) => void
   selectedModel: string
   onModelChange: (model: string) => void
-  showSuggestions: boolean
+  isWorkflow: boolean
 }
 
 export function ChatPanel({
@@ -47,7 +47,7 @@ export function ChatPanel({
   setSelectedTemplateId,
   selectedModel,
   onModelChange,
-  showSuggestions
+  isWorkflow
 }: ChatPanelProps) {
   const [showEmptyScreen, setShowEmptyScreen] = useState(false)
   const router = useRouter()
@@ -89,7 +89,8 @@ export function ChatPanel({
       onSubmit={handleSubmit}
       className={cn(
         'max-w-3xl w-full mx-auto',
-        messages.length > 0 ? 'px-2 py-4' : 'px-6'
+        messages.length > 0 ? 'px-2 py-4' : 'px-6',
+        isWorkflow && 'max-w-full mx-0 p-0'
       )}
     >
       <div className="relative flex flex-col w-full gap-2 bg-muted rounded-3xl border border-input">
@@ -104,7 +105,7 @@ export function ChatPanel({
           placeholder="Ask a question..."
           spellCheck={false}
           value={input}
-          className="resize-none w-full min-h-12 bg-transparent border-0 px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="resize-none w-full min-h-12 bg-transparent border-0 p-5 text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           onChange={e => {
             handleInputChange(e)
             setShowEmptyScreen(e.target.value.length === 0)
@@ -130,22 +131,26 @@ export function ChatPanel({
         />
 
         <div className="flex items-center justify-between p-3">
-          <div className="flex items-center gap-2">
-            <ResourcesSelector
-              selectedIds={selectedResourceIds}
-              onSelect={setSelectedResourceIds}
-            />
-            <TemplateSelector
-              selectedIds={
-                new Set(selectedTemplateId ? [selectedTemplateId] : [])
-              }
-              onSelect={ids =>
-                setSelectedTemplateId(ids.size > 0 ? Array.from(ids)[0] : null)
-              }
-              onCreateTemplate={() => {}}
-            />
-          </div>
-          <div className="flex items-center gap-2">
+          {!isWorkflow && (
+            <div className="flex items-center gap-2">
+              <ResourcesSelector
+                selectedIds={selectedResourceIds}
+                onSelect={setSelectedResourceIds}
+              />
+              <TemplateSelector
+                selectedIds={
+                  new Set(selectedTemplateId ? [selectedTemplateId] : [])
+                }
+                onSelect={ids =>
+                  setSelectedTemplateId(
+                    ids.size > 0 ? Array.from(ids)[0] : null
+                  )
+                }
+                onCreateTemplate={() => {}}
+              />
+            </div>
+          )}
+          <div className="flex items-center gap-2 ml-auto">
             {/* <ThinkingToggle onModelChange={onModelChange} /> */}
 
             {messages.length > 0 && (
@@ -174,7 +179,7 @@ export function ChatPanel({
         </div>
       </div>
 
-      {showSuggestions && messages.length === 0 && (
+      {!isWorkflow && messages.length === 0 && (
         <EmptyScreen
           submitMessage={message => {
             handleInputChange({

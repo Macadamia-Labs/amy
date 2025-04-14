@@ -43,7 +43,7 @@ export default async function WorkflowPage({
   }
 
   return (
-    <div className="p-8">
+    <div className="max-h-full flex flex-col p-8">
       <div className="mb-6">
         <h1 className="text-3xl font-bold tracking-tight">
           {workflow.icon} {workflow.name}
@@ -52,10 +52,12 @@ export default async function WorkflowPage({
         <p className="text-muted-foreground mt-1">{workflow.description}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
+        <div className="md:col-span-2 space-y-6">
           <InstructionsCard />
-          <Chat id={id} showSuggestions={false} />
+          <div>
+            <Chat id={id} isWorkflow={true} />
+          </div>
         </div>
 
         <div>

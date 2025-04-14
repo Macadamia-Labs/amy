@@ -19,6 +19,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar'
+import { CreateWorkflowDialog } from '@/components/workflows/create-workflow-dialog'
 import { useRouter } from 'next/navigation'
 
 interface Workflow {
@@ -55,6 +56,7 @@ export function NavWorkflows() {
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <div className="flex items-center justify-between">
         <SidebarGroupLabel>Workflows</SidebarGroupLabel>
+        <CreateWorkflowDialog />
       </div>
       <SidebarMenu>
         {displayWorkflows.map(workflow => (

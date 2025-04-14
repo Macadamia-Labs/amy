@@ -3,7 +3,7 @@
 import { useResources } from '@/components/providers/resources-provider'
 import { useToolChat } from '@/hooks/use-tool-chat'
 import { useChatId } from '@/lib/hooks/use-chat-id'
-import { generateUUID } from '@/lib/utils/helpers'
+import { cn, generateUUID } from '@/lib/utils/helpers'
 import { JSONValue, Message } from 'ai'
 import React, { useEffect, useState } from 'react'
 import { ChatMessages } from './chat-messages'
@@ -24,14 +24,14 @@ export function Chat({
   query,
   projectId,
   newConversation,
-  showSuggestions = true
+  isWorkflow = false
 }: {
   id: string
   savedMessages?: Message[]
   query?: string
   projectId?: string
   newConversation?: boolean
-  showSuggestions?: boolean
+  isWorkflow?: boolean
 }) {
   const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
     new Set()
@@ -135,7 +135,12 @@ export function Chat({
   }
 
   return (
-    <div className="flex flex-col w-full max-w-3xl h-full mx-auto justify-center">
+    <div
+      className={cn(
+        'flex flex-col w-full max-w-3xl h-full mx-auto justify-center',
+        isWorkflow && 'max-w-full mx-0'
+      )}
+    >
       {/* <p>New Conversation: { ? 'true' : 'false'}</p> */}
       {/* <div className="flex justify-end p-2">
         <Dialog open={debugOpen} onOpenChange={setDebugOpen}>
@@ -187,7 +192,7 @@ export function Chat({
           setSelectedTemplateId={setSelectedTemplateId}
           selectedModel={selectedModel}
           onModelChange={setSelectedModel}
-          showSuggestions={showSuggestions}
+          isWorkflow={isWorkflow}
         />
       </div>
     </div>

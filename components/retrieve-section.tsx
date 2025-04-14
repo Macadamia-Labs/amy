@@ -68,7 +68,7 @@ export function RetrieveSection({
       >
         {!isLoading && data ? (
           <Section title="Sources">
-            {data.map(result => (
+            {data.map((result: any) => (
               <div
                 key={result.id}
                 className="p-2 mb-2 rounded-md bg-muted hover:bg-muted/80 cursor-pointer transition-colors"
@@ -78,7 +78,7 @@ export function RetrieveSection({
                 }}
               >
                 <div className="text-sm text-muted-foreground line-clamp-2">
-                  {result.content}
+                  {result?.title || result?.resource_id}
                 </div>
               </div>
             ))}

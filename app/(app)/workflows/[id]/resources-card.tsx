@@ -4,6 +4,7 @@ import { useResources } from '@/components/providers/resources-provider'
 import { ResourcesSelector } from '@/components/resources/resources-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { BoxIcon } from '@/lib/utils/icons'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
@@ -29,20 +30,22 @@ export function ResourcesCard() {
   )
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-semibold">
-          Attached Resources
+    <Card className="bg-muted rounded-3xl h-full">
+      <CardHeader className="flex flex-row items-center justify-between relative">
+        <CardTitle className="flex flex-row items-center">
+          <BoxIcon className="size-6 mr-2" /> Attached Resources
         </CardTitle>
-        <ResourcesSelector
-          selectedIds={selectedResourceIds}
-          onSelect={handleResourceSelect}
-          trigger={ghostTrigger}
-        />
+        <div className="absolute right-4 top-3">
+          <ResourcesSelector
+            selectedIds={selectedResourceIds}
+            onSelect={handleResourceSelect}
+            trigger={ghostTrigger}
+          />
+        </div>
       </CardHeader>
       <CardContent>
         {attachedResources.length === 0 ? (
-          <div className="text-center py-6 text-muted-foreground">
+          <div className="text-center py-6 text-muted-foreground h-full">
             <p>No resources attached yet</p>
           </div>
         ) : (

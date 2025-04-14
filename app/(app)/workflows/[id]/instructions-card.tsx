@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MemoizedReactMarkdown } from '@/components/ui/markdown'
 import { Textarea } from '@/components/ui/textarea'
 import { Toggle } from '@/components/ui/toggle'
-import { CheckIcon, PencilIcon } from '@/lib/utils/icons'
+import { CheckIcon, PencilIcon, TextFileIcon } from '@/lib/utils/icons'
 import { useState } from 'react'
 
 export function InstructionsCard() {
@@ -26,10 +26,11 @@ export function InstructionsCard() {
   }
 
   return (
-    <Card>
+    <Card className="bg-muted rounded-3xl">
       <CardHeader className="flex flex-row items-center justify-between relative">
-        {' '}
-        <CardTitle>Instructions</CardTitle>
+        <CardTitle className="flex flex-row items-center">
+          <TextFileIcon className="size-6 mr-2" /> Instructions
+        </CardTitle>
         <Toggle
           pressed={isEditMode}
           onPressedChange={setIsEditMode}
