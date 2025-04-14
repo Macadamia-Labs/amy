@@ -1,6 +1,11 @@
 'use client'
 
-import { LightningIcon, MoreHorizontalIcon } from '@/lib/utils/icons'
+import {
+  LightningIcon,
+  MoreHorizontalIcon,
+  PencilIcon,
+  TrashIcon
+} from '@/lib/utils/icons'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
@@ -8,6 +13,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import {
@@ -20,8 +26,11 @@ import {
   useSidebar
 } from '@/components/ui/sidebar'
 import { CreateWorkflowDialog } from '@/components/workflows/create-workflow-dialog'
+import { EditWorkflowDialog } from '@/components/workflows/edit-workflow-dialog'
+import { deleteWorkflow } from '@/lib/actions/workflows'
 import { Workflow } from '@/lib/types/workflow'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 const defaultWorkflows: Workflow[] = [
   {
@@ -87,6 +96,31 @@ export function NavWorkflows({
                   <span className="text-sm text-muted-foreground">
                     {workflow.description}
                   </span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <EditWorkflowDialog
+                  workflow={workflow}
+                  trigger={
+                    <DropdownMenuItem onSelect={e => e.preventDefault()}>
+                      <PencilIcon className="text-muted-foreground size-4 mr-2" />
+                      <span>Rename</span>
+                    </DropdownMenuItem>
+                  }
+                />
+                <DropdownMenuItem
+                  onClick={async () => {
+                    try {
+                      await deleteWorkflow(workflow.id)
+                      toast.success('Workflow deleted successfully')
+                      router.refresh()
+                    } catch (error) {
+                      toast.error('Failed to delete workflow')
+                    }
+                  }}
+                  className="text-destructive"
+                >
+                  <TrashIcon className="text-destructive size-4 mr-2" />
+                  <span>Delete</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

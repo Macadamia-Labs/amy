@@ -8,6 +8,7 @@ export interface Workflow {
   description: string
   instructions: string
   icon?: string
+  resourceIds?: string[]
 }
 
 export type GraphWorkflowStatus =

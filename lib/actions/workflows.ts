@@ -112,3 +112,10 @@ export async function fetchWorkflows() {
   if (error) throw error
   return data
 }
+
+export async function deleteWorkflow(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('workflows').delete().eq('id', id)
+
+  if (error) throw error
+}

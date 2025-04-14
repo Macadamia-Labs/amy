@@ -1,24 +1,15 @@
 import { Chat } from '@/components/chat'
 import { fetchWorkflow } from '@/lib/actions/workflows'
+import { Workflow } from '@/lib/types/workflow'
 import { notFound } from 'next/navigation'
 import { InstructionsCard } from './instructions-card'
 import { ResourcesCard } from './resources-card'
 
-// Define the Workflow interface
-interface Workflow {
-  id: string
-  name: string
-  description: string
-  icon: string
-  instructions: string
-  resourceIds: string[]
-}
-
 // Import the workflows data
-const workflows: Workflow[] = [
+const defaultWorkflows: Workflow[] = [
   {
     id: 'check-bom',
-    name: 'Check error bill of materials in drawings',
+    title: 'Check error bill of materials in drawings',
     description:
       'Verify and validate bill of materials in engineering drawings',
     icon: '📋',
@@ -28,7 +19,7 @@ const workflows: Workflow[] = [
   },
   {
     id: 'code-compliance-check',
-    name: 'Code compliance check',
+    title: 'Code compliance check',
     description: 'Check code compliance of a project',
     icon: '📂',
     instructions:
@@ -57,7 +48,7 @@ export default async function WorkflowPage({
     workflow = await fetchWorkflow(id)
   } else {
     // Check hardcoded workflows if it's not a UUID
-    workflow = workflows.find(w => w.id === id) || null
+    workflow = defaultWorkflows.find(w => w.id === id) || null
   }
 
   if (!workflow) {
@@ -67,9 +58,7 @@ export default async function WorkflowPage({
   return (
     <div className="max-h-full flex flex-col p-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {workflow.icon} {workflow.name}
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight">{workflow.title}</h1>
 
         <p className="text-muted-foreground mt-1">{workflow.description}</p>
       </div>
@@ -88,7 +77,7 @@ export default async function WorkflowPage({
         <div>
           <ResourcesCard
             workflowId={workflow.id}
-            initialResourceIds={workflow.resourceIds}
+            initialResourceIds={workflow.resourceIds || []}
           />
         </div>
       </div>
