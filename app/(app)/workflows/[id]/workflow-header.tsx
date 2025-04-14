@@ -9,10 +9,10 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { EditWorkflowDialog } from '@/components/workflows/edit-workflow-dialog'
 import { ExecuteWorkflowButton } from '@/components/workflows/execute-workflow-button'
-import { GraphWorkflow } from '@/lib/types/workflow'
+import { Workflow } from '@/lib/types/workflow'
 
 interface WorkflowHeaderProps {
-  workflow: GraphWorkflow
+  workflow: Workflow
 }
 
 export default async function WorkflowHeader({
@@ -35,10 +35,7 @@ export default async function WorkflowHeader({
       </Breadcrumb>
       <div className="ml-auto flex items-center gap-4">
         {workflow && <EditWorkflowDialog workflow={workflow} />}
-        <ExecuteWorkflowButton
-          workflowId={workflow.id}
-          status={workflow.status}
-        />
+        <ExecuteWorkflowButton workflow={workflow} status={workflow.status} />
       </div>
     </header>
   )

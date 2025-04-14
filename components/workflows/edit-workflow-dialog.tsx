@@ -18,11 +18,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { updateWorkflow } from '@/lib/actions/workflows'
-import { GraphWorkflow } from '@/lib/types/workflow'
+import { Workflow } from '@/lib/types/workflow'
 import { PencilIcon } from '@/lib/utils/icons'
 
 interface EditWorkflowDialogProps {
-  workflow: GraphWorkflow
+  workflow: Workflow
   trigger?: React.ReactNode
 }
 
