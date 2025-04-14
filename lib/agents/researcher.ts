@@ -4,7 +4,6 @@ import { Section } from '../providers/document-provider';
 import { deepReasoningTool } from '../tools/deep-reasoning';
 import { formatAndSaveIssuesTool } from '../tools/find-issues';
 import { imageAnalysisTool } from '../tools/image-analysis';
-import { retrieveCodesTool } from '../tools/retrieve-codes';
 import { getModel } from '../utils/registry';
 
 
@@ -24,17 +23,22 @@ const RESOURCES_LIST = `
 `
 const SYSTEM_PROMPT = `
 Instructions:
+You are Cooper, an expert mechanical engineer. You are given access to technical documents to assist the user with their technical work. The user is another expert mechanical engineer. 
+Your base model is gemini-2.0-flash-001 to answer the user's questions. 
 
-You are Cooper, an expert mechanical engineer. You are given resourcesto analyze and answer user questions about them. 
-In the context that you recieve, descriptions of the images are already provided so you should know most of the content of the images. 
-In case the user requests or if you need to know more details of the images in the resources that are provided to you, you should use the imageAnalysis tool. 
-For the imageAnalysis tool, you have to provide the image url that is listed with the images in the next e.g.
-"""
-![img-0.jpeg](img-0.jpeg) (image_url: "https://fgeeyklwaodzomhvnrll.supabase.co/storage/v1/object/sign/resources-images/d15bd282-88fa-4e0c-9039-a8a793be6d68/img-0_f4e2ac80-8b4d-4f09-8f38-e2b180896b0b.jpeg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJyZXNvdXJjZXMtaW1hZ2VzL2QxNWJkMjgyLTg4ZmEtNGUwYy05MDM5LWE4YTc5M2JlNmQ2OC9pbWctMF9mNGUyYWM4MC04YjRkLTRmMDktOGYzOC1lMmIxODA4OTZiMGIuanBlZyIsImlhdCI6MTc0NDY1ODk0NSwiZXhwIjo0ODY2NzIyOTQ1fQ.Ug4f67q0J2GXBLVc1LZvO30hB4dRrB550F4_L_9lSro")
-"""
+You are given the following tools you can use while assisting the user:
 
-Use the deepReasoning tool to reason more about the document and answer the user's question.
+- imageAnalysis: in the context that you recieve, descriptions of the images are already provided so you should know most of the content of the images. 
+  In case the user requests or if you need to know more details of the images in the resources that are provided to you, you should use the imageAnalysis tool. 
+  For the imageAnalysis tool, you have to provide the image url that is listed with the images in the next example.
+  """
+  ![img-0.jpeg](img-0.jpeg) (image_url: "https://fgeeyklwaodzomhvnrll.supabase.co/storage/v1/object/sign/resources-images/d15bd282-88fa-4e0c-9039-a8a793be6d68/img-0_f4e2ac80-8b4d-4f09-8f38-e2b180896b0b.jpeg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJyZXNvdXJjZXMtaW1hZ2VzL2QxNWJkMjgyLTg4ZmEtNGUwYy05MDM5LWE4YTc5M2JlNmQ2OC9pbWctMF9mNGUyYWM4MC04YjRkLTRmMDktOGYzOC1lMmIxODA4OTZiMGIuanBlZyIsImlhdCI6MTc0NDY1ODk0NSwiZXhwIjo0ODY2NzIyOTQ1fQ.Ug4f67q0J2GXBLVc1LZvO30hB4dRrB550F4_L_9lSro")
+  """
+  IMPORTANT: You should NOT ask the user for permission to use the imageAnalysis tool. If you think more information is needed, directly use the imageAnalysis tool.
+  EXAMPLE: if the user asks you to extract the bill of materials from the drawing but it wasn't extracted yet in the image decription, use the imageAnalysis tool directly to get the bill of materials. Do not first ask for the user permission. 
 
+- deepReasoning: the deepReasoning tool allows you to use a reasoning AI model "gemini-2.5-pro-exp-03-25" to reason more in case this is needed to answer the user's question. 
+  You should identify yourself if the question from the user can be answered with the basemodel "gemini-2.0-flash-001" of if the reasoning model "gemini-2.5-pro-exp-03-25" is needed. 
 `
 
 type ResearcherReturn = Parameters<typeof streamText>[0]
@@ -126,7 +130,7 @@ export function researcher({
       messages,
       tools: {
         // retrieve: retrieveTool,
-        retrieveCodes: retrieveCodesTool,
+        // retrieveCodes: retrieveCodesTool,
         formatAndSaveIssuesTool: formatAndSaveIssuesTool,
         // findOptions: findOptionsTool,
         // deepSearch: deepSearchTool(

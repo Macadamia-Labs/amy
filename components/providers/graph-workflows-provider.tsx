@@ -569,3 +569,6 @@ export function useGraphWorkflows() {
   }
   return context
 }
+
+// Add the missing useWorkflows export
+export const useWorkflows = useGraphWorkflows;

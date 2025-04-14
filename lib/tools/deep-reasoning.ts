@@ -1,4 +1,4 @@
-import { openai } from '@ai-sdk/openai'
+import { google } from '@ai-sdk/google'
 import { DataStreamWriter, generateObject, tool } from 'ai'
 import { z } from 'zod'
 // import { inngest } from '../inngest/client'
@@ -44,7 +44,7 @@ export async function deepReasoning(
   const {
     object: { reasoning, answer }
   } = await generateObject({
-    model: openai('o3-mini'),
+    model: google('gemini-2.5-pro-exp-03-25'),
     schema: z.object({
       reasoning: z.string().describe('A concise reasoning for the answer'),
       answer: z.string().describe('The answer to the query')

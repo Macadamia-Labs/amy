@@ -1,29 +1,29 @@
 'use client'
 
 import {
-  LightningIcon,
-  MoreHorizontalIcon,
-  PencilIcon,
-  TrashIcon
+    LightningIcon,
+    MoreHorizontalIcon,
+    PencilIcon,
+    TrashIcon
 } from '@/lib/utils/icons'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar
+    SidebarGroup,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuAction,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    useSidebar
 } from '@/components/ui/sidebar'
 import { CreateWorkflowDialog } from '@/components/workflows/create-workflow-dialog'
 import { EditWorkflowDialog } from '@/components/workflows/edit-workflow-dialog'
@@ -39,14 +39,16 @@ const defaultWorkflows: Workflow[] = [
     description:
       'Verify and validate bill of materials in engineering drawings',
     icon: '📋',
-    instructions: 'Check the bill of materials for errors'
+    instructions: 'Check the bill of materials for errors',
+    status: 'active'
   },
   {
     id: 'code-compliance-check',
     title: 'Code compliance check',
     description: 'Check code compliance of a project',
     icon: '📂',
-    instructions: 'Check the code compliance of a project'
+    instructions: 'Check the code compliance of a project',
+    status: 'active'
   }
 ]
 
