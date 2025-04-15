@@ -65,7 +65,7 @@ export function Chat({
     error,
     reload
   } = useToolChat({
-    id: chatId,
+    id: id || chatId,
     initialMessages: savedMessages as any,
     resourcesContext: {
       resourceIds: Array.from(selectedResourceIds),
