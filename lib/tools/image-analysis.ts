@@ -13,6 +13,14 @@ const logger = initLogger({
   apiKey: process.env.BRAINTRUST_API_KEY
 })
 
+
+const imageAnalysisSystemPrompt = `
+You are an expert image analyzer of technical images in mechanical/civil engineering. The user will provide you with an image url and a question about the image.
+Provide detailed answers based on the image. If you cannot determine something with certainty, acknowledge limitations. Avoid making assumptions about image context beyond what's visible.
+Provide all your answers in markdown format. 
+`
+
+
 export const imageAnalysisTool = tool({
   description:
     'If more information is needed from an image, use this tool to query the image again.',
@@ -30,6 +38,10 @@ export const imageAnalysisTool = tool({
       const result = await generateText({
         model,
         messages: [
+          {
+            role: 'system',
+            content: imageAnalysisSystemPrompt
+          },
           {
             role: 'user',
             content: [
