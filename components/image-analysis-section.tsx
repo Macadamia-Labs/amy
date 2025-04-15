@@ -3,12 +3,12 @@
 import { ToolInvocation } from 'ai'
 import { useEffect, useState } from 'react'
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from './ui/accordion'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from './ui/collapsible'
+import { Separator } from './ui/separator'
+import { TextShimmer } from './ui/text-shimmer'
 
 interface ImageAnalysisResponse {
   description: string
@@ -28,20 +28,19 @@ export function ImageAnalysisSection({
 }: ImageAnalysisSectionProps) {
   // Sync external state to internal state
   useEffect(() => {
-    setInternalOpen(isOpen);
-  }, [isOpen]);
-  
-  // Internal state to control accordion
-  const [internalOpen, setInternalOpen] = useState(isOpen);
-  
+    setInternalOpen(isOpen)
+  }, [isOpen])
+
+  // Internal state to control collapsible
+  const [internalOpen, setInternalOpen] = useState(isOpen)
+
   // Handle internal state changes and propagate to parent
-  const handleOpenChange = (value: string) => {
-    const newIsOpen = value === 'image-analysis';
-    setInternalOpen(newIsOpen);
+  const handleOpenChange = (newIsOpen: boolean) => {
+    setInternalOpen(newIsOpen)
     if (newIsOpen !== isOpen) {
-      onOpenChange(newIsOpen);
+      onOpenChange(newIsOpen)
     }
-  };
+  }
 
   // Access args safely with type checking
   const parameters = tool.args as
@@ -58,54 +57,48 @@ export function ImageAnalysisSection({
   const question = parameters?.question || 'No question provided'
   const description = output?.description || 'No description available'
   const analysis = output?.analysis || 'No analysis available'
+  const isAnalyzing = tool.state !== 'result'
 
   return (
-    <Accordion
-      type="single"
-      collapsible
-      value={internalOpen ? 'image-analysis' : ''}
-      onValueChange={handleOpenChange}
-    >
-      <AccordionItem value="image-analysis">
-        <AccordionTrigger className="text-sm font-medium">
-          Image Analysis: {question}
-        </AccordionTrigger>
-        <AccordionContent>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Image Analysis Results</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-xs font-medium text-muted-foreground">
-                    Image URL
-                  </h4>
-                  <p className="text-sm break-all">{imageUrl}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs font-medium text-muted-foreground">
-                    Question
-                  </h4>
-                  <p className="text-sm">{question}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs font-medium text-muted-foreground">
-                    Description
-                  </h4>
-                  <p className="text-sm">{description}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs font-medium text-muted-foreground">
-                    Analysis
-                  </h4>
-                  <p className="text-sm whitespace-pre-wrap">{analysis}</p>
-                </div>
+    <Collapsible open={internalOpen} onOpenChange={handleOpenChange}>
+      <CollapsibleTrigger asChild className="w-full cursor-pointer">
+        <div className="flex items-center justify-between p-3 bg-muted border rounded-2xl">
+          <div className="flex items-center space-x-4">
+            {imageUrl !== 'No image URL provided' ? (
+              <img
+                src={imageUrl}
+                alt="Image preview"
+                className="h-16 w-16 object-cover rounded-md border"
+              />
+            ) : (
+              <div className="h-16 w-16 bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">
+                No Image
               </div>
-            </CardContent>
-          </Card>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+            )}
+            <div>
+              {isAnalyzing ? (
+                <TextShimmer className="text-sm font-medium">
+                  Analyzing image...
+                </TextShimmer>
+              ) : (
+                <p className="text-sm font-medium">Image Analyzed</p>
+              )}
+              <p className="text-xs text-muted-foreground line-clamp-2">
+                {question}
+              </p>
+            </div>
+          </div>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="p-4">
+          <Separator className="my-2" />
+          <h4 className="text-xs font-medium text-muted-foreground">
+            Analysis
+          </h4>
+          <p className="text-xs whitespace-pre-wrap font-mono">{analysis}</p>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }

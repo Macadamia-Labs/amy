@@ -13,13 +13,11 @@ const logger = initLogger({
   apiKey: process.env.BRAINTRUST_API_KEY
 })
 
-
 const imageAnalysisSystemPrompt = `
 You are an expert image analyzer of technical images in mechanical/civil engineering. The user will provide you with an image url and a question about the image.
 Provide detailed answers based on the image. If you cannot determine something with certainty, acknowledge limitations. Avoid making assumptions about image context beyond what's visible.
 Provide all your answers in markdown format. 
 `
-
 
 export const imageAnalysisTool = tool({
   description:
@@ -31,7 +29,7 @@ export const imageAnalysisTool = tool({
   execute: async ({ imageUrl, question }) => {
     try {
       console.log('Analyzing image:', imageUrl)
-      
+
       // Wrap the model with Braintrust logger
       const model = google('gemini-2.0-flash-001')
 
@@ -85,7 +83,11 @@ export const imageAnalysisTool = tool({
       } as ImageAnalysisResponse
     } catch (error) {
       console.error('Error analyzing image:', error)
-      throw new Error(`Failed to analyze image: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      throw new Error(
+        `Failed to analyze image: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      )
     }
   }
 })
