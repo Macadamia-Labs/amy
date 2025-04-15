@@ -85,6 +85,12 @@ export const models: Model[] = [
     providerId: 'openai'
   },
   {
+    id: 'gpt-4.1',
+    name: 'GPT-4.1',
+    provider: 'OpenAI',
+    providerId: 'openai'
+  },
+  {
     id: 'gpt-4o-mini',
     name: 'GPT-4o mini',
     provider: 'OpenAI',

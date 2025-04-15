@@ -73,7 +73,8 @@ export function Chat({
     },
     workflow: workflowContext,
     projectId,
-    selectedModel: 'google:gemini-2.0-flash-001'
+    // selectedModel: 'google:gemini-2.0-flash-001'
+    selectedModel: 'openai:gpt-4.1'
   })
 
   const [localData, setLocalData] = useState<JSONValue[] | undefined>()
