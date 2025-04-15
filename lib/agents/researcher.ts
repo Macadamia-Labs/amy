@@ -4,7 +4,6 @@ import { Section } from '../providers/document-provider'
 import { deepReasoningTool } from '../tools/deep-reasoning'
 import { formatAndSaveIssuesTool } from '../tools/find-issues'
 import { imageAnalysisTool } from '../tools/image-analysis'
-import { retrieveCodesTool } from '../tools/retrieve-codes'
 import { Workflow } from '../types/workflow'
 import { getModel } from '../utils/registry'
 const logger = initLogger({
@@ -76,6 +75,16 @@ export function researcher({
     
       Follow these instructions to perform the desired task:
       ${JSON.stringify(workflow.instructions)}
+
+      ${
+        workflow.result
+          ? `\n\n<WORKFLOW_RESULT>
+      The result of the workflow is:
+      ${workflow.result}
+      </WORKFLOW_RESULT>
+      `
+          : ''
+      }
       </WORKFLOW_INSTRUCTIONS>
       `
     }

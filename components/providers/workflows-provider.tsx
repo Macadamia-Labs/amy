@@ -10,6 +10,7 @@ interface WorkflowsContextType {
   executeWorkflow: (id: string) => Promise<void>
   updateWorkflow: (id: string, updates: Partial<Workflow>) => void
   runningWorkflows: Set<string>
+  workflowResults: Record<string, string | null>
 }
 
 const WorkflowsContext = createContext<WorkflowsContextType | undefined>(
@@ -27,6 +28,9 @@ export function WorkflowsProvider({
   const [runningWorkflows, setRunningWorkflows] = useState<Set<string>>(
     new Set()
   )
+  const [workflowResults, setWorkflowResults] = useState<
+    Record<string, string | null>
+  >({})
 
   const { user } = useAuth()
 
@@ -58,10 +62,24 @@ export function WorkflowsProvider({
       console.log('[executeWorkflow] workflow', workflow)
 
       // Only pass workflowId and userId to the API
-      await fetch('/api/execute-workflow', {
+      const response = await fetch('/api/execute-workflow', {
         method: 'POST',
         body: JSON.stringify({ workflowId: id, userId: user?.id })
       })
+
+      if (!response.ok) {
+        throw new Error('Failed to execute workflow')
+      }
+
+      const data = await response.json()
+
+      console.log('[executeWorkflow] data', data)
+
+      // Update workflow results
+      setWorkflowResults(prev => ({
+        ...prev,
+        [id]: data.result
+      }))
     } catch (error) {
       console.error('Error executing workflow:', error)
       toast.error('Failed to execute workflow')
@@ -82,7 +100,8 @@ export function WorkflowsProvider({
         workflows: workflowsState,
         executeWorkflow,
         updateWorkflow,
-        runningWorkflows
+        runningWorkflows,
+        workflowResults
       }}
     >
       {children}

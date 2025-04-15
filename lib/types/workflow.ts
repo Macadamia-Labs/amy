@@ -10,6 +10,7 @@ export interface Workflow {
   icon?: string
   resourceIds?: string[]
   status: GraphWorkflowStatus
+  result?: string | null
 }
 
 export type GraphWorkflowStatus =
