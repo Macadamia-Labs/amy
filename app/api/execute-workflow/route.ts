@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { generateText } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 
+export const maxDuration = 300 // 5 minutes timeout
+
 export async function POST(request: NextRequest) {
   try {
     const { workflowId, userId } = await request.json()
