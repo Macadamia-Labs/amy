@@ -82,11 +82,11 @@ export function ChatMessages({
 
   // const showLoading = isLoading && messages[messages.length - 1].role === 'user'
 
-  const getIsOpen = (id: string) => {
-    const baseId = id.endsWith('-related') ? id.slice(0, -8) : id
-    const index = messages.findIndex(msg => msg.id === baseId)
-    return openStates[id] ?? index >= lastUserIndex
-  }
+  // const getIsOpen = (id: string) => {
+  //   const baseId = id.endsWith('-related') ? id.slice(0, -8) : id
+  //   const index = messages.findIndex(msg => msg.id === baseId)
+  //   return openStates[id] ?? index >= lastUserIndex
+  // }
 
   const handleOpenChange = (id: string, open: boolean) => {
     setOpenStates(prev => ({
@@ -102,7 +102,7 @@ export function ChatMessages({
           <RenderMessage
             message={message}
             messageId={message.id}
-            getIsOpen={getIsOpen}
+            getIsOpen={() => false}
             onOpenChange={handleOpenChange}
             onQuerySelect={onQuerySelect}
             onResetToMessage={onResetToMessage}
@@ -115,7 +115,7 @@ export function ChatMessages({
           key={manualToolCallId}
           message={messages[messages.length - 1]}
           tool={lastToolData}
-          isOpen={getIsOpen(manualToolCallId)}
+          isOpen={false}
           onOpenChange={open => handleOpenChange(manualToolCallId, open)}
         />
       )}

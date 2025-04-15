@@ -4,11 +4,7 @@ import { CheckCircleIcon } from '@/lib/utils/icons'
 import { Message, ToolInvocation } from 'ai'
 import { useEffect, useState } from 'react'
 import Loader from './lottie/loader'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from './ui/collapsible'
+import { Collapsible, CollapsibleContent } from './ui/collapsible'
 import { TextShimmer } from './ui/text-shimmer'
 
 interface DeepReasoningSectionProps {
@@ -112,23 +108,12 @@ export function DeepReasoningSection({
         )}
         <p className="font-bold">Deep Reasoning</p>
         {isLoading ? (
-          <TextShimmer className="text-sm ml-auto">
-            {`Reasoning effort: ${reasoningEffort}`}
-          </TextShimmer>
+          <TextShimmer className="text-sm">{displayProgress}</TextShimmer>
         ) : (
-          <p className="text-sm text-muted-foreground ml-auto">
-            Effort: {reasoningEffort}
-          </p>
+          <p className="text-sm text-muted-foreground">{displayProgress}</p>
         )}
       </div>
       <Collapsible open={isOpen} onOpenChange={onOpenChange}>
-        <CollapsibleTrigger className="text-sm text-muted-foreground cursor-pointer w-full text-left">
-          {isLoading ? (
-            <TextShimmer className="text-sm">{displayProgress}</TextShimmer>
-          ) : (
-            <p className="text-sm text-muted-foreground">{displayProgress}</p>
-          )}{' '}
-        </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="flex flex-col gap-2 mt-2">
             <p className="text-sm text-muted-foreground">
