@@ -1,6 +1,5 @@
 'use client'
 
-import { useWorkflows } from '@/components/providers/workflows-provider'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -26,12 +25,14 @@ export function ExecuteWorkflowButton({
 }: ExecuteWorkflowButtonProps) {
   const [isExecuting, setIsExecuting] = useState(false)
   const { user } = useAuth()
-  const { executeWorkflow } = useWorkflows()
+  function executeWorkflow() {
+    console.log('execute error checking')
+  }
 
   const handleExecute = async () => {
     try {
       setIsExecuting(true)
-      await executeWorkflow(workflow.id)
+      await executeWorkflow()
       toast.success('Workflow execution initiated successfully')
     } catch (error: any) {
       console.error('Error initiating workflow:', error)

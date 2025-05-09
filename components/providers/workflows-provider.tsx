@@ -43,54 +43,65 @@ export function WorkflowsProvider({
   }
 
   const executeWorkflow = async (id: string) => {
-    // Prevent executing a workflow that's already running
+    // Prevent initiating a workflow that's already running or being initiated
     if (runningWorkflows.has(id)) {
-      console.warn('Workflow is already running, ignoring execution request')
+      console.warn(
+        '[WorkflowsProvider] Workflow is already running or initiating, ignoring execution request',
+        { id }
+      )
+      toast.info('Workflow execution is already in progress.') // Inform user
       return
     }
 
     try {
-      // Mark workflow as running
+      // Mark workflow as running (or initiating)
       setRunningWorkflows(prev => new Set([...prev, id]))
-
-      // Get the workflow
-      const workflow = workflowsState.find(w => w.id === id)
-      if (!workflow) {
-        throw new Error('Workflow not found')
-      }
-
-      console.log('[executeWorkflow] workflow', workflow)
 
       // Only pass workflowId and userId to the API
       const response = await fetch('/api/execute-workflow', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ workflowId: id, userId: user?.id })
       })
 
       if (!response.ok) {
-        throw new Error('Failed to execute workflow')
+        const errorData = await response.json().catch(() => ({})) // Try to get error details
+        console.error('[WorkflowsProvider] Failed to initiate workflow', {
+          id,
+          status: response.status,
+          errorData
+        })
+        throw new Error(errorData.error || 'Failed to initiate workflow')
       }
 
-      const data = await response.json()
+      // The API call was successful in initiating the workflow via Inngest.
+      // The actual execution happens in the background.
+      // We don't get the result back here anymore.
+      console.log(
+        '[WorkflowsProvider] Workflow initiation request successful',
+        { id }
+      )
 
-      console.log('[executeWorkflow] data', data)
+      // We can optionally update the local workflow state to 'running' here immediately
+      // updateWorkflow(id, { status: 'running' }) // Uncomment if desired
 
-      // Update workflow results
-      setWorkflowResults(prev => ({
-        ...prev,
-        [id]: data.result
-      }))
+      // Result is no longer returned directly
+      // setWorkflowResults(prev => ({ ...prev, [id]: undefined })) // Clear previous result if any
     } catch (error) {
-      console.error('Error executing workflow:', error)
-      toast.error('Failed to execute workflow')
+      console.error('[WorkflowsProvider] Error initiating workflow:', {
+        id,
+        error
+      })
+      // Ensure the error is re-thrown so the button can catch it
       throw error
     } finally {
-      // Mark workflow as not running
-      setRunningWorkflows(prev => {
-        const next = new Set(prev)
-        next.delete(id)
-        return next
-      })
+      // Important: Do NOT remove the workflow from runningWorkflows here.
+      // It should be removed when the Inngest function completes/fails.
+      // This requires a mechanism to get status updates back to the client
+      // (e.g., Supabase real-time subscriptions on the workflows table).
+      // For now, we leave it in runningWorkflows until a page refresh or explicit status update.
     }
   }
 

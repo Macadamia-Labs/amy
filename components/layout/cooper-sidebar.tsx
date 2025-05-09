@@ -5,9 +5,12 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  SidebarMenuButton,
   SidebarRail
 } from '@/components/ui/sidebar'
 import { fetchWorkflows } from '@/lib/actions/workflows'
+import { RulerIcon } from '@/lib/utils/icons'
+import Link from 'next/link'
 import * as React from 'react'
 import { MacadamiaHead } from './macadamia-head'
 import { NavWorkflows } from './nav-actions'
@@ -37,6 +40,15 @@ export default async function CooperSidebar(
           {/* <SidebarGroupLabel>General</SidebarGroupLabel> */}
           <NavHome />
           <NavResources />
+          <Link href="/rules">
+            <SidebarMenuButton asChild>
+              <span className="flex items-center gap-2">
+                <RulerIcon className="size-4" />
+                Rules
+              </span>
+            </SidebarMenuButton>{' '}
+          </Link>
+
           {/* <NavIssues /> */}
           {/* <NavIntegrations /> */}
           {/* <NavActivity /> */}
@@ -44,6 +56,7 @@ export default async function CooperSidebar(
           {/* <NavDocs /> */}
         </SidebarGroup>
         <NavWorkflows workflows={workflows} />
+        {/* <NavErrorChecks /> */}
       </SidebarContent>
       <SidebarFooter>
         {/* <NavSettings /> */}

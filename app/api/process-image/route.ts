@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Processing image:', imageUrl)
 
-    const { object } = await generateObject({
+    const { object, usage } = await generateObject({
       model: openai('gpt-4o-mini'),
       messages: [
         {
@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
         tags: z.array(z.string()).describe('A list of tags for the image')
       })
     })
+
+    console.log('Usage:', JSON.stringify(usage, null, 2))
 
     if (!object) {
       return NextResponse.json(
