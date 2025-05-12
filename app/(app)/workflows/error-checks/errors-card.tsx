@@ -1,7 +1,9 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { XCircleIcon } from '@/lib/utils/icons'
+import { AnimatePresence, motion } from 'framer-motion'
 
 interface ErrorMessage {
   id: string
@@ -28,18 +30,39 @@ export function ErrorsCard({ errors }: ErrorsCardProps) {
           </p>
         ) : (
           <ul className="space-y-3">
-            {errors.map(error => (
-              <li key={error.id} className="p-3 bg-muted rounded-lg shadow-sm">
-                <p className="font-medium text-destructive-foreground">
-                  {error.message}
-                </p>
-                {error.ruleText && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Related rule: {error.ruleText}
-                  </p>
-                )}
-              </li>
-            ))}
+            <AnimatePresence initial={false}>
+              {errors.map(error => (
+                <motion.li
+                  key={error.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 16 }}
+                  transition={{
+                    duration: 0.25,
+                    type: 'spring',
+                    stiffness: 200
+                  }}
+                  className="p-3 bg-muted rounded-lg shadow-sm flex flex-col gap-1"
+                >
+                  <div className="flex items-center gap-2">
+                    {error.ruleText && (
+                      <Badge variant="secondary" className="shrink-0">
+                        {error.ruleText.match(/Rule (\d+)/)?.[0]}
+                      </Badge>
+                    )}
+                    <p className="font-medium break-words flex-1">
+                      {error.message}
+                    </p>
+                  </div>
+                  {error.ruleText && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      <span className="sr-only">Related rule: </span>
+                      {error.ruleText}
+                    </p>
+                  )}
+                </motion.li>
+              ))}
+            </AnimatePresence>
           </ul>
         )}
       </CardContent>

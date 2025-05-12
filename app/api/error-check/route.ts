@@ -1,106 +1,124 @@
+import { getSignedResourceUrl } from '@/lib/actions/resources'
 import { NextResponse } from 'next/server'
 
 interface ErrorCheckRequestBody {
   rules: string[]
-  fileUrl: string
+  resourceIds: string[]
 }
 
 interface ErrorMessage {
   id: string
   message: string
+  resourceId?: string
   ruleText?: string
-  // Add other relevant error details here if needed
-}
-
-// Simulate a delay to mimic real API processing time
-async function simulateDelay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export async function POST(request: Request) {
   try {
     const body: ErrorCheckRequestBody = await request.json()
-    const { rules, fileUrl } = body
+    const { rules, resourceIds } = body
+
+    console.log('api/error-check/route.ts')
+    console.log('rules', rules)
+    console.log('resourceIds', resourceIds)
 
     if (
       !rules ||
       !Array.isArray(rules) ||
-      !fileUrl ||
-      typeof fileUrl !== 'string'
+      !resourceIds ||
+      !Array.isArray(resourceIds) ||
+      resourceIds.length === 0
     ) {
       return NextResponse.json(
         {
           message:
-            'Invalid request body: rules (array of strings) and fileUrl (string) are required.'
+            'Invalid request body: rules (array of strings) and resourceIds (array of strings) are required.'
         },
         { status: 400 }
       )
     }
 
-    // Simulate some processing
-    await simulateDelay(1500) // Simulate 1.5 seconds of processing
-
-    const foundErrors: ErrorMessage[] = []
-
-    // Mock error generation logic
-    if (rules.length === 0) {
-      // This case should ideally be caught client-side, but as a fallback:
-      foundErrors.push({
-        id: 'no-rules-provided',
-        message: 'No rules were provided to check against.'
-      })
-    } else {
-      rules.forEach((rule, index) => {
-        // Simulate finding an error for some rules
-        if (
-          fileUrl.includes('Bill_of_Materials') &&
-          rule.toLowerCase().includes('duplicate items')
-        ) {
-          foundErrors.push({
-            id: `err-${index}-bom-dup`,
-            message: `Potential duplicate items found in ${fileUrl} violating rule: "${rule}"`,
-            ruleText: rule
-          })
+    const errorPromises = resourceIds.map(async (resourceId) => {
+      let fileUrl: string | null = null
+      try {
+        fileUrl = await getSignedResourceUrl(resourceId)
+      } catch (e) {
+        return {
+          id: `signed-url-error-${resourceId}`,
+          message: `Failed to get signed URL for resource ${resourceId}: ${e instanceof Error ? e.message : 'Unknown error'}`,
+          resourceId
         }
-        if (rule.toLowerCase().includes('title block') && Math.random() > 0.5) {
-          foundErrors.push({
-            id: `err-${index}-title-block`,
-            message: `Title block incomplete in ${fileUrl}. Checked against rule: "${rule}"`,
-            ruleText: rule
-          })
-        }
-        if (index % 3 === 0 && !fileUrl.includes('ISO_Drawing_Standard')) {
-          // Mock error for every 3rd rule if not the ISO standard doc
-          foundErrors.push({
-            id: `err-${index}-generic`,
-            message: `Generic check failed for rule: "${rule}" on file ${fileUrl}.`,
-            ruleText: rule
-          })
-        }
-      })
-    }
+      }
 
-    if (foundErrors.length === 0 && rules.length > 0) {
-      // If no specific errors were triggered by the mock logic but rules were present
-      foundErrors.push({
-        id: 'no-specific-errors',
-        message: `No specific issues found for ${fileUrl} based on the provided ${rules.length} rules during this mock check.`
-      })
-    }
-
-    if (rules.length > 0 && fileUrl.includes('ISO_Drawing_Standard')) {
-      // Always return a specific message for the ISO standard, potentially an empty error array if it passes all checks
-      return NextResponse.json({
-        errors: [
+      try {
+        console.log('api/error-check/route.ts')
+        console.log('process.env.QA_CHECK_API_URL', process.env.QA_CHECK_API_URL)
+        console.log('process.env.MACADAMIA_API_URL', process.env.MACADAMIA_API_URL)
+        console.log('fileUrl', fileUrl)
+        console.log('rules', rules)
+        const apiResponse = await fetch(
+          process.env.QA_CHECK_API_URL || process.env.MACADAMIA_API_URL + '/v1/proyectos/qa-check-drawings',
           {
-            id: 'iso-check',
-            message: `ISO document ${fileUrl} checked. All clear!`
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(process.env.QA_CHECK_API_KEY ? { 'Authorization': `Bearer ${process.env.QA_CHECK_API_KEY}` } : {})
+            },
+            body: JSON.stringify({
+              'file-url': fileUrl,
+              custom_prompt: rules.join('\n')
+            })
           }
-        ]
-      })
-    }
+        )
 
-    return NextResponse.json({ errors: foundErrors })
+        if (!apiResponse.ok) {
+          const errorData = await apiResponse.text()
+          return {
+            id: `external-api-error-${resourceId}`,
+            message: `External API error for resource ${resourceId}: ${errorData}`,
+            resourceId
+          }
+        }
+
+        const apiResult = await apiResponse.json()
+        console.log('apiResult', apiResult)
+        // Handle qa_results as either a string or an array
+        if (typeof apiResult.qa_results === 'string') {
+          return {
+            id: `qa-results-${resourceId}`,
+            message: apiResult.qa_results,
+            resourceId
+          }
+        } else if (Array.isArray(apiResult.qa_results)) {
+          // Return an array of error messages, one per result
+          return apiResult.qa_results.map((result: string, idx: number) => ({
+            id: `qa-results-${resourceId}-${idx}`,
+            message: result,
+            resourceId
+          }))
+        } else {
+          return {
+            id: `external-api-success-${resourceId}`,
+            message: typeof apiResult === 'string' ? apiResult : JSON.stringify(apiResult),
+            resourceId
+          }
+        }
+      } catch (e) {
+        return {
+          id: `external-api-fetch-error-${resourceId}`,
+          message: `Failed to call external API for resource ${resourceId}: ${e instanceof Error ? e.message : 'Unknown error'}`,
+          resourceId
+        }
+      }
+    })
+
+    const allResults = await Promise.all(errorPromises)
+    // Flatten in case any result is an array (from multiple qa_results)
+    const allErrors: ErrorMessage[] = allResults.flat()
+
+    console.log('allErrors', allErrors)
+
+    return NextResponse.json({ errors: allErrors })
   } catch (error) {
     console.error('[API_ERROR_CHECK] Error:', error)
     let errorMessage = 'Internal Server Error'

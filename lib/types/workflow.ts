@@ -48,15 +48,6 @@ export interface GraphWorkflowExecution {
 
 export type WorkflowStatus = "processing" | "completed" | "error";
 
-export interface Workflow {
-  id: string;
-  user_id: string;
-  title: string;
-  description: string;
-  status: WorkflowStatus;
-  error_message?: string;
-  last_run: string;
-}
 
 export interface WorkflowRun {
   id: string;

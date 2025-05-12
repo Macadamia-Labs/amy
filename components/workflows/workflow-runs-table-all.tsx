@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -26,12 +27,11 @@ import {
 import {
   deleteWorkflowRun,
   getAllWorkflowRunsWithNames
-} from '@/lib/actions/workflows'
+} from '@/lib/actions/workflow-runs'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { Check, Loader2, Trash2, XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { Skeleton } from './ui/skeleton'
 
 export function WorkflowRunsTableAll() {
   const { user } = useAuth()

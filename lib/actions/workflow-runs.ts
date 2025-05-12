@@ -1,6 +1,6 @@
 "use server";
 import { WorkflowRun, WorkflowStatus } from "@/lib/types/workflow";
-import { createServiceRoleClient } from "@/utils/supabase/service";
+import { createServiceRoleClient } from "../supabase/service";
 
 export async function createWorkflowRun({
   user_id,

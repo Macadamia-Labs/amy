@@ -1,6 +1,5 @@
 'use client'
 
-import { getSignedResourceUrl } from '@/lib/actions/resources'
 import { useState } from 'react'
 import { ErrorChecksHeader } from './error-checks-header'
 import { ErrorChecksResourcesCard } from './error-checks-resources-card'
@@ -71,43 +70,24 @@ export default function ErrorChecksPage() {
 
     try {
       const resourceIds = Array.from(selectedResourceIds)
-      const errorResults = await Promise.all(
-        resourceIds.map(async resourceId => {
-          try {
-            const signedUrl = await getSignedResourceUrl(resourceId)
-            const response = await fetch('/api/error-check', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                rules: selectedRules.map(rule => rule.text),
-                fileUrl: signedUrl
-              })
-            })
-
-            if (!response.ok) {
-              const errorData = await response.json()
-              throw new Error(errorData.message || 'Error checking failed')
-            }
-
-            const result: { errors: ErrorMessage[] } = await response.json()
-            return result.errors
-          } catch (error) {
-            return [
-              {
-                id: `api-fetch-error-${resourceId}`,
-                message:
-                  error instanceof Error
-                    ? error.message
-                    : 'An unknown error occurred'
-              }
-            ]
-          }
+      const response = await fetch('/api/error-check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          rules: selectedRules.map(rule => rule.text),
+          resourceIds
         })
-      )
-      // Flatten all errors from all resources
-      setFoundErrors(errorResults.flat())
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Error checking failed')
+      }
+
+      const result: { errors: ErrorMessage[] } = await response.json()
+      setFoundErrors(result.errors)
     } catch (error) {
       console.error('Error checking failed:', error)
       setFoundErrors([

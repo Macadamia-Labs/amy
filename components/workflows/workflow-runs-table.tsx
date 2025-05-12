@@ -1,120 +1,120 @@
-"use client";
+'use client'
 
-import LoadingDots from "@/components/magicui/loading-dots";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import LoadingDots from '@/components/magicui/loading-dots'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  CardTitle
+} from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  TableRow
+} from '@/components/ui/table'
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useWorkflowRunsSubscription } from "@/hooks/use-workflow-runs-subscription";
-import { getDownloadUrlForResource } from "@/lib/actions/resources/get-download-url";
-import { deleteWorkflowRun } from "@/lib/actions/workflows";
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import { useWorkflowRunsSubscription } from '@/hooks/use-workflow-runs-subscription'
+import { getSignedResourceUrl } from '@/lib/actions/resources'
+import { deleteWorkflowRun } from '@/lib/actions/workflow-runs'
 import {
   Check,
   Download,
   Loader2,
   MoreHorizontal,
   Trash2,
-  XIcon,
-} from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Skeleton } from "./ui/skeleton";
+  XIcon
+} from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Skeleton } from '../ui/skeleton'
 
 interface WorkflowRunsTableProps {
-  workflowId: string;
+  workflowId: string
 }
 
 export function WorkflowRunsTable({ workflowId }: WorkflowRunsTableProps) {
-  const [deletingRunId, setDeletingRunId] = useState<string | null>(null);
-  const [downloadingRunId, setDownloadingRunId] = useState<string | null>(null);
+  const [deletingRunId, setDeletingRunId] = useState<string | null>(null)
+  const [downloadingRunId, setDownloadingRunId] = useState<string | null>(null)
   const { runs, loading, fetchRunsData } =
-    useWorkflowRunsSubscription(workflowId);
-  const [currentPage, setCurrentPage] = useState(1);
-  const runsPerPage = 5;
+    useWorkflowRunsSubscription(workflowId)
+  const [currentPage, setCurrentPage] = useState(1)
+  const runsPerPage = 5
 
   const handleDeleteRun = async (runId: string) => {
-    setDeletingRunId(runId);
+    setDeletingRunId(runId)
     try {
-      await deleteWorkflowRun(runId);
-      toast.success("Workflow run deleted successfully.");
-      fetchRunsData();
+      await deleteWorkflowRun(runId)
+      toast.success('Workflow run deleted successfully.')
+      fetchRunsData()
     } catch (error) {
-      console.error("Failed to delete workflow run:", error);
-      toast.error("Failed to delete workflow run.");
+      console.error('Failed to delete workflow run:', error)
+      toast.error('Failed to delete workflow run.')
     } finally {
-      setDeletingRunId(null);
+      setDeletingRunId(null)
     }
-  };
+  }
 
   const handleDownloadRun = async (
     runId: string,
     resourceId: string | null | undefined
   ) => {
     if (!resourceId) {
-      toast.error("Output resource ID not found for this run.");
-      return;
+      toast.error('Output resource ID not found for this run.')
+      return
     }
-    setDownloadingRunId(runId);
+    setDownloadingRunId(runId)
     try {
-      const url = await getDownloadUrlForResource(resourceId);
+      const url = await getSignedResourceUrl(resourceId)
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `workflow_output_${runId}.xlsx`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `workflow_output_${runId}.xlsx`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
 
-      toast.success("Download started.");
+      toast.success('Download started.')
     } catch (error: any) {
-      console.error("Failed to download workflow run output:", error);
-      toast.error(`Failed to download file: ${error.message}`);
+      console.error('Failed to download workflow run output:', error)
+      toast.error(`Failed to download file: ${error.message}`)
     } finally {
-      setDownloadingRunId(null);
+      setDownloadingRunId(null)
     }
-  };
+  }
 
   const sortedRuns = [...runs].sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
+  )
 
-  const totalPages = Math.ceil(sortedRuns.length / runsPerPage);
-  const startIndex = (currentPage - 1) * runsPerPage;
-  const endIndex = startIndex + runsPerPage;
-  const currentRuns = sortedRuns.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(sortedRuns.length / runsPerPage)
+  const startIndex = (currentPage - 1) * runsPerPage
+  const endIndex = startIndex + runsPerPage
+  const currentRuns = sortedRuns.slice(startIndex, endIndex)
 
   const handlePreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
+    setCurrentPage(prev => Math.max(prev - 1, 1))
+  }
 
   const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
+    setCurrentPage(prev => Math.min(prev + 1, totalPages))
+  }
 
   return (
     <Card>
@@ -157,33 +157,33 @@ export function WorkflowRunsTable({ workflowId }: WorkflowRunsTableProps) {
             ) : (
               currentRuns.map((w, idx) => {
                 const originalIndex = sortedRuns.findIndex(
-                  (run) => run.id === w.id
-                );
-                const runNumber = sortedRuns.length - originalIndex;
-                const isCompleted = w.status === "completed";
-                const canDownload = isCompleted && w.output_resource_id;
-                const isDeleting = deletingRunId === w.id;
-                const isDownloading = downloadingRunId === w.id;
+                  run => run.id === w.id
+                )
+                const runNumber = sortedRuns.length - originalIndex
+                const isCompleted = w.status === 'completed'
+                const canDownload = isCompleted && w.output_resource_id
+                const isDeleting = deletingRunId === w.id
+                const isDownloading = downloadingRunId === w.id
 
                 return (
                   <TableRow key={w.id}>
                     <TableCell className="min-w-[80px] whitespace-nowrap">{`Run ${runNumber}`}</TableCell>
                     <TableCell>
-                      {w.status === "processing" ? (
+                      {w.status === 'processing' ? (
                         <Badge className="bg-yellow-500 text-white hover:bg-yellow-500 focus:bg-yellow-500/50 active:bg-yellow-500/50">
                           <p className="flex items-center">
                             <Loader2 className="w-4 h-4 animate-spin mr-2" />
                             Processing <LoadingDots />
                           </p>
                         </Badge>
-                      ) : w.status === "error" ? (
+                      ) : w.status === 'error' ? (
                         <Badge className="bg-red-500 text-white hover:bg-red-500 focus:bg-red-500/50 active:bg-red-500/50">
                           <p className="flex items-center">
                             <XIcon className="w-4 h-4 mr-1" />
                             Error
                           </p>
                         </Badge>
-                      ) : w.status === "completed" ? (
+                      ) : w.status === 'completed' ? (
                         <Badge className="bg-green-500 text-white hover:bg-green-500 focus:bg-green-500/50 active:bg-green-500/50">
                           <p className="flex items-center">
                             <Check className="w-4 h-4 mr-1" />
@@ -192,11 +192,11 @@ export function WorkflowRunsTable({ workflowId }: WorkflowRunsTableProps) {
                         </Badge>
                       ) : (
                         <Badge className="bg-muted text-foreground hover:bg-muted focus:bg-muted active:bg-muted">
-                          {typeof w.status === "string" &&
+                          {typeof w.status === 'string' &&
                           (w.status as string).length > 0
                             ? (w.status as string).charAt(0).toUpperCase() +
                               (w.status as string).slice(1)
-                            : "Unknown"}
+                            : 'Unknown'}
                         </Badge>
                       )}
                     </TableCell>
@@ -229,13 +229,13 @@ export function WorkflowRunsTable({ workflowId }: WorkflowRunsTableProps) {
                           </TooltipContent>
                         </Tooltip>
                       ) : (
-                        "-"
+                        '-'
                       )}
                     </TableCell>
                     <TableCell>
                       {new Date(w.created_at).toLocaleDateString()}
                     </TableCell>
-                    <TableCell onClick={(e) => e.stopPropagation()}>
+                    <TableCell onClick={e => e.stopPropagation()}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -284,7 +284,7 @@ export function WorkflowRunsTable({ workflowId }: WorkflowRunsTableProps) {
                       </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                );
+                )
               })
             )}
           </TableBody>
@@ -314,5 +314,5 @@ export function WorkflowRunsTable({ workflowId }: WorkflowRunsTableProps) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
