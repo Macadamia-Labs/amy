@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import { ErrorChecksHeader } from './error-checks-header'
+import { ErrorChecksResourcesCard } from './error-checks-resources-card'
 import { ErrorsCard } from './errors-card'
-import { ResourcesCard } from './resources-card'
 import { RulesCard } from './rules-card'
 
 interface Rule {
+  id: string
   text: string
   enabled: boolean
 }
@@ -16,6 +17,13 @@ interface ErrorMessage {
   message: string
   ruleText?: string // Optional: link error to a specific rule
   // Add other relevant error details here if needed
+}
+
+interface Resource {
+  id: string
+  name: string
+  signedFileUrl: string
+  type: string
 }
 
 // Mock data for resources - replace with actual data fetching as needed
@@ -42,8 +50,8 @@ const mockResources = [
 
 export default function ErrorChecksPage() {
   const [selectedRules, setSelectedRules] = useState<Rule[]>([])
-  const [selectedResourceUrl, setSelectedResourceUrl] = useState<string | null>(
-    null
+  const [selectedResourceIds, setSelectedResourceIds] = useState<Set<string>>(
+    new Set()
   )
   const [foundErrors, setFoundErrors] = useState<ErrorMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -52,14 +60,14 @@ export default function ErrorChecksPage() {
     setSelectedRules(updatedSelectedRules)
   }
 
-  const handleResourceSelect = (resourceUrl: string | null) => {
-    setSelectedResourceUrl(resourceUrl)
-    // Optionally clear previous errors when a new resource is selected
+  const handleResourceSelect = (resourceIds: Set<string>) => {
+    setSelectedResourceIds(resourceIds)
     setFoundErrors([])
   }
 
   async function handleErrorCheck() {
-    if (!selectedResourceUrl) {
+    const selectedResourceId = Array.from(selectedResourceIds)[0] || null
+    if (!selectedResourceId) {
       // Potentially show a notification to the user
       console.warn('No resource is selected.')
       setFoundErrors([
@@ -90,6 +98,11 @@ export default function ErrorChecksPage() {
     setFoundErrors([]) // Clear previous errors
 
     try {
+      // Find the selected resource URL
+      const selectedResource = mockResources.find(
+        r => r.id === selectedResourceId
+      )
+      const fileUrl = selectedResource?.signedFileUrl
       const response = await fetch('/api/error-check', {
         method: 'POST',
         headers: {
@@ -97,7 +110,7 @@ export default function ErrorChecksPage() {
         },
         body: JSON.stringify({
           rules: enabledRuleTexts,
-          fileUrl: selectedResourceUrl
+          fileUrl
         })
       })
 
@@ -128,17 +141,19 @@ export default function ErrorChecksPage() {
         onCheckErrors={handleErrorCheck}
         isLoading={isLoading}
         rulesCount={selectedRules.filter(r => r.enabled).length}
-        isResourceSelected={!!selectedResourceUrl}
+        isResourceSelected={selectedResourceIds.size > 0}
       />
-      <div className="grid grid-cols-3 gap-6 p-6 overflow-auto">
-        <div className="col-span-2">
-          <RulesCard onSelectedRulesChange={handleSelectedRulesChange} />
+      <div className="grid grid-cols-2 gap-6 p-6 overflow-auto">
+        <div className="col-span-1">
+          <RulesCard
+            selectedRules={selectedRules}
+            onChangeSelectedRules={handleSelectedRulesChange}
+          />
         </div>
         <div className="col-span-1">
-          <ResourcesCard
-            resources={mockResources}
-            onResourceSelect={handleResourceSelect}
-            selectedResourceUrl={selectedResourceUrl}
+          <ErrorChecksResourcesCard
+            selectedResourceIds={selectedResourceIds}
+            onSelectResource={handleResourceSelect}
           />
         </div>
       </div>
