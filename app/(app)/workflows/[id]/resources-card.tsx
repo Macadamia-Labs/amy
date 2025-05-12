@@ -115,7 +115,7 @@ export function ResourcesCard({
   )
 
   return (
-    <Card className="bg-muted rounded-3xl h-full">
+    <Card className="bg-card rounded-3xl h-full">
       <CardHeader className="flex flex-row items-center justify-between relative">
         <CardTitle className="flex flex-row items-center">
           <BoxIcon className="size-6 mr-2" /> Attached Resources

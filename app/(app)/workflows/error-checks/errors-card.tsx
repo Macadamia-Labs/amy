@@ -15,7 +15,7 @@ interface ErrorsCardProps {
 
 export function ErrorsCard({ errors }: ErrorsCardProps) {
   return (
-    <Card className="bg-muted rounded-3xl h-full">
+    <Card className="bg-card rounded-3xl h-full max-w-full">
       <CardHeader className="flex flex-row items-center justify-between relative pb-4">
         <CardTitle className="flex flex-row items-center">
           <XCircleIcon className="size-6 mr-2" /> Errors Found
@@ -29,10 +29,7 @@ export function ErrorsCard({ errors }: ErrorsCardProps) {
         ) : (
           <ul className="space-y-3">
             {errors.map(error => (
-              <li
-                key={error.id}
-                className="p-3 bg-background rounded-lg shadow-sm"
-              >
+              <li key={error.id} className="p-3 bg-muted rounded-lg shadow-sm">
                 <p className="font-medium text-destructive-foreground">
                   {error.message}
                 </p>

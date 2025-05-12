@@ -18,7 +18,7 @@ export interface Rule {
   created_at: string
   text: string
   type: string
-  user_id: string
+  user_id?: string
   examples?: Example[]
 }
 

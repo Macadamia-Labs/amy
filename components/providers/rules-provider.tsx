@@ -3,7 +3,8 @@
 import {
   addRule as addRuleServer,
   bulkDeleteRules as bulkDeleteRulesServer,
-  deleteRule as deleteRuleServer
+  deleteRule as deleteRuleServer,
+  Rule
 } from '@/lib/actions/rules'
 import {
   createContext,
@@ -23,12 +24,6 @@ interface Example {
     name?: string
     mimeType?: string
   }
-}
-
-interface Rule {
-  id: string
-  text: string
-  examples: Example[]
 }
 
 interface RulesContextValue {
@@ -53,7 +48,13 @@ function RulesProvider({ initialRules, children }: RulesProviderProps) {
     const tempId = `temp-${Date.now()}-${Math.random()
       .toString(36)
       .slice(2, 8)}`
-    const optimisticRule: Rule = { id: tempId, text, examples }
+    const optimisticRule: Rule = {
+      id: tempId,
+      text,
+      examples,
+      created_at: new Date().toISOString(),
+      type: 'rule'
+    }
     setRules(prev => [...prev, optimisticRule])
 
     const toastId = toast.loading('Saving rule...')
@@ -71,7 +72,9 @@ function RulesProvider({ initialRules, children }: RulesProviderProps) {
             ? {
                 id: result.data!.id,
                 text: result.data!.text,
-                examples: result.data!.examples ?? []
+                examples: result.data!.examples ?? [],
+                created_at: result.data!.created_at,
+                type: 'rule'
               }
             : r
         )

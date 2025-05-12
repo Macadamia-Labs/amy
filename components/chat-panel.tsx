@@ -89,7 +89,7 @@ export function ChatPanel({
         isWorkflow && 'max-w-full mx-0 p-0'
       )}
     >
-      <div className="relative flex flex-col w-full gap-2 bg-muted rounded-3xl border border-input">
+      <div className="relative flex flex-col w-full gap-2 bg-card rounded-3xl border border-input">
         <Textarea
           ref={inputRef}
           name="input"

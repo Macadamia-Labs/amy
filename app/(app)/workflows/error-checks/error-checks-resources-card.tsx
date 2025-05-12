@@ -52,7 +52,7 @@ export function ErrorChecksResourcesCard({
   }
 
   return (
-    <Card className="bg-muted rounded-3xl h-full flex flex-col">
+    <Card className="bg-card rounded-3xl h-full flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between relative">
         <CardTitle className="flex flex-row items-center">
           <TextFileIcon className="size-6 mr-2" /> Resources
@@ -112,7 +112,7 @@ export function ErrorChecksResourcesCard({
               <li key={resource.id}>
                 <div
                   className={cn(
-                    'w-full flex items-center px-4 py-2 rounded-lg border bg-card'
+                    'w-full flex items-center px-4 py-2 rounded-lg border bg-muted'
                   )}
                 >
                   <span className="truncate flex-1 text-left">

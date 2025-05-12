@@ -397,3 +397,24 @@ export async function getResourcesByIds(resourceIds: string[]) {
   if (error) throw error
   return data
 }
+
+export async function getSignedResourceUrl(resourceId: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('resources')
+    .select('file_path')
+    .eq('id', resourceId)
+    .single()
+
+  if (error) throw error
+  if (!data?.file_path) throw new Error('Resource not found')
+
+  const { data: signedUrlData, error: signError } = await supabase.storage
+    .from('resources')
+    .createSignedUrl(data.file_path, 60 * 60) // 1 hour expiration
+
+  if (signError) throw signError
+  if (!signedUrlData?.signedUrl) throw new Error('Failed to create signed URL')
+
+  return signedUrlData.signedUrl
+}

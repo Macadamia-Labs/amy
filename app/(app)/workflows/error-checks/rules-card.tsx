@@ -53,7 +53,7 @@ export function RulesCard({
   }
 
   return (
-    <Card className="bg-muted rounded-3xl h-full">
+    <Card className="bg-card rounded-3xl h-full">
       <CardHeader className="flex flex-row items-center justify-between relative">
         <CardTitle className="flex flex-row items-center">
           <TextFileIcon className="size-6 mr-2" /> Rules
@@ -104,6 +104,9 @@ export function RulesCard({
         </div>
       </CardHeader>
       <CardContent>
+        {selectedRules.length === 0 && (
+          <p className="text-sm text-muted-foreground">No rules selected.</p>
+        )}
         <ul className="space-y-2">
           {selectedRules
             .filter(r => r.enabled)
@@ -111,7 +114,7 @@ export function RulesCard({
               <li key={rule.id}>
                 <div
                   className={cn(
-                    'w-full flex items-center px-4 py-2 rounded-lg border bg-card'
+                    'w-full flex items-center px-4 py-2 rounded-lg border bg-muted'
                   )}
                 >
                   <span className="truncate flex-1 text-left">{rule.text}</span>

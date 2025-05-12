@@ -58,7 +58,7 @@ export function ErrorChecksHeader({
   const { canCheck, buttonText } = getButtonState()
 
   return (
-    <div className="flex items-center justify-between p-4 py-3 bg-card sticky top-0 z-10">
+    <div className="flex items-center justify-between p-4 py-3 sticky top-0 z-10">
       <div className="flex items-center gap-2 mr-auto">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
@@ -69,8 +69,8 @@ export function ErrorChecksHeader({
       <Button
         onClick={onCheckErrors}
         disabled={!canCheck}
-        size="default"
-        className="min-w-[180px]"
+        size="sm"
+        className="px-4 rounded-lg"
       >
         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         {isLoading ? 'Checking...' : buttonText}

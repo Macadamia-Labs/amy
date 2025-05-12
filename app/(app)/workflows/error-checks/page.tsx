@@ -1,5 +1,6 @@
 'use client'
 
+import { getSignedResourceUrl } from '@/lib/actions/resources'
 import { useState } from 'react'
 import { ErrorChecksHeader } from './error-checks-header'
 import { ErrorChecksResourcesCard } from './error-checks-resources-card'
@@ -18,35 +19,6 @@ interface ErrorMessage {
   ruleText?: string // Optional: link error to a specific rule
   // Add other relevant error details here if needed
 }
-
-interface Resource {
-  id: string
-  name: string
-  signedFileUrl: string
-  type: string
-}
-
-// Mock data for resources - replace with actual data fetching as needed
-const mockResources = [
-  {
-    id: 'res1',
-    name: 'Bill_of_Materials_v1.xlsx',
-    signedFileUrl: 'mock-url/Bill_of_Materials_v1.xlsx',
-    type: 'Spreadsheet'
-  },
-  {
-    id: 'res2',
-    name: 'Technical_Drawing_RevA.pdf',
-    signedFileUrl: 'mock-url/Technical_Drawing_RevA.pdf',
-    type: 'PDF Document'
-  },
-  {
-    id: 'res3',
-    name: 'ISO_Drawing_Standard.pdf',
-    signedFileUrl: 'mock-url/ISO_Drawing_Standard.pdf',
-    type: 'PDF Document'
-  }
-]
 
 export default function ErrorChecksPage() {
   const [selectedRules, setSelectedRules] = useState<Rule[]>([])
@@ -98,29 +70,44 @@ export default function ErrorChecksPage() {
     setFoundErrors([]) // Clear previous errors
 
     try {
-      // Find the selected resource URL
-      const selectedResource = mockResources.find(
-        r => r.id === selectedResourceId
-      )
-      const fileUrl = selectedResource?.signedFileUrl
-      const response = await fetch('/api/error-check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          rules: enabledRuleTexts,
-          fileUrl
+      const resourceIds = Array.from(selectedResourceIds)
+      const errorResults = await Promise.all(
+        resourceIds.map(async resourceId => {
+          try {
+            const signedUrl = await getSignedResourceUrl(resourceId)
+            const response = await fetch('/api/error-check', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                rules: selectedRules.map(rule => rule.text),
+                fileUrl: signedUrl
+              })
+            })
+
+            if (!response.ok) {
+              const errorData = await response.json()
+              throw new Error(errorData.message || 'Error checking failed')
+            }
+
+            const result: { errors: ErrorMessage[] } = await response.json()
+            return result.errors
+          } catch (error) {
+            return [
+              {
+                id: `api-fetch-error-${resourceId}`,
+                message:
+                  error instanceof Error
+                    ? error.message
+                    : 'An unknown error occurred'
+              }
+            ]
+          }
         })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Error checking failed')
-      }
-
-      const result: { errors: ErrorMessage[] } = await response.json()
-      setFoundErrors(result.errors)
+      )
+      // Flatten all errors from all resources
+      setFoundErrors(errorResults.flat())
     } catch (error) {
       console.error('Error checking failed:', error)
       setFoundErrors([
@@ -136,14 +123,14 @@ export default function ErrorChecksPage() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
       <ErrorChecksHeader
         onCheckErrors={handleErrorCheck}
         isLoading={isLoading}
         rulesCount={selectedRules.filter(r => r.enabled).length}
         isResourceSelected={selectedResourceIds.size > 0}
       />
-      <div className="grid grid-cols-2 gap-6 p-6 overflow-auto">
+      <div className="grid grid-cols-2 gap-4 p-4 overflow-auto max-w-full">
         <div className="col-span-1">
           <RulesCard
             selectedRules={selectedRules}
@@ -157,7 +144,7 @@ export default function ErrorChecksPage() {
           />
         </div>
       </div>
-      <div className="p-6 pt-0">
+      <div className="p-4 pt-0">
         <ErrorsCard errors={foundErrors} />
       </div>
     </div>

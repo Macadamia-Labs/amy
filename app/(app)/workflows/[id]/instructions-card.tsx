@@ -50,7 +50,7 @@ export function InstructionsCard({
   }
 
   return (
-    <Card className="bg-muted rounded-3xl">
+    <Card className="bg-card rounded-3xl">
       <CardHeader className="flex flex-row items-center justify-between relative">
         <CardTitle className="flex flex-row items-center">
           <TextFileIcon className="size-6 mr-2" /> Instructions

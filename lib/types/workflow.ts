@@ -45,3 +45,26 @@ export interface GraphWorkflowExecution {
   logs?: string[]
   results?: Record<string, any>
 }
+
+export type WorkflowStatus = "processing" | "completed" | "error";
+
+export interface Workflow {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  status: WorkflowStatus;
+  error_message?: string;
+  last_run: string;
+}
+
+export interface WorkflowRun {
+  id: string;
+  workflow_id: string;
+  status: WorkflowStatus;
+  status_message?: string;
+  created_at: string;
+  resource_ids: string[];
+  output_resource_id?: string | null;
+  updated_at?: string;
+}
