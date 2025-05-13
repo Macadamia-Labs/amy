@@ -1,3 +1,5 @@
+export const maxDuration = 300
+
 import { getSignedResourceUrl } from '@/lib/actions/resources'
 import { NextResponse } from 'next/server'
 
