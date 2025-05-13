@@ -4,9 +4,11 @@ import {
   ChartColumnIcon,
   ConvoIcon,
   FileCheckIcon,
+  FileScanIcon,
   FileSignatureIcon,
   ImageIcon,
   NotesIcon,
+  TableIcon,
   TextFileIcon
 } from '@/lib/utils/icons'
 
@@ -97,7 +99,9 @@ export const categoryIcons = {
   'technical drawing': FileSignatureIcon,
   'process flow diagram': FileCheckIcon,
   'data sheet': TextFileIcon,
-  report: TextFileIcon
+  report: TextFileIcon,
+  excel: TableIcon,
+  scan: FileScanIcon
 }
 
 export const defaultFolders: Resource[] = [
