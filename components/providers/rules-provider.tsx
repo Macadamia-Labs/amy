@@ -57,7 +57,9 @@ function RulesProvider({ initialRules, children }: RulesProviderProps) {
     }
     setRules(prev => [...prev, optimisticRule])
 
-    const toastId = toast.loading('Saving rule...')
+    const toastId = toast.loading('Saving rule...', {
+      description: text
+    })
     try {
       const result = await addRuleServer(text, '', examples)
       if (result.error || !result.data || !result.data.id) {

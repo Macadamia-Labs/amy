@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import { LightningIcon } from '@/lib/utils/icons'
 import { Loader2 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
@@ -32,10 +33,10 @@ export function ErrorChecksHeader({
   const getButtonState = () => {
     const canCheck = rulesCount > 0 && isResourceSelected && !isLoading
     let buttonText = 'Run Error Checks'
-    if (!isResourceSelected) {
-      buttonText = 'Select a Resource'
-    } else if (rulesCount === 0) {
+    if (rulesCount === 0) {
       buttonText = 'Select Rules'
+    } else if (!isResourceSelected) {
+      buttonText = 'Select a Resource'
     }
     return { canCheck, buttonText }
   }
@@ -69,13 +70,18 @@ export function ErrorChecksHeader({
       <Button
         onClick={onCheckErrors}
         disabled={!canCheck}
-        size="sm"
+        variant={'outline'}
+        size={'lg'}
         className="px-4 rounded-lg"
       >
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        {isLoading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <LightningIcon />
+        )}
         {isLoading ? 'Checking...' : buttonText}
         {!isLoading && rulesCount > 0 && isResourceSelected && (
-          <span className="ml-2 bg-primary-foreground text-primary rounded-full px-2 py-0.5 text-xs font-semibold">
+          <span className="ml-2 bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs font-semibold">
             {rulesCount}
           </span>
         )}

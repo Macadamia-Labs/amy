@@ -1,6 +1,5 @@
 'use client'
 
-import { WorkflowSelector } from '@/components/templates/workflow-selector'
 import { Button } from '@/components/ui/button'
 import { useChatId } from '@/lib/hooks/use-chat-id'
 import { cn } from '@/lib/utils'
@@ -133,7 +132,7 @@ export function ChatPanel({
                 selectedIds={selectedResourceIds}
                 onSelect={setSelectedResourceIds}
               />
-              <WorkflowSelector
+              {/* <WorkflowSelector
                 selectedIds={
                   new Set(selectedWorkflowId ? [selectedWorkflowId] : [])
                 }
@@ -142,7 +141,7 @@ export function ChatPanel({
                     ids.size > 0 ? Array.from(ids)[0] : null
                   )
                 }
-              />
+              /> */}
             </div>
           )}
           <div className="flex items-center gap-2 ml-auto">

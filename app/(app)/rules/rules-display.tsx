@@ -34,9 +34,18 @@ export function RulesTable() {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
   const { rules, addRule, deleteRule, bulkDeleteRules } = useRules()
+
+  // Calculate pagination
+  const totalPages = Math.ceil(rules.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedRules = rules.slice(startIndex, endIndex)
 
   const handleDeleteRule = async (id: string) => {
     setIsDeleting(true)
@@ -64,18 +73,38 @@ export function RulesTable() {
     } else {
       setSelectedIds(new Set(rules.map(r => r.id)))
     }
+    setLastSelectedId(null)
   }
 
-  const handleCheckboxChange = (id: string, checked: boolean) => {
-    setSelectedIds(prev => {
-      const next = new Set(prev)
+  const handleCheckboxChange = (
+    id: string,
+    checked: boolean,
+    shiftKey: boolean
+  ) => {
+    const newSelected = new Set(selectedIds)
+
+    if (shiftKey && lastSelectedId) {
+      const lastIndex = rules.findIndex(r => r.id === lastSelectedId)
+      const currentIndex = rules.findIndex(r => r.id === id)
+      const [start, end] = [lastIndex, currentIndex].sort((a, b) => a - b)
+
+      rules.slice(start, end + 1).forEach(rule => {
+        if (checked) {
+          newSelected.add(rule.id)
+        } else {
+          newSelected.delete(rule.id)
+        }
+      })
+    } else {
       if (checked) {
-        next.add(id)
+        newSelected.add(id)
       } else {
-        next.delete(id)
+        newSelected.delete(id)
       }
-      return next
-    })
+    }
+
+    setSelectedIds(newSelected)
+    setLastSelectedId(id)
   }
 
   const handleSuccess = (data: any) => {
@@ -156,13 +185,17 @@ export function RulesTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              rules.map(rule => (
+              paginatedRules.map(rule => (
                 <TableRow key={rule.id} className="hover:bg-muted/50">
                   <TableCell className="text-center">
                     <Checkbox
                       checked={selectedIds.has(rule.id)}
                       onCheckedChange={(checked: CheckedState) => {
-                        handleCheckboxChange(rule.id, checked === true)
+                        handleCheckboxChange(
+                          rule.id,
+                          checked === true,
+                          (window.event as MouseEvent)?.shiftKey ?? false
+                        )
                       }}
                     />
                   </TableCell>
@@ -282,6 +315,34 @@ export function RulesTable() {
             )}
           </TableBody>
         </Table>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t">
+            <div className="text-sm text-muted-foreground">
+              Showing {startIndex + 1} to {Math.min(endIndex, rules.length)} of{' '}
+              {rules.length} rules
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setCurrentPage(prev => Math.min(totalPages, prev + 1))
+                }
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

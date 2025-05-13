@@ -112,7 +112,7 @@ export function ErrorChecksResourcesCard({
               <li key={resource.id}>
                 <div
                   className={cn(
-                    'w-full flex items-center px-4 py-2 rounded-lg border bg-muted'
+                    'w-full flex items-center px-4 py-2 rounded-lg bg-muted'
                   )}
                 >
                   <span className="truncate flex-1 text-left">

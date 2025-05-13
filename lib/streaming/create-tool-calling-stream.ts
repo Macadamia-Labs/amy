@@ -3,6 +3,7 @@ import {
   convertToCoreMessages,
   createDataStreamResponse,
   DataStreamWriter,
+  smoothStream,
   streamText
 } from 'ai'
 import { getMaxAllowedTokens, truncateMessages } from '../utils/context-window'
@@ -52,7 +53,12 @@ export function createToolCallingStreamResponse(config: BaseStreamConfig) {
               skipRelatedQuestions: true,
               userId
             })
-          }
+          },
+          experimental_transform: smoothStream(
+            {
+              delayInMs: 20,
+            }
+          )
         })
 
         result.mergeIntoDataStream(dataStream)

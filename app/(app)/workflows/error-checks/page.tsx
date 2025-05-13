@@ -110,22 +110,34 @@ export default function ErrorChecksPage() {
         rulesCount={selectedRules.filter(r => r.enabled).length}
         isResourceSelected={selectedResourceIds.size > 0}
       />
-      <div className="grid grid-cols-2 gap-4 p-4 overflow-auto max-w-full">
-        <div className="col-span-1">
-          <RulesCard
-            selectedRules={selectedRules}
-            onChangeSelectedRules={handleSelectedRulesChange}
-          />
+      <div className="p-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold tracking-tight">
+            {'Error checking'}
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            {
+              'Goes over documents to see whether they respect the selected design rules.'
+            }
+          </p>
         </div>
-        <div className="col-span-1">
-          <ErrorChecksResourcesCard
-            selectedResourceIds={selectedResourceIds}
-            onSelectResource={handleResourceSelect}
-          />
+        <div className="grid grid-cols-2 gap-4 overflow-auto max-w-full">
+          <div className="col-span-1">
+            <RulesCard
+              selectedRules={selectedRules}
+              onChangeSelectedRules={handleSelectedRulesChange}
+            />
+          </div>
+          <div className="col-span-1">
+            <ErrorChecksResourcesCard
+              selectedResourceIds={selectedResourceIds}
+              onSelectResource={handleResourceSelect}
+            />
+          </div>
         </div>
-      </div>
-      <div className="p-4 pt-0">
-        <ErrorsCard errors={foundErrors} />
+        <div className="pt-4">
+          <ErrorsCard errors={foundErrors} />
+        </div>
       </div>
     </div>
   )
