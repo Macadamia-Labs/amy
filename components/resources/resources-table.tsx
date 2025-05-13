@@ -595,7 +595,7 @@ export function ResourcesTable() {
           </div>
         ) : (
           <>
-            <UITable>
+            <UITable className="bg-card rounded-lg">
               <TableHeader>
                 <TableRow>
                   <TableHead>Resource</TableHead>
