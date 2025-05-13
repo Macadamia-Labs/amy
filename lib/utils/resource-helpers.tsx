@@ -1,7 +1,6 @@
 import LoadingDots from '@/components/magicui/loading-dots'
 import { Badge } from '@/components/ui/badge'
 import { DEFAULT_INTEGRATIONS } from '@/data/integrations'
-import { categoryIcons } from '@/data/resources'
 import { Resource } from '@/lib/types'
 import {
   CheckCircleIcon,
@@ -16,8 +15,6 @@ export const getResourceStatusIcon = (
   resource: Resource,
   uploadStatus: Map<string, string>
 ): ReactElement => {
-  const IconComponent =
-    categoryIcons[resource.category as keyof typeof categoryIcons]
   const currentUploadStatus = uploadStatus.get(resource.id)
 
   if (currentUploadStatus === 'loading') {
@@ -41,8 +38,6 @@ export const getResourceStatusIcon = (
     )
   } else if (resource.status === 'completed') {
     return <CheckCircleIcon className="size-6 text-green-500" />
-  } else if (IconComponent) {
-    return <IconComponent className="size-6 text-muted-foreground" />
   }
 
   return (

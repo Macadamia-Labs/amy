@@ -1,5 +1,6 @@
 'use client'
 
+import { useResources } from '@/components/providers/resources-provider'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { XCircleIcon } from '@/lib/utils/icons'
@@ -9,6 +10,7 @@ interface ErrorMessage {
   id: string
   message: string
   ruleText?: string
+  resourceId?: string
 }
 
 interface ErrorsCardProps {
@@ -16,6 +18,7 @@ interface ErrorsCardProps {
 }
 
 export function ErrorsCard({ errors }: ErrorsCardProps) {
+  const { resources } = useResources()
   return (
     <Card className="bg-card rounded-3xl h-full max-w-full">
       <CardHeader className="flex flex-row items-center justify-between relative pb-4">
@@ -58,6 +61,16 @@ export function ErrorsCard({ errors }: ErrorsCardProps) {
                     <p className="text-xs text-muted-foreground mt-1">
                       <span className="sr-only">Related rule: </span>
                       {error.ruleText}
+                    </p>
+                  )}
+                  {error.resourceId && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      <span className="sr-only">Related resource: </span>
+                      {
+                        resources.find(
+                          resource => resource.id === error.resourceId
+                        )?.title
+                      }
                     </p>
                   )}
                 </motion.li>
