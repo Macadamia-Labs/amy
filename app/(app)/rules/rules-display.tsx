@@ -217,11 +217,13 @@ export function RulesTable() {
                               </div>
                               {example.taggedFile.type === 'image' &&
                                 example.taggedFile.url && (
-                                  <img
+                                  <Image
                                     src={example.taggedFile.url}
                                     alt="Example image"
                                     className="max-w-xs max-h-32 rounded border"
                                     loading="lazy"
+                                    width={128}
+                                    height={128}
                                   />
                                 )}
                               {example.taggedFile.type === 'text' &&

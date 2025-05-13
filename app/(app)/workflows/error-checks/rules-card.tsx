@@ -113,7 +113,7 @@ export function RulesCard({
                         create this new rule:
                       </p>
                       <p className="text-sm font-medium font-mono">
-                        "{searchTerm}"
+                        {`"${searchTerm}"`}
                       </p>
                     </div>
                   ) : (
